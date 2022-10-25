@@ -2,4 +2,5 @@
     <string name="app_name">MyApplication</string>
     <string name="template">Template</string>
     <string name="greeting">Hello</string>
+    <string name="test">test</string>
 </resources>

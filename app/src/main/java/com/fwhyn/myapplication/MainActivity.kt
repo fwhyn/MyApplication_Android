@@ -1,5 +1,6 @@
 package com.fwhyn.myapplication
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import com.fwhyn.myapplication.viewbindingsample.ResultActivity
 import com.google.android.material.composethemeadapter.MdcTheme
 import kotlinx.coroutines.*
 
@@ -25,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val greeting = findViewById<TextView>(R.id.test_text)
+        greeting.setOnClickListener {
+            startActivity(Intent(this, ResultActivity::class.java))
+        }
 //        val greeting = findViewById<ComposeView>(R.id.test_text)
 //        greeting.setContent {
 //            MdcTheme { // or AppCompatTheme

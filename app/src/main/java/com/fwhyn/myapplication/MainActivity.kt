@@ -1,9 +1,9 @@
 package com.fwhyn.myapplication
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -12,12 +12,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
-import com.fwhyn.myapplication.viewbindingsample.ResultActivity
-import com.google.android.material.composethemeadapter.MdcTheme
-import kotlinx.coroutines.*
+import com.fwhyn.myapplication.databindingsample.UserActivity
+import kotlinx.coroutines.Job
 
 class MainActivity : AppCompatActivity() {
     private var job: Job? = null
@@ -28,8 +25,12 @@ class MainActivity : AppCompatActivity() {
 
         val greeting = findViewById<TextView>(R.id.test_text)
         greeting.setOnClickListener {
-            startActivity(Intent(this, ResultActivity::class.java))
+            startActivity(Intent(this, UserActivity::class.java))
         }
+
+//        greeting.setOnClickListener {
+//            startActivity(Intent(this, ResultActivity::class.java))
+//        }
 //        val greeting = findViewById<ComposeView>(R.id.test_text)
 //        greeting.setContent {
 //            MdcTheme { // or AppCompatTheme

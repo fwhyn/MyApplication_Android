@@ -3,4 +3,6 @@
     <string name="template">Template</string>
     <string name="greeting">Hello</string>
     <string name="test">test</string>
+    <string name="button_test">Button Test</string>
+    <string name="button">Button</string>
 </resources>

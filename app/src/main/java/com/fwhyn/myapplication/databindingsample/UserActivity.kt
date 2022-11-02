@@ -2,8 +2,7 @@ package com.fwhyn.myapplication.databindingsample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil
-import com.fwhyn.myapplication.R
+import android.view.View
 import com.fwhyn.myapplication.databinding.ActivityUserBinding
 
 class UserActivity : AppCompatActivity() {
@@ -13,6 +12,12 @@ class UserActivity : AppCompatActivity() {
         val binding: ActivityUserBinding = ActivityUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.user = User("Test", "User")
+        val userTest = User("Test", "User")
+
+        binding.user = userTest
+
+//        binding.buttonTest.setOnClickListener {
+//            userTest.firstName = "aaa"
+//        }
     }
 }

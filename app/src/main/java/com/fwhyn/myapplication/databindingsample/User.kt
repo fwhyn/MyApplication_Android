@@ -1,3 +1,3 @@
 package com.fwhyn.myapplication.databindingsample
 
-data class User(val firstName: String, val lastName: String)
+data class User(var firstName: String, var lastName: String)

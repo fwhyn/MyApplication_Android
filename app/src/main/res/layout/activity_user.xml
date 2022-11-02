@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="user" type="com.fwhyn.myapplication.databindingsample.User"/>
+        <variable name="user" type="com.fwhyn.myapplication.databindingsample.User" />
         <variable name="presenter" type="com.fwhyn.myapplication.databindingsample.Presenter" />
+        <variable name="click" type="com.fwhyn.myapplication.databindingsample.ClickHandler" />
     </data>
     <LinearLayout
         android:orientation="vertical"
@@ -15,14 +16,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{user.lastName}"/>
+            android:text="@{user.lastName}" />
 
         <Button
             android:id="@+id/button_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_test"
-            android:onClick="@{(view) -> presenter.onSaveClick(view)}" />
-
+            android:onClick="@{(v) -> presenter.onSaveClick(v)}" />
     </LinearLayout>
 </layout>

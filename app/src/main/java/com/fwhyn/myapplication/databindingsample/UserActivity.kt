@@ -12,13 +12,15 @@ class UserActivity : AppCompatActivity(), ClickHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding: ActivityUserBinding = ActivityUserBinding.inflate(layoutInflater)
+        // binding view
+        val binding = ActivityUserBinding.inflate(layoutInflater)
         parentView = binding.root
         setContentView(parentView)
 
-        val userTest = User("Test", "User")
-        binding.user = userTest
+        // binding class
+        binding.user = User("Test", "User")
         binding.presenter = Presenter()
+        binding.viewmodel = ScheduleViewModel()
     }
 
     override fun onClick(view: View) {

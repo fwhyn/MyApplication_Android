@@ -4,6 +4,7 @@
         <variable name="user" type="com.fwhyn.myapplication.databindingsample.User" />
         <variable name="presenter" type="com.fwhyn.myapplication.databindingsample.Presenter" />
         <variable name="click" type="com.fwhyn.myapplication.databindingsample.ClickHandler" />
+        <variable name="viewmodel" type="com.fwhyn.myapplication.databindingsample.ScheduleViewModel" />
     </data>
     <LinearLayout
         android:orientation="vertical"
@@ -17,6 +18,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{user.lastName}" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewmodel.username}" />
 
         <Button
             android:id="@+id/button_test"

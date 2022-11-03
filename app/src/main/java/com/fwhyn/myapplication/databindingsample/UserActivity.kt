@@ -17,6 +17,10 @@ class UserActivity : AppCompatActivity(), ClickHandler {
         parentView = binding.root
         setContentView(parentView)
 
+        // Specify the current activity as the lifecycle owner.
+        // to bind livedata
+        binding.lifecycleOwner = this
+
         // binding class
         binding.user = User("Test", "User")
         binding.presenter = Presenter()

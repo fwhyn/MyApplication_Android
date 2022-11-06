@@ -5,4 +5,5 @@
     <string name="test">test</string>
     <string name="button_test">Button Test</string>
     <string name="button">Button</string>
+    <string name="dummy_text">Dummy text</string>
 </resources>

@@ -1,6 +1,6 @@
 package com.fwhyn.myapplication.javatest;
 
-public class Test {
+public class CustomSet {
     Object[] object = new Object[4];
 
     public void add (Object value) {

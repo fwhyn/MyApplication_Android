@@ -28,33 +28,31 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.cocktails.game.model
+package com.fwhyn.myapplication.cocktailsgame
 
-class Question(val correctOption: String,
-               val incorrectOption: String) {
-  var answeredOption: String? = null
+class Game(private val questions: List<Question>,
+           highest: Int = 0) {
+  var currentScore = 0
     private set
 
-  val isAnsweredCorrectly: Boolean
-    get() = correctOption == answeredOption
+  var highestScore = highest
+    private set
 
-  fun answer(option: String): Boolean {
-    if (option != correctOption && option != incorrectOption)
-      throw IllegalArgumentException("Not a valid option")
+  private var questionIndex = -1
 
-    answeredOption = option
-
-    return isAnsweredCorrectly
+  fun incrementScore() {
+    currentScore++
+    if (currentScore > highestScore) {
+      highestScore = currentScore
+    }
   }
 
-//  fun getOptions(sort: (List<String>) -> List<String> = { it.shuffled() })
-  // this is equal logic:
-  fun getOptions(sort: (List<String>) -> List<String> = { qList -> qList.shuffled() })
-      = sort(listOf(correctOption, incorrectOption))
+  fun nextQuestion(): Question? {
+    if (questionIndex + 1 < questions.size) {
+      questionIndex++
+      return questions[questionIndex]
+    }
+    return null
+  }
 
-  // tried to create more complex function
-  fun getOptions2(sort: (List<String>, Int) -> List<String> = { qList, number -> println("default: $number"); qList
-    .shuffled() },
-                 valueCheck: Int = 0)
-      = sort(listOf(correctOption, incorrectOption), valueCheck)
 }

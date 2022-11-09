@@ -28,7 +28,7 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.cocktails.game.model
+package com.fwhyn.myapplication.cocktailsgame
 
 import org.junit.Assert
 import org.junit.Test

@@ -35,71 +35,71 @@ import org.junit.Before
 import org.junit.Test
 
 class QuestionUnitTests {
-  private lateinit var question: Question
+    private lateinit var question: Question
 
-  @Before
-  fun setup() {
-    question = Question("CORRECT", "INCORRECT")
-  }
+    @Before
+    fun setup() {
+        question = Question("CORRECT", "INCORRECT")
+    }
 
-  @Test
-  fun whenCreatingQuestion_shouldNotHaveAnsweredOption() {
-    Assert.assertNull(question.answeredOption)
-  }
+    @Test
+    fun whenCreatingQuestion_shouldNotHaveAnsweredOption() {
+        Assert.assertNull(question.answeredOption)
+    }
 
-  @Test
-  fun whenAnswering_shouldHaveAnsweredOption() {
-    question.answer("INCORRECT")
+    @Test
+    fun whenAnswering_shouldHaveAnsweredOption() {
+        question.answer("INCORRECT")
 
-    Assert.assertEquals("INCORRECT", question.answeredOption)
-  }
+        Assert.assertEquals("INCORRECT", question.answeredOption)
+    }
 
-  @Test
-  fun whenAnswering_withCorrectOption_shouldReturnTrue() {
-    val result = question.answer("CORRECT")
+    @Test
+    fun whenAnswering_withCorrectOption_shouldReturnTrue() {
+        val result = question.answer("CORRECT")
 
-    Assert.assertTrue(result)
-  }
+        Assert.assertTrue(result)
+    }
 
-  @Test
-  fun whenAnswering_withIncorrectOption_shouldReturnFalse() {
-    val result = question.answer("INCORRECT")
+    @Test
+    fun whenAnswering_withIncorrectOption_shouldReturnFalse() {
+        val result = question.answer("INCORRECT")
 
-    Assert.assertFalse(result)
-  }
+        Assert.assertFalse(result)
+    }
 
-  @Test(expected = IllegalArgumentException::class)
-  fun whenAnswering_withInvalidOption_shouldThrowException() {
-    question.answer("INVALID")
-  }
+    @Test(expected = IllegalArgumentException::class)
+    fun whenAnswering_withInvalidOption_shouldThrowException() {
+        question.answer("INVALID")
+    }
 
-  @Test
-  fun whenCreatingQuestion_shouldReturnOptionsWithCustomSort() {
+    @Test
+    fun whenCreatingQuestion_shouldReturnOptionsWithCustomSort() {
 //    val options = question.getOptions { it.reversed() }
-    // this is equal logic:
-    val options = question.getOptions { qList -> qList.reversed() }
+        // this is equal logic:
+        val options = question.getOptions { qList -> qList.reversed() }
 
-    Assert.assertEquals(listOf("INCORRECT", "CORRECT"), options)
-  }
+        Assert.assertEquals(listOf("INCORRECT", "CORRECT"), options)
+    }
 
-  @Test
-  fun whenCreatingQuestion_shouldReturnRandomOptions() {
-    val options = question.getOptions()
+    @Test
+    fun whenCreatingQuestion_shouldReturnRandomOptions() {
+        val options = question.getOptions()
 
-    Assert.assertEquals(2, options.size)
-  }
+        Assert.assertEquals(2, options.size)
+    }
 
-  @Test
-  fun whenCreatingQuestion_TestCustom() {
-    val options = question.getOptions2({ qList, number -> println("custom: $number"); qList.reversed() }, 4)
+    @Test
+    fun whenCreatingQuestion_TestCustom() {
+        val options = question.getOptions2({ qList, number -> println("custom: $number"); qList.reversed() }, 4)
 
-    Assert.assertEquals(listOf("INCORRECT", "CORRECT"), options)
-  }
+        Assert.assertEquals(listOf("INCORRECT", "CORRECT"), options)
+    }
 
-  @Test
-  fun whenCreatingQuestion_TestDefault() {
-    val options = question.getOptions2()
+    @Test
+    fun whenCreatingQuestion_TestDefault() {
+        val options = question.getOptions2()
 
-    Assert.assertEquals(2, options.size)
-  }
+        Assert.assertEquals(2, options.size)
+    }
 }

@@ -30,24 +30,25 @@
 
 package com.fwhyn.myapplication.cocktails.game.model
 
-class Game(private val questions: List<Question>,
-           val score: Score = Score(0)
+class Game(
+    private val questions: List<Question>,
+    val score: Score = Score(0)
 ) {
 
-  private var questionIndex = -1
+    private var questionIndex = -1
 
-  fun nextQuestion(): Question? {
-    if (questionIndex + 1 < questions.size) {
-      questionIndex++
-      return questions[questionIndex]
+    fun nextQuestion(): Question? {
+        if (questionIndex + 1 < questions.size) {
+            questionIndex++
+            return questions[questionIndex]
+        }
+        return null
     }
-    return null
-  }
 
-  fun answer(question: Question, option: String) {
-    val result = question.answer(option)
-    if (result) {
-      score.increment()
+    fun answer(question: Question, option: String) {
+        val result = question.answer(option)
+        if (result) {
+            score.increment()
+        }
     }
-  }
 }

@@ -30,31 +30,36 @@
 
 package com.fwhyn.myapplication.cocktails.game.model
 
-class Question(val correctOption: String,
-               val incorrectOption: String) {
-  var answeredOption: String? = null
-    private set
+class Question(
+    val correctOption: String,
+    val incorrectOption: String
+) {
+    var answeredOption: String? = null
+        private set
 
-  val isAnsweredCorrectly: Boolean
-    get() = correctOption == answeredOption
+    val isAnsweredCorrectly: Boolean
+        get() = correctOption == answeredOption
 
-  fun answer(option: String): Boolean {
-    if (option != correctOption && option != incorrectOption)
-      throw IllegalArgumentException("Not a valid option")
+    fun answer(option: String): Boolean {
+        if (option != correctOption && option != incorrectOption)
+            throw IllegalArgumentException("Not a valid option")
 
-    answeredOption = option
+        answeredOption = option
 
-    return isAnsweredCorrectly
-  }
+        return isAnsweredCorrectly
+    }
 
-//  fun getOptions(sort: (List<String>) -> List<String> = { it.shuffled() })
-  // this is equal logic:
-  fun getOptions(sort: (List<String>) -> List<String> = { qList -> qList.shuffled() })
-      = sort(listOf(correctOption, incorrectOption))
+    //  fun getOptions(sort: (List<String>) -> List<String> = { it.shuffled() })
+    // this is equal logic:
+    fun getOptions(sort: (List<String>) -> List<String> = { qList -> qList.shuffled() }) =
+        sort(listOf(correctOption, incorrectOption))
 
-  // tried to create more complex function
-  fun getOptions2(sort: (List<String>, Int) -> List<String> = { qList, number -> println("default: $number"); qList
-    .shuffled() },
-                 valueCheck: Int = 0)
-      = sort(listOf(correctOption, incorrectOption), valueCheck)
+    // tried to create more complex function
+    fun getOptions2(
+        sort: (List<String>, Int) -> List<String> = { qList, number ->
+            println("default: $number"); qList
+            .shuffled()
+        },
+        valueCheck: Int = 0
+    ) = sort(listOf(correctOption, incorrectOption), valueCheck)
 }

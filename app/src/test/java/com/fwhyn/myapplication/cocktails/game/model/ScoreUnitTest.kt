@@ -1,6 +1,5 @@
 package com.fwhyn.myapplication.cocktails.game.model
 
-import com.fwhyn.myapplication.cocktails.game.model.Score
 import org.junit.Assert
 import org.junit.Test
 
@@ -15,7 +14,8 @@ class ScoreUnitTests {
         Assert.assertEquals(
             "Current score should have been 1",
             1,
-            score.current)
+            score.current
+        )
     }
 
     @Test

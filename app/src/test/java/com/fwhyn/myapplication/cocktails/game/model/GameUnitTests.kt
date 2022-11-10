@@ -30,9 +30,6 @@
 
 package com.fwhyn.myapplication.cocktails.game.model
 
-import com.fwhyn.myapplication.cocktails.game.model.Game
-import com.fwhyn.myapplication.cocktails.game.model.Question
-import com.fwhyn.myapplication.cocktails.game.model.Score
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
@@ -40,64 +37,64 @@ import org.mockito.kotlin.*
 
 class GameUnitTests {
 
-  @Test
-  fun whenGettingNextQuestion_shouldReturnIt() {
-    val question1 = Question("CORRECT", "INCORRECT")
-    val questions = listOf(question1)
-    val game = Game(questions)
+    @Test
+    fun whenGettingNextQuestion_shouldReturnIt() {
+        val question1 = Question("CORRECT", "INCORRECT")
+        val questions = listOf(question1)
+        val game = Game(questions)
 
-    val nextQuestion = game.nextQuestion()
+        val nextQuestion = game.nextQuestion()
 
-    Assert.assertSame(question1, nextQuestion)
-  }
+        Assert.assertSame(question1, nextQuestion)
+    }
 
-  @Test
-  fun whenGettingNextQuestion_withoutMoreQuestions_shouldReturnNull() {
-    val question1 = Question("CORRECT", "INCORRECT")
-    val questions = listOf(question1)
-    val game = Game(questions)
+    @Test
+    fun whenGettingNextQuestion_withoutMoreQuestions_shouldReturnNull() {
+        val question1 = Question("CORRECT", "INCORRECT")
+        val questions = listOf(question1)
+        val game = Game(questions)
 
-    game.nextQuestion()
-    val nextQuestion = game.nextQuestion()
+        game.nextQuestion()
+        val nextQuestion = game.nextQuestion()
 
-    Assert.assertNull(nextQuestion)
-  }
+        Assert.assertNull(nextQuestion)
+    }
 
-  @Test
-  fun whenAnswering_shouldDelegateToQuestion() {
-    // 1
-    val question = mock<Question>()
-    val game = Game(listOf(question))
+    @Test
+    fun whenAnswering_shouldDelegateToQuestion() {
+        // 1
+        val question = mock<Question>()
+        val game = Game(listOf(question))
 
-    // 2
-    game.answer(question, "OPTION")
+        // 2
+        game.answer(question, "OPTION")
 
-    // 3
-    verify(question, times(1)).answer(eq("OPTION"))
-  }
+        // 3
+        verify(question, times(1)).answer(eq("OPTION"))
+    }
 
-  @Test
-  fun whenAnsweringCorrectly_shouldIncrementCurrentScore() {
-    val question = mock<Question>()
-    whenever(question.answer(anyString())).thenReturn(true)
-    val score = mock<Score>()
-    val game = Game(listOf(question), score)
+    @Test
+    fun whenAnsweringCorrectly_shouldIncrementCurrentScore() {
+        val question = mock<Question>()
+        whenever(question.answer(anyString())).thenReturn(true)
+        val score = mock<Score>()
+        val game = Game(listOf(question), score)
 
-    game.answer(question, "OPTION")
+        game.answer(question, "OPTION")
 
-    verify(score).increment()
-  }
+        verify(score).increment()
+    }
 
-  @Test
-  fun whenAnsweringIncorrectly_shouldNotIncrementCurrentScore() {
-    val question = mock<Question>()
-    whenever(question.answer(anyString())).thenReturn(false)
-    val score = mock<Score>()
-    val game = Game(listOf(question), score)
+    @Test
+    fun whenAnsweringIncorrectly_shouldNotIncrementCurrentScore() {
+        val question = mock<Question>()
+        whenever(question.answer(anyString())).thenReturn(false)
+        val score = mock<Score>()
+        val game = Game(listOf(question), score)
 
-    game.answer(question, "OPTION")
+        game.answer(question, "OPTION")
 
-    verify(score, never()).increment()
-  }
+        verify(score, never()).increment()
+    }
 
 }

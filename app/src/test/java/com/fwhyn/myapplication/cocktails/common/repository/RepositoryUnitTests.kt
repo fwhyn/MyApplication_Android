@@ -16,8 +16,10 @@ class RepositoryUnitTests {
         val sharedPreferences: SharedPreferences = mock()
         whenever(sharedPreferences.edit())
             .thenReturn(sharedPreferencesEditor)
-        val repository = CocktailsRepositoryImpl(api,
-            sharedPreferences)
+        val repository = CocktailsRepositoryImpl(
+            api,
+            sharedPreferences
+        )
 
         // 2
         val score = 100

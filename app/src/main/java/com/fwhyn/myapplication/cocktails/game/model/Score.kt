@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.cocktailsgame
+package com.fwhyn.myapplication.cocktails.game.model
 
 class Score(highestScore: Int = 0) {
     var current = 0

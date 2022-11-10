@@ -28,78 +28,76 @@
  * THE SOFTWARE.
  */
 
-package com.fwhyn.myapplication.cocktailsgame
+package com.fwhyn.myapplication.cocktails.game.model
 
+import com.fwhyn.myapplication.cocktails.game.model.Game
+import com.fwhyn.myapplication.cocktails.game.model.Question
+import com.fwhyn.myapplication.cocktails.game.model.Score
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.kotlin.*
 
-class QuestionUnitTests {
-  private lateinit var question: Question
+class GameUnitTests {
 
-  @Before
-  fun setup() {
-    question = Question("CORRECT", "INCORRECT")
+  @Test
+  fun whenGettingNextQuestion_shouldReturnIt() {
+    val question1 = Question("CORRECT", "INCORRECT")
+    val questions = listOf(question1)
+    val game = Game(questions)
+
+    val nextQuestion = game.nextQuestion()
+
+    Assert.assertSame(question1, nextQuestion)
   }
 
   @Test
-  fun whenCreatingQuestion_shouldNotHaveAnsweredOption() {
-    Assert.assertNull(question.answeredOption)
+  fun whenGettingNextQuestion_withoutMoreQuestions_shouldReturnNull() {
+    val question1 = Question("CORRECT", "INCORRECT")
+    val questions = listOf(question1)
+    val game = Game(questions)
+
+    game.nextQuestion()
+    val nextQuestion = game.nextQuestion()
+
+    Assert.assertNull(nextQuestion)
   }
 
   @Test
-  fun whenAnswering_shouldHaveAnsweredOption() {
-    question.answer("INCORRECT")
+  fun whenAnswering_shouldDelegateToQuestion() {
+    // 1
+    val question = mock<Question>()
+    val game = Game(listOf(question))
 
-    Assert.assertEquals("INCORRECT", question.answeredOption)
+    // 2
+    game.answer(question, "OPTION")
+
+    // 3
+    verify(question, times(1)).answer(eq("OPTION"))
   }
 
   @Test
-  fun whenAnswering_withCorrectOption_shouldReturnTrue() {
-    val result = question.answer("CORRECT")
+  fun whenAnsweringCorrectly_shouldIncrementCurrentScore() {
+    val question = mock<Question>()
+    whenever(question.answer(anyString())).thenReturn(true)
+    val score = mock<Score>()
+    val game = Game(listOf(question), score)
 
-    Assert.assertTrue(result)
+    game.answer(question, "OPTION")
+
+    verify(score).increment()
   }
 
   @Test
-  fun whenAnswering_withIncorrectOption_shouldReturnFalse() {
-    val result = question.answer("INCORRECT")
+  fun whenAnsweringIncorrectly_shouldNotIncrementCurrentScore() {
+    val question = mock<Question>()
+    whenever(question.answer(anyString())).thenReturn(false)
+    val score = mock<Score>()
+    val game = Game(listOf(question), score)
 
-    Assert.assertFalse(result)
+    game.answer(question, "OPTION")
+
+    verify(score, never()).increment()
   }
 
-  @Test(expected = IllegalArgumentException::class)
-  fun whenAnswering_withInvalidOption_shouldThrowException() {
-    question.answer("INVALID")
-  }
-
-  @Test
-  fun whenCreatingQuestion_shouldReturnOptionsWithCustomSort() {
-//    val options = question.getOptions { it.reversed() }
-    // this is equal logic:
-    val options = question.getOptions { qList -> qList.reversed() }
-
-    Assert.assertEquals(listOf("INCORRECT", "CORRECT"), options)
-  }
-
-  @Test
-  fun whenCreatingQuestion_shouldReturnRandomOptions() {
-    val options = question.getOptions()
-
-    Assert.assertEquals(2, options.size)
-  }
-
-  @Test
-  fun whenCreatingQuestion_TestCustom() {
-    val options = question.getOptions2({ qList, number -> println("custom: $number"); qList.reversed() }, 4)
-
-    Assert.assertEquals(listOf("INCORRECT", "CORRECT"), options)
-  }
-
-  @Test
-  fun whenCreatingQuestion_TestDefault() {
-    val options = question.getOptions2()
-
-    Assert.assertEquals(2, options.size)
-  }
 }

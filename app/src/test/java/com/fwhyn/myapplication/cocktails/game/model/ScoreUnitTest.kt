@@ -1,5 +1,6 @@
-package com.fwhyn.myapplication.cocktailsgame
+package com.fwhyn.myapplication.cocktails.game.model
 
+import com.fwhyn.myapplication.cocktails.game.model.Score
 import org.junit.Assert
 import org.junit.Test
 

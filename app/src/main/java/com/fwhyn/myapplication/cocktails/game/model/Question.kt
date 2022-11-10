@@ -28,25 +28,33 @@
  * THE SOFTWARE.
  */
 
-package com.fwhyn.myapplication.cocktailsgame
+package com.fwhyn.myapplication.cocktails.game.model
 
-class Game(private val questions: List<Question>,
-           val score: Score = Score(0)) {
+class Question(val correctOption: String,
+               val incorrectOption: String) {
+  var answeredOption: String? = null
+    private set
 
-  private var questionIndex = -1
+  val isAnsweredCorrectly: Boolean
+    get() = correctOption == answeredOption
 
-  fun nextQuestion(): Question? {
-    if (questionIndex + 1 < questions.size) {
-      questionIndex++
-      return questions[questionIndex]
-    }
-    return null
+  fun answer(option: String): Boolean {
+    if (option != correctOption && option != incorrectOption)
+      throw IllegalArgumentException("Not a valid option")
+
+    answeredOption = option
+
+    return isAnsweredCorrectly
   }
 
-  fun answer(question: Question, option: String) {
-    val result = question.answer(option)
-    if (result) {
-      score.increment()
-    }
-  }
+//  fun getOptions(sort: (List<String>) -> List<String> = { it.shuffled() })
+  // this is equal logic:
+  fun getOptions(sort: (List<String>) -> List<String> = { qList -> qList.shuffled() })
+      = sort(listOf(correctOption, incorrectOption))
+
+  // tried to create more complex function
+  fun getOptions2(sort: (List<String>, Int) -> List<String> = { qList, number -> println("default: $number"); qList
+    .shuffled() },
+                 valueCheck: Int = 0)
+      = sort(listOf(correctOption, incorrectOption), valueCheck)
 }

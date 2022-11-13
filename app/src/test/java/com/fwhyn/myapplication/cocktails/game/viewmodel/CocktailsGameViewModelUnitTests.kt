@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.cocktails.game
+package com.fwhyn.myapplication.cocktails.game.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer

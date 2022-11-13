@@ -45,12 +45,10 @@ class CocktailsGameFactoryUnitTests {
         verify(callback).onSuccess(any())
     }
 
-    private fun setUpRepositoryWithCocktails(
-        repository: CocktailsRepository) {
+    private fun setUpRepositoryWithCocktails(repository: CocktailsRepository) {
         doAnswer {
             // 1
-            val callback: RepositoryCallback<List<Cocktail>, String>
-                    = it.getArgument(0)
+            val callback: RepositoryCallback<List<Cocktail>, String> = it.getArgument(0)
             callback.onSuccess(cocktails)
         }.whenever(repository).getAlcoholic(any())
     }
@@ -114,13 +112,10 @@ class CocktailsGameFactoryUnitTests {
         })
     }
 
-    private fun assertQuestion(question: Question?,
-                               correctOption: String,
-                               imageUrl: String?) {
+    private fun assertQuestion(question: Question?, correctOption: String, imageUrl: String?) {
         Assert.assertNotNull(question)
         Assert.assertEquals(imageUrl, question?.imageUrl)
         Assert.assertEquals(correctOption, question?.correctOption)
-        Assert.assertNotEquals(correctOption,
-            question?.incorrectOption)
+        Assert.assertNotEquals(correctOption, question?.incorrectOption)
     }
 }

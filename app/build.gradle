@@ -93,4 +93,6 @@ dependencies {
     testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
     // Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    // ViewModel LiveData
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
 }

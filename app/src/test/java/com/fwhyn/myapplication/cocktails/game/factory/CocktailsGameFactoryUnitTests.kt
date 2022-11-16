@@ -45,14 +45,6 @@ class CocktailsGameFactoryUnitTests {
         verify(callback).onSuccess(any())
     }
 
-    private fun setUpRepositoryWithCocktails(repository: CocktailsRepository) {
-        doAnswer {
-            // 1
-            val callback: RepositoryCallback<List<Cocktail>, String> = it.getArgument(0)
-            callback.onSuccess(cocktails)
-        }.whenever(repository).getAlcoholic(any())
-    }
-
     @Test
     fun buildGame_shouldCallOnError() {
         val callback = mock<CocktailsGameFactory.Callback>()
@@ -61,15 +53,6 @@ class CocktailsGameFactoryUnitTests {
         factory.buildGame(callback)
 
         verify(callback).onError()
-    }
-
-    private fun setUpRepositoryWithError(
-        repository: CocktailsRepository) {
-        doAnswer {
-            val callback: RepositoryCallback<List<Cocktail>, String>
-                    = it.getArgument(0)
-            callback.onError("Error")
-        }.whenever(repository).getAlcoholic(any())
     }
 
     @Test
@@ -117,5 +100,22 @@ class CocktailsGameFactoryUnitTests {
         Assert.assertEquals(imageUrl, question?.imageUrl)
         Assert.assertEquals(correctOption, question?.correctOption)
         Assert.assertNotEquals(correctOption, question?.incorrectOption)
+    }
+
+    private fun setUpRepositoryWithCocktails(repository: CocktailsRepository) {
+        doAnswer {
+            // 1
+            val callback: RepositoryCallback<List<Cocktail>, String> = it.getArgument(0)
+            callback.onSuccess(cocktails)
+        }.whenever(repository).getAlcoholic(any())
+    }
+
+    private fun setUpRepositoryWithError(
+        repository: CocktailsRepository) {
+        doAnswer {
+            val callback: RepositoryCallback<List<Cocktail>, String>
+                    = it.getArgument(0)
+            callback.onError("Error")
+        }.whenever(repository).getAlcoholic(any())
     }
 }

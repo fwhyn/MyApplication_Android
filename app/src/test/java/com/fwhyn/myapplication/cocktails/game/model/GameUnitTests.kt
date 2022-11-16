@@ -97,4 +97,29 @@ class GameUnitTests {
         verify(score, never()).increment()
     }
 
+    @Test
+    fun whenAnsweringIncorrectly_shouldIncrementWrongNumber() {
+        val question = mock<Question>()
+        whenever(question.answer(anyString())).thenReturn(false)
+        val score = mock<Score>()
+        val game = Game(listOf(question), score)
+
+        game.answer(question, "OPTION")
+        Assert.assertEquals(1, game.wrongNumber)
+        game.answer(question, "OPTION")
+        Assert.assertEquals(2, game.wrongNumber)
+    }
+
+    @Test
+    fun whenAnsweringCorrectly_shouldNotIncrementWrongNumber() {
+        val question = mock<Question>()
+        whenever(question.answer(anyString())).thenReturn(true)
+        val score = mock<Score>()
+        val game = Game(listOf(question), score)
+
+        game.answer(question, "OPTION")
+        Assert.assertEquals(0, game.wrongNumber)
+        game.answer(question, "OPTION")
+        Assert.assertEquals(0, game.wrongNumber)
+    }
 }

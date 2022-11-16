@@ -36,6 +36,7 @@ class Game(
 ) {
 
     private var questionIndex = -1
+    var wrongNumber = 0
 
     fun nextQuestion(): Question? {
         if (questionIndex + 1 < questions.size) {
@@ -49,6 +50,8 @@ class Game(
         val result = question.answer(option)
         if (result) {
             score.increment()
+        } else {
+            wrongNumber++
         }
     }
 }

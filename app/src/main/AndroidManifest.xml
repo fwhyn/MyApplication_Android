@@ -4,8 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--android:name=".cocktails.CocktailsApplication"-->
     <application
-        android:name=".cocktails.CocktailsApplication"
+        android:name=".wishlist.app.WishlistApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,27 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="33">
-
-        <activity
-            android:name=".databindingsample.UserActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-
-        <activity
-            android:name=".viewbindingsample.ResultActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-
-        <activity
-            android:name=".cocktails.CocktailsGameActivity"
-            android:exported="false">
-        </activity>
 
         <activity
             android:name=".MainActivity"
@@ -49,6 +29,44 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+        </activity>
+
+        <!-- Data Binding -->
+        <activity
+            android:name=".databindingsample.UserActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <!-- View Binding -->
+        <activity
+            android:name=".viewbindingsample.ResultActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <!-- Cocktails Game -->
+        <activity
+            android:name=".cocktails.CocktailsGameActivity"
+            android:exported="false">
+        </activity>
+
+        <!-- Wishlist -->
+        <activity
+            android:name=".wishlist.app.WishlistSplashActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".wishlist.WishlistMainActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".wishlist.WishlistDetailActivity"
+            android:exported="false">
         </activity>
     </application>
 

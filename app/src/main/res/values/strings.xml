@@ -18,4 +18,11 @@
     <string name="game_score">Score: %1$d</string>
     <string name="game_highscore">Highscore: %1$d</string>
     <string name="game_question_title">What is the name of this cocktail?</string>
+
+    <!-- Wishlist -->
+    <string name="add_list">Add list</string>
+    <string name="title_list_person">Who is this list for?</string>
+    <string name="save">Save</string>
+    <string name="add_wish">Add Wish</string>
+    <string name="title_add_wish">What are they wishing for?</string>
 </resources>

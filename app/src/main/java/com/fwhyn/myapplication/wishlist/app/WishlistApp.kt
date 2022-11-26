@@ -30,16 +30,21 @@
 
 package com.fwhyn.myapplication.wishlist.app
 
-import android.app.Application
+import android.util.Log
+import com.fwhyn.myapplication.MyApp
+import com.fwhyn.myapplication.Util.Companion.TAG
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 
-class WishlistApp : Application() {
+class WishlistApp : MyApp() {
     override fun onCreate() {
         super.onCreate()
+
+        Log.d(TAG, "try to start wishlist koin")
         if (GlobalContext.getOrNull() == null) {
             startKoin {
+                Log.d(TAG, "start wishlist koin")
                 // declare Android context
                 androidContext(this@WishlistApp)
                 // declare used modules

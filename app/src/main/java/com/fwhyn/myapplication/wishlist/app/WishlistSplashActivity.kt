@@ -57,7 +57,7 @@ class WishlistSplashActivity : AppCompatActivity() {
 
         // Using a coroutine to delay loading the MainActivity
         lifecycleScope.launch {
-            delay(2000)
+            delay(500)
             // Start activity
             startActivity(Intent(this@WishlistSplashActivity, WishlistMainActivity::class.java))
 

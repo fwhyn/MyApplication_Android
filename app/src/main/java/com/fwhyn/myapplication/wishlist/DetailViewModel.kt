@@ -38,10 +38,10 @@ import com.fwhyn.myapplication.wishlist.persistance.Repository
 class DetailViewModel(private val repository: Repository) : ViewModel() {
 
     fun saveNewItem(wishlist: Wishlist, name: String) {
-        repository.saveWishlistItem(Wishlist("", listOf()))
+        repository.saveWishlistItem(wishlist, name)
     }
 
     fun getWishlist(id: Int): LiveData<Wishlist> {
-        return MutableLiveData()
+        return repository.getWishlist(id)
     }
 }

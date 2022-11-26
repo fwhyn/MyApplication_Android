@@ -35,6 +35,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.fwhyn.myapplication.wishlist.Wishlist
 
-@Database(entities = [Wishlist::class], version = 1)
+@Database(entities = [Wishlist::class], version = 1, exportSchema = false)
 @TypeConverters(StringListConverter::class)
 abstract class WishlistDatabase : RoomDatabase()

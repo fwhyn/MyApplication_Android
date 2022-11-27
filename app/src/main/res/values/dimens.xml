@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="margin_small">12dp</dimen>
     <dimen name="medium_margin">32dp</dimen>
 
     <!-- Wishlist -->
-    <dimen name="padding_small">8dp</dimen>
-    <dimen name="min_clickable_size">48dp</dimen>
-    <dimen name="padding_normal">16dp</dimen>
 </resources>

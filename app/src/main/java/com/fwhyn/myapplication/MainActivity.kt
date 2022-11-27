@@ -1,10 +1,8 @@
 package com.fwhyn.myapplication
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.fwhyn.myapplication.wishlist.app.WishlistSplashActivity
 import kotlinx.coroutines.Job
 
 class MainActivity : AppCompatActivity() {
@@ -17,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_main).setOnClickListener {
 //            startActivity(Intent(this, UserActivity::class.java))
 //            startActivity(Intent(this, CocktailsGameActivity::class.java))
-            startActivity(Intent(this, WishlistSplashActivity::class.java))
+//            startActivity(Intent(this, WishlistSplashActivity::class.java))
         }
     }
 }

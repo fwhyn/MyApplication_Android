@@ -1,28 +1,18 @@
 <resources>
     <string name="app_name">MyApplication</string>
     <string name="template">Template</string>
-    <string name="greeting">Hello</string>
     <string name="test">test</string>
     <string name="button_test">Button Test</string>
     <string name="button">Button</string>
     <string name="dummy_text">Dummy text</string>
 
     <!-- Cocktails Game -->
-    <string name="main_title">Cocktails</string>
     <string name="game_next">Next</string>
     <string name="error_default_text">Error</string>
     <string name="error_retry_default_text">Retry</string>
     <string name="loading_default_text">Loading</string>
-    <string name="no_results_default_text">No results</string>
     <string name="game_no_questions_left">No questions left</string>
     <string name="game_score">Score: %1$d</string>
     <string name="game_highscore">Highscore: %1$d</string>
     <string name="game_question_title">What is the name of this cocktail?</string>
-
-    <!-- Wishlist -->
-    <string name="add_list">Add list</string>
-    <string name="title_list_person">Who is this list for?</string>
-    <string name="save">Save</string>
-    <string name="add_wish">Add Wish</string>
-    <string name="title_add_wish">What are they wishing for?</string>
 </resources>

@@ -53,20 +53,6 @@
             android:name=".cocktails.CocktailsGameActivity"
             android:exported="false">
         </activity>
-
-        <!-- Wishlist -->
-        <activity
-            android:name=".wishlist.app.WishlistSplashActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".wishlist.WishlistMainActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".wishlist.WishlistDetailActivity"
-            android:exported="false">
-        </activity>
     </application>
 
 </manifest>

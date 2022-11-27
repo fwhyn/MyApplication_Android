@@ -31,7 +31,7 @@
 package com.fwhyn.wishlist.app
 
 import com.fwhyn.wishlist.DetailViewModel
-import com.fwhyn.wishlist.MainViewModel
+import com.fwhyn.wishlist.WishlistMainViewModel
 import com.fwhyn.wishlist.persistance.Repository
 import com.fwhyn.wishlist.persistance.RepositoryImpl
 import com.fwhyn.wishlist.persistance.WishlistDao
@@ -45,7 +45,7 @@ val appModule = module {
 
     single<WishlistDao> { WishlistDaoImpl() }
 
-    viewModel { MainViewModel(get()) }
+    viewModel { WishlistMainViewModel(get()) }
 
     viewModel { DetailViewModel(get()) }
 }

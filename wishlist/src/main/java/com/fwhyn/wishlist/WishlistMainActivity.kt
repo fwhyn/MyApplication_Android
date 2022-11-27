@@ -40,7 +40,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WishlistMainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: WishlistMainViewModel by viewModel()
     private lateinit var binding: ActivityWishlistMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

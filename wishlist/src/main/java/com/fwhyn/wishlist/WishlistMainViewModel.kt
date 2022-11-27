@@ -34,7 +34,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.fwhyn.wishlist.persistance.Repository
 
-class MainViewModel(private val repository: Repository) : ViewModel() {
+class WishlistMainViewModel(private val repository: Repository) : ViewModel() {
 
     fun saveNewList(name: String) {
         repository.saveWishlist(Wishlist(name, listOf()))

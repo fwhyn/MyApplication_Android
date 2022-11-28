@@ -1,5 +1,7 @@
 plugins {
-    id 'com.android.application'
+    // Fixed error: Dependent features configured but no package ID was set:
+    // id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
 }
@@ -9,7 +11,9 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.fwhyn.wishlist"
+        // Fixed error: Library projects cannot set applicationId. applicationId is set to 'com.fwhyn.wishlist' in
+        // default config:
+        // applicationId "com.fwhyn.wishlist"
         minSdk 23
         targetSdk 33
         versionCode 1
@@ -46,6 +50,8 @@ dependencies {
 
     // ---------------- Lifecycle ----------------
     def lifecycle_version = "2.5.1"
+
+    // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
 
     // ---------------- Room ----------------

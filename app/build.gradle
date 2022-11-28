@@ -3,7 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'kotlin-parcelize'
 }
 
 android {
@@ -50,13 +49,12 @@ android {
 }
 
 dependencies {
+    // ---------------- Main ----------------
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.test:monitor:1.6.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-    implementation 'com.github.bumptech.glide:glide:4.13.2'
 
     // ---------------- Module ----------------
     implementation project(path: ':wishlist')
@@ -66,10 +64,6 @@ dependencies {
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
-
-    // ---------------- Retrofit ----------------
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // ---------------- Coroutine ----------------
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
@@ -100,16 +94,12 @@ dependencies {
     // JUnit4
     testImplementation 'junit:junit:4.13.2'
 
-    // Mockito-Kotlin
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
-
     // ViewModel LiveData
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
 
     // Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
-    // others
+    // Arch Core
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-    androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
 }

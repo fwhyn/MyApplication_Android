@@ -8,21 +8,30 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication" >
+        android:theme="@style/Theme.MyApplication">
 
-    <!-- Wishlist -->
-    <activity
-        android:name=".app.WishlistSplashActivity"
-        android:exported="true">
-    </activity>
-    <activity
-        android:name=".WishlistMainActivity"
-        android:exported="false">
-    </activity>
-    <activity
-        android:name=".WishlistDetailActivity"
-        android:exported="false">
-    </activity>
+        <!-- Wishlist -->
+        <activity
+            android:name=".app.WishlistSplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".WishlistMainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".WishlistDetailActivity"
+            android:exported="false" />
 
     </application>
 

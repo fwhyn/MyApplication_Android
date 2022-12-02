@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- margin -->
+    <dimen name="small_margin">16dp</dimen>
     <dimen name="medium_margin">32dp</dimen>
 
-    <!-- Wishlist -->
+    <!-- height -->
+    <dimen name="medium_height">64dp</dimen>
+
+    <!-- size -->
+    <dimen name="small_size">12sp</dimen>
+    <dimen name="medium_size">24sp</dimen>
 </resources>

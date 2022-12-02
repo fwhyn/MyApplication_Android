@@ -1,23 +1,27 @@
 package com.fwhyn.myapplication
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.fwhyn.wishlist.app.WishlistSplashActivity
-import kotlinx.coroutines.Job
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.fwhyn.myapplication.databinding.ActivityMainBinding
+import com.fwhyn.myapplication.ui.common.recyclerview.CustomAdapter
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
-    private var job: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        findViewById<Button>(R.id.button_main).setOnClickListener {
-//            startActivity(Intent(this, UserActivity::class.java))
-//            startActivity(Intent(this, CocktailsGameActivity::class.java))
-            startActivity(Intent(this, WishlistSplashActivity::class.java))
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.buttonMain.setOnClickListener {
+            Snackbar.make(binding.root, R.string.test, Snackbar.LENGTH_SHORT).show()
+        }
+
+        with(binding.mainList) {
+            adapter = CustomAdapter(Util.stringList)
+            layoutManager = LinearLayoutManager(this@MainActivity)
         }
     }
 }

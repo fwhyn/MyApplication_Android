@@ -6,8 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fwhyn.myapplication.databinding.TextRowItemBinding
+import com.fwhyn.myapplication.domain.model.Module
 
-class CustomAdapter(private val dataSet: Array<String>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class CustomAdapter(
+    private val dataSet: List<Module>,
+    private val clickListener: (Module) -> Unit,
+) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -32,15 +36,19 @@ class CustomAdapter(private val dataSet: Array<String>) : RecyclerView.Adapter<C
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         lateinit var textItem: TextView
 
         constructor(itemBinding: TextRowItemBinding) : this(itemBinding.root) {
             textItem = itemBinding.textView
         }
 
-        fun bind(string: String) {
-            textItem.text = string
+        fun bind(module: Module) {
+            textItem.text = module.name
+
+            textItem.setOnClickListener {
+                clickListener(module)
+            }
         }
     }
 }

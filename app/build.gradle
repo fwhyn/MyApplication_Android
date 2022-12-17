@@ -56,6 +56,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.test:monitor:1.6.0'
 
+
     // ---------------- Module ----------------
     implementation project(path: ':wishlist')
 
@@ -69,8 +70,10 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
     // ---------------- Dagger ----------------
-    implementation 'com.google.dagger:dagger:2.42'
-    kapt 'com.google.dagger:dagger-compiler:2.42'
+    def dagger_version = "2.44.2"
+    implementation 'com.google.dagger:dagger:2.44.2'
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // ---------------- Compose ----------------
 //    // Integration with activities

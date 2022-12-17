@@ -1,15 +1,9 @@
 package com.fwhyn.myapplication.databindingsample
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 //import androidx.lifecycle.viewModelScope
-import com.fwhyn.myapplication.Util.Companion.TAG
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 class ScheduleViewModel : ViewModel() {
 

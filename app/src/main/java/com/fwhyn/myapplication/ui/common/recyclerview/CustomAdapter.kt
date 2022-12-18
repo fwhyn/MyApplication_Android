@@ -40,7 +40,7 @@ class CustomAdapter(
         lateinit var textItem: TextView
 
         constructor(itemBinding: TextRowItemBinding) : this(itemBinding.root) {
-            textItem = itemBinding.textView
+            textItem = itemBinding.textElement
         }
 
         fun bind(module: Module) {

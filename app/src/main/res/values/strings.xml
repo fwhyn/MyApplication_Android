@@ -4,4 +4,5 @@
     <string name="test">test</string>
     <string name="button">Button</string>
     <string name="element_text">Element Text</string>
+    <string name="module_list">Module List</string>
 </resources>

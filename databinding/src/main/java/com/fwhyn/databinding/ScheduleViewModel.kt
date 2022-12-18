@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.databindingsample
+package com.fwhyn.databinding
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,9 +1,9 @@
-package com.fwhyn.myapplication.databindingsample
+package com.fwhyn.databinding
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.fwhyn.myapplication.databinding.ActivityUserBinding
+import com.fwhyn.databinding.databinding.ActivityUserBinding
 import com.google.android.material.snackbar.Snackbar
 
 class UserActivity : AppCompatActivity(), ClickHandler {

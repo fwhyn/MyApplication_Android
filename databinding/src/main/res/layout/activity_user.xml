@@ -2,10 +2,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="user" type="com.fwhyn.myapplication.databindingsample.User" />
-        <variable name="presenter" type="com.fwhyn.myapplication.databindingsample.Presenter" />
-        <variable name="click" type="com.fwhyn.myapplication.databindingsample.ClickHandler" />
-        <variable name="viewmodel" type="com.fwhyn.myapplication.databindingsample.ScheduleViewModel" />
+        <variable name="user" type="com.fwhyn.databinding.User" />
+        <variable name="presenter" type="com.fwhyn.databinding.Presenter" />
+        <variable name="click" type="com.fwhyn.databinding.ClickHandler" />
+        <variable name="viewmodel" type="com.fwhyn.databinding.ScheduleViewModel" />
     </data>
     <LinearLayout
         android:orientation="vertical"

@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.databindingsample
+package com.fwhyn.databinding
 
 import android.view.View
 

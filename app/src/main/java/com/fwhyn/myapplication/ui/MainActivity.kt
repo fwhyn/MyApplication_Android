@@ -16,10 +16,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainActivityViewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // inject dependency
         (application as MyApp).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
 
+        // set view
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

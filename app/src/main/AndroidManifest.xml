@@ -39,15 +39,6 @@
                 android:value="" />
         </activity>
 
-        <!-- View Binding -->
-        <activity
-            android:name=".viewbindingsample.ResultActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-
     </application>
 
 </manifest>

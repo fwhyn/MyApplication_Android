@@ -1,8 +1,8 @@
 package com.fwhyn.myapplication
 
 import android.app.Application
-import com.fwhyn.myapplication.di.AppComponent
-import com.fwhyn.myapplication.di.DaggerAppComponent
+import com.fwhyn.myapplication.ui.di.DaggerAppComponent
+import com.fwhyn.myapplication.ui.di.AppComponent
 import com.fwhyn.wishlist.app.wishlistAppModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext

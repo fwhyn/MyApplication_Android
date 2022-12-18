@@ -16,3 +16,4 @@ rootProject.name = "MyApplication"
 include ':app'
 include ':wishlist'
 include ':cocktails'
+include ':viewbinding'

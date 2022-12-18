@@ -61,6 +61,7 @@ dependencies {
     // ---------------- Module ----------------
     implementation project(path: ':wishlist')
     implementation project(path: ':cocktails')
+    implementation project(path: ':viewbinding')
 
     // ---------------- Lifecycle ----------------
     def lifecycle_version = "2.5.1"
@@ -107,4 +108,7 @@ dependencies {
 
     // Arch Core
     testImplementation "androidx.arch.core:core-testing:2.1.0"
+
+    // Mockito-Kotlin
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
 }

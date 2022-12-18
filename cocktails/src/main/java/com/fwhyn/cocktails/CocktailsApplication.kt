@@ -31,17 +31,18 @@
 package com.fwhyn.cocktails
 
 import android.app.Application
+import android.content.Context
 import com.fwhyn.cocktails.common.network.CocktailsApi
 import com.fwhyn.cocktails.common.repository.CocktailsRepository
 import com.fwhyn.cocktails.common.repository.CocktailsRepositoryImpl
 import com.fwhyn.cocktails.game.factory.CocktailsGameFactory
 import com.fwhyn.cocktails.game.factory.CocktailsGameFactoryImpl
 
-class CocktailsApplication : Application() {
+class CocktailsApplication(context: Context) {
     val repository: CocktailsRepository by lazy {
         CocktailsRepositoryImpl(
             CocktailsApi.create(),
-            getSharedPreferences("Cocktails", MODE_PRIVATE)
+            context.getSharedPreferences("Cocktails", Context.MODE_PRIVATE)
         )
     }
 

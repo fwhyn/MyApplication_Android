@@ -60,6 +60,7 @@ dependencies {
 
     // ---------------- Module ----------------
     implementation project(path: ':wishlist')
+    implementation project(path: ':cocktails')
 
     // ---------------- Lifecycle ----------------
     def lifecycle_version = "2.5.1"

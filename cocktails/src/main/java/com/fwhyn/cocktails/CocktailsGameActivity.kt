@@ -52,8 +52,10 @@ class CocktailsGameActivity : AppCompatActivity() {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val repository = (application as CocktailsApplication).repository
-        val factory = (application as CocktailsApplication).gameFactory
+        val cocktailsApplication = CocktailsApplication(applicationContext)
+        val repository = cocktailsApplication.repository
+        val factory = cocktailsApplication.gameFactory
+
         viewModel = ViewModelProvider(this,
             CocktailsGameViewModelFactory(repository, factory))[CocktailsGameViewModel::class.java]
 

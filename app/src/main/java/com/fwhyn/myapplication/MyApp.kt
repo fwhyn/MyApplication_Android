@@ -28,7 +28,7 @@ open class MyApp : Application() {
     }
 
     // start koin
-    fun startKoin() {
+    private fun startKoin() {
         if (GlobalContext.getOrNull() == null) {
             startKoin {
                 // declare Android context

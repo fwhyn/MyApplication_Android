@@ -2,6 +2,7 @@ package com.fwhyn.myapplication.ui
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fwhyn.myapplication.MyApp
@@ -9,15 +10,15 @@ import com.fwhyn.myapplication.R
 import com.fwhyn.myapplication.databinding.ActivityMainBinding
 import com.fwhyn.myapplication.ui.common.recyclerview.CustomAdapter
 import com.google.android.material.snackbar.Snackbar
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    @Inject
-    lateinit var mainActivityViewModel: MainActivityViewModel
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // inject dependency
-        (application as MyApp).appComponent.inject(this)
+//        (application as MyApp).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
 

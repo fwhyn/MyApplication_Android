@@ -1,13 +1,15 @@
 package com.fwhyn.myapplication
 
 import android.app.Application
-import com.fwhyn.myapplication.ui.di.DaggerAppComponent
-import com.fwhyn.myapplication.ui.di.AppComponent
+//import com.fwhyn.myapplication.ui.di.DaggerAppComponent
+//import com.fwhyn.myapplication.ui.di.AppComponent
 import com.fwhyn.wishlist.app.wishlistAppModule
+import dagger.hilt.android.HiltAndroidApp
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 
+@HiltAndroidApp
 open class MyApp : Application() {
 
     override fun onCreate() {
@@ -17,15 +19,15 @@ open class MyApp : Application() {
     }
 
     // Instance of the AppComponent that will be used by all the Activities in the project
-    val appComponent: AppComponent by lazy {
-        initializeComponent()
-    }
+//    val appComponent: AppComponent by lazy {
+//        initializeComponent()
+//    }
 
-    open fun initializeComponent(): AppComponent {
-        // Creates an instance of AppComponent using its Factory constructor
-        // We pass the applicationContext that will be used as Context in the graph
-        return DaggerAppComponent.create()
-    }
+//    open fun initializeComponent(): AppComponent {
+//        // Creates an instance of AppComponent using its Factory constructor
+//        // We pass the applicationContext that will be used as Context in the graph
+//        return DaggerAppComponent.create()
+//    }
 
     // start koin
     private fun startKoin() {

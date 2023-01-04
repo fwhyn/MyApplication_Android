@@ -5,8 +5,8 @@ import com.fwhyn.myapplication.ui.MainActivity
 import dagger.Component
 import javax.inject.Singleton
 
-@Singleton
-@Component(modules = [DataModule::class])
+//@Singleton
+//@Component(modules = [DataModule::class])
 interface AppComponent {
-    fun inject(activity: MainActivity)
+//    fun inject(activity: DaggerHiltActivity)
 }

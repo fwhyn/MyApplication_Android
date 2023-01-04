@@ -3,7 +3,7 @@ package com.fwhyn.myapplication
 class MyActivityTest {
 //    @Rule
 //    @JvmField
-//    val composeTestRule = createAndroidComposeRule<MainActivity>()
+//    val composeTestRule = createAndroidComposeRule<DaggerHiltActivity>()
 //
 //    @Test
 //    fun testGreeting() {

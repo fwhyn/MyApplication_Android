@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.fwhyn.myapplication.MyApp
 import com.fwhyn.myapplication.R
 import com.fwhyn.myapplication.databinding.ActivityMainBinding
 import com.fwhyn.myapplication.ui.common.recyclerview.CustomAdapter
@@ -17,9 +16,6 @@ class MainActivity : AppCompatActivity() {
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // inject dependency
-//        (application as MyApp).appComponent.inject(this)
-
         super.onCreate(savedInstanceState)
 
         // set view

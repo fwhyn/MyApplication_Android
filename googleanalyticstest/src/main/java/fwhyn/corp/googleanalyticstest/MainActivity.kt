@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.analytics.HitBuilders
+import com.google.android.gms.analytics.ecommerce.Product
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,12 +25,25 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<TextView>(R.id.text_view).setOnClickListener {
             Log.d("fwhyn_test", "send tracker")
+
+            val product = Product()
+            with(product) {
+                setBrand("WhyWhy Collection")
+                setName("Key Chain")
+            }
+
+            val dimensionValue1 = "SOME_DIMENSION_VALUE_1"
+            val dimensionValue2 = "SOME_DIMENSION_VALUE_2"
+
             mTracker.send(
                 HitBuilders.EventBuilder()
                     .setCategory("Test-Category")
                     .setAction("Test-Action")
                     .setLabel("Test-Label")
                     .setValue(7294)
+                    .addProduct(product)
+                    .setCustomDimension(1, dimensionValue1)
+                    .setCustomDimension(2, dimensionValue2)
                     .build()
             )
         }

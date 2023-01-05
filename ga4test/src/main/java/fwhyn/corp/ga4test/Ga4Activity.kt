@@ -49,5 +49,10 @@ class Ga4Activity : AppCompatActivity() {
         findViewById<Button>(R.id.button3).setOnClickListener {
             firebaseAnalytics.setDefaultEventParameters(null)
         }
+
+        findViewById<Button>(R.id.button4).setOnClickListener {
+            firebaseAnalytics.setUserProperty("test_cd1", "test custom dimension 1")
+            firebaseAnalytics.setUserProperty("favorite_food", "food")
+        }
     }
 }

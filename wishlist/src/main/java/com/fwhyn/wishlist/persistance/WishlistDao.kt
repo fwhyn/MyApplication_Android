@@ -33,14 +33,21 @@ package com.fwhyn.wishlist.persistance
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Query
 import com.fwhyn.wishlist.Wishlist
 
+@Dao
 interface WishlistDao {
 
+    @Query("SELECT * FROM wishlist")
     fun getAll(): LiveData<List<Wishlist>>
 
+    @Query("SELECT * FROM wishlist WHERE id != :id")
     fun findById(id: Int): LiveData<Wishlist>
 
+    @Delete
     fun save(vararg wishlist: Wishlist)
 }
 

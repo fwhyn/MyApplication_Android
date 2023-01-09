@@ -37,4 +37,6 @@ import com.fwhyn.wishlist.Wishlist
 
 @Database(entities = [Wishlist::class], version = 1, exportSchema = false)
 @TypeConverters(StringListConverter::class)
-abstract class WishlistDatabase : RoomDatabase()
+abstract class WishlistDatabase : RoomDatabase() {
+    abstract fun wishlistDao(): WishlistDao
+}

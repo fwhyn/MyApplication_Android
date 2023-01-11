@@ -69,6 +69,9 @@ dependencies {
     // Mockito-Kotlin
     androidTestImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
 
+    // Instrumentation Test
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+
     // Others
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
 }

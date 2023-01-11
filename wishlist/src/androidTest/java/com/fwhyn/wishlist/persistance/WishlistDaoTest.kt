@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
@@ -40,6 +41,26 @@ class WishlistDaoTest {
         verify(testObserver).onChanged(emptyList())
     }
 
+    @Test
+    fun saveWishlistsSavesData() {
+        // 1
+        val wishlist1 = Wishlist("Victoria", listOf(), 1)
+        val wishlist2 = Wishlist("Tyler", listOf(), 2)
+        wishlistDao.save(wishlist1, wishlist2)
+
+        // 2
+        val testObserver: Observer<List<Wishlist>> = mock()
+        wishlistDao.getAll().observeForever(testObserver)
+
+        // 3
+        val listClass =
+            ArrayList::class.java as Class<ArrayList<Wishlist>>
+        val argumentCaptor = ArgumentCaptor.forClass(listClass)
+        // 4
+        verify(testObserver).onChanged(argumentCaptor.capture())
+        // 5
+        assertTrue(argumentCaptor.value.size > 0)
+    }
 
     @After
     fun closeDb() {

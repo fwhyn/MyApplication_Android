@@ -2,9 +2,7 @@ package fwhyn.corp.ga4test
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.TextView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
@@ -21,38 +19,43 @@ class Ga4Activity : AppCompatActivity() {
         // Obtain the FirebaseAnalytics instance.
         firebaseAnalytics = Firebase.analytics
 
-        findViewById<TextView>(R.id.text_view).setOnClickListener{
-            Log.d("fwhyn_test", "log event")
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
-                param(FirebaseAnalytics.Param.ITEM_ID, 1)
-                param(FirebaseAnalytics.Param.ITEM_NAME, "Test GA4")
-                param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+        findViewById<Button>(R.id.printing_button).setOnClickListener {
+            firebaseAnalytics.logEvent("printing") {
+                param("copies", 3)
+                param("paper_size", "A0")
+                param("metric_test", 30)
+                param("unregistered_param", "unregistered pram test")
             }
         }
 
-        findViewById<Button>(R.id.button1).setOnClickListener {
-            firebaseAnalytics.logEvent("share_image") {
-                param("image_name", "name")
-                param("full_text", "text")
-            }
-        }
-
-        findViewById<Button>(R.id.button2).setOnClickListener {
+        findViewById<Button>(R.id.default_button).setOnClickListener {
             val parameters = Bundle().apply {
-                this.putString("level_name", "Caverns01")
-                this.putInt("level_difficulty", 4)
+                this.putInt("copies", 4)
+                this.putString("paper_size", "A4")
             }
 
             firebaseAnalytics.setDefaultEventParameters(parameters)
         }
 
-        findViewById<Button>(R.id.button3).setOnClickListener {
+        findViewById<Button>(R.id.clear_button).setOnClickListener {
             firebaseAnalytics.setDefaultEventParameters(null)
         }
 
-        findViewById<Button>(R.id.button4).setOnClickListener {
-            firebaseAnalytics.setUserProperty("test_cd1", "test custom dimension 1")
-            firebaseAnalytics.setUserProperty("favorite_food", "food")
+        findViewById<Button>(R.id.properties_button).setOnClickListener {
+            firebaseAnalytics.setUserProperty("user_in", "user logged in")
+            firebaseAnalytics.setUserProperty("event_properties", "properties recorded")
+        }
+
+        findViewById<Button>(R.id.scanning_button).setOnClickListener {
+            firebaseAnalytics.logEvent("scanning") {
+                param("copies", 99)
+                param("paper_size", "A3")
+            }
+
+            firebaseAnalytics.logEvent("copying") {
+                param("copies", 2)
+                param("paper_size", "B1")
+            }
         }
     }
 }

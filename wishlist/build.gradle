@@ -62,13 +62,16 @@ dependencies {
     // ---------------- Test ----------------
     // JUnit4
     testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 
     // Mockito
     androidTestImplementation 'org.mockito:mockito-android:3.10.0'
     // Mockito-Kotlin
     androidTestImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
 
+    // Instrumentation Test
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+
     // Others
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
 }

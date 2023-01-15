@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "423241025264",
+    "project_id": "my-application-fwhyn-release",
+    "storage_bucket": "my-application-fwhyn-release.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423241025264:android:201597e3d3df6b12732435",
+        "android_client_info": {
+          "package_name": "com.fwhyn.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "423241025264-nct6dv8or7mpae7tp7tlthknajg5i5ig.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_mw9CC-SzmeQt-z5SqXbqv4focLT0w6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "423241025264-nct6dv8or7mpae7tp7tlthknajg5i5ig.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

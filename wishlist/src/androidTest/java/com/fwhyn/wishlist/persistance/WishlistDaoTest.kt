@@ -62,6 +62,24 @@ class WishlistDaoTest {
         assertTrue(argumentCaptor.value.size > 0)
     }
 
+    @Test
+    fun getAllRetrievesData() {
+        val wishlist1 = Wishlist("Victoria", emptyList(), 1)
+        val wishlist2 = Wishlist("Tyler", emptyList(), 2)
+        wishlistDao.save(wishlist1, wishlist2)
+
+        val testObserver: Observer<List<Wishlist>> = mock()
+        wishlistDao.getAll().observeForever(testObserver)
+
+        val listClass =
+            ArrayList::class.java as Class<ArrayList<Wishlist>>
+        val argumentCaptor = ArgumentCaptor.forClass(listClass)
+        verify(testObserver).onChanged(argumentCaptor.capture())
+        val capturedArgument = argumentCaptor.value
+        assertTrue(capturedArgument
+            .containsAll(listOf(wishlist1, wishlist2)))
+    }
+
     @After
     fun closeDb() {
         wishlistDatabase.close()

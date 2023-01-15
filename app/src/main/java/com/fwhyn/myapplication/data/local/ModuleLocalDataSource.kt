@@ -14,5 +14,6 @@ class ModuleLocalDataSource {
         Module("View Binding", ResultActivity::class.java),
         Module("Data Binding", UserActivity::class.java),
         Module("Dagger Hilt Greek", DaggerHiltActivity::class.java),
+        Module("Google Analytics", DaggerHiltActivity::class.java),
     )
 }

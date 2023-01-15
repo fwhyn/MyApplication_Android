@@ -2,10 +2,11 @@ package com.fwhyn.wishlist
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
 import com.fwhyn.wishlist.persistance.RepositoryImpl
 import com.fwhyn.wishlist.persistance.WishlistDao
-import com.fwhyn.wishlist.persistance.WishlistDaoImpl
-import org.junit.Assert.*
+import com.fwhyn.wishlist.persistance.WishlistDatabase
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -18,7 +19,12 @@ class DetailViewModelTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     // 1
-    private val wishlistDao: WishlistDao = Mockito.spy(WishlistDaoImpl())
+    private val wishlistDao: WishlistDao = Mockito.spy(
+        Room.inMemoryDatabaseBuilder(
+            ApplicationProvider.getApplicationContext(),
+            WishlistDatabase::class.java)
+            .allowMainThreadQueries()
+            .build().wishlistDao())
 
     // 2
     private val viewModel = DetailViewModel(RepositoryImpl(wishlistDao))

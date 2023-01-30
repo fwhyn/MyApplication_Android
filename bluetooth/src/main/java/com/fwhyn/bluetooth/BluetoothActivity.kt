@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.fwhyn.bluetooth.permission.PermissionCheck
 
-private const val SCAN_PERIOD = 10000L
 private const val REQUEST_ENABLE_BT = 1
 private const val REQUEST_BT_PERMISSION = 1
 
@@ -33,8 +32,7 @@ class BluetoothActivity : AppCompatActivity() {
     val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         when (result.resultCode) {
             RESULT_OK -> {
-                Toast.makeText(this, R.string.permission_granted, Toast.LENGTH_SHORT).show()
-                Looper.myLooper()?.let {  scanLeDevice(true, Handler(it)) }
+                Toast.makeText(this, R.string.bluetooth_enabled, Toast.LENGTH_SHORT).show()
             }
 
             RESULT_CANCELED -> {
@@ -88,40 +86,8 @@ class BluetoothActivity : AppCompatActivity() {
 
             // run permission and enable bluetooth
         } else {
-            Looper.myLooper()?.let {  scanLeDevice(true, Handler(it)) }
+
         }
-    }
-
-    private var mScanning: Boolean = false
-
-    private fun scanLeDevice(enable: Boolean, handler: Handler) {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-//            requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_SCAN)
-        } else {
-            when (enable) {
-                true -> {
-                    // Stops scanning after a pre-defined scan period.
-                    handler.postDelayed({
-                        mScanning = false
-                        bluetoothAdapter?.stopLeScan(leScanCallback)
-                    }, SCAN_PERIOD)
-                    mScanning = true
-                    bluetoothAdapter?.startLeScan(leScanCallback)
-                }
-                else -> {
-                    mScanning = false
-                    bluetoothAdapter?.stopLeScan(leScanCallback)
-                }
-            }
-        }
-    }
-
-    private val leScanCallback = BluetoothAdapter.LeScanCallback { device, rssi, scanRecord ->
-        Log.d("fwhyn_test", "$rssi")
     }
 
     companion object {

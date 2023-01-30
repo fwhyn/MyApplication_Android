@@ -1,18 +1,15 @@
-package com.fwhyn.bluetooth
+package com.fwhyn.bluetooth.ble
 
-import android.app.ListActivity
 import android.bluetooth.BluetoothAdapter
 import android.os.Handler
-
-private const val SCAN_PERIOD: Long = 10000
 
 /**
  * Activity for scanning and displaying available BLE devices.
  */
-class DeviceScanActivity(
+class BleScan(
     private val bluetoothAdapter: BluetoothAdapter,
     private val handler: Handler
-) : ListActivity() {
+) {
 
     private var mScanning: Boolean = false
 
@@ -36,5 +33,9 @@ class DeviceScanActivity(
 
     private val leScanCallback = BluetoothAdapter.LeScanCallback { device, rssi, scanRecord ->
 
+    }
+
+    companion object {
+        private const val SCAN_PERIOD: Long = 10000
     }
 }

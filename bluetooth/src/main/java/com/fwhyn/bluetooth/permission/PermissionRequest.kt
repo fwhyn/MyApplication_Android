@@ -9,8 +9,7 @@ class PermissionRequest {
     /**
      * Please register the launcher before activity created
      */
-    fun registerLauncher(activity: ActivityResultCaller, callback: (Boolean) -> Unit) :
-            ActivityResultLauncher<String> {
+    fun registerLauncher(activity: ActivityResultCaller, callback: (Boolean) -> Unit) : ActivityResultLauncher<String> {
         return activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             callback(isGranted)
         }

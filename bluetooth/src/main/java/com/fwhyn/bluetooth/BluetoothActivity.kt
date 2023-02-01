@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -56,6 +57,11 @@ class BluetoothActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.hello_textview).setOnClickListener {
             Looper.myLooper()?.let {  scanLeDevice(true, Handler(it)) }
         }
+
+        val test = View.OnClickListener {
+
+        }
+        findViewById<TextView>(R.id.hello_textview).setOnClickListener(test)
 
         runBle()
     }

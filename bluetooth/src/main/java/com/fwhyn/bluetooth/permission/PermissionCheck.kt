@@ -3,10 +3,11 @@ package com.fwhyn.bluetooth.permission
 import android.app.Activity
 import android.content.pm.PackageManager
 
-class PermissionCheck(private val activity: Activity, private val permissionMgr: PermissionMgr) {
+// Singleton, activity from Application
+class PermissionCheck(private val activity: Activity) {
     private lateinit var permissionMap: HashMap<String, Boolean>
 
-    fun permissionsCheck(permissions: Array<String>) {
+    fun permissionsCheck(permissions: Array<String>, permissionMgr: PermissionMgr) {
         when {
             permissionsGranted(permissions) -> {
                 permissionMgr.onPermissionGranted()
@@ -23,6 +24,7 @@ class PermissionCheck(private val activity: Activity, private val permissionMgr:
 
             else -> {
                 // Other conditions
+                // change to request permission
                 permissionMgr.onPermissionDenied(permissionMap)
             }
         }

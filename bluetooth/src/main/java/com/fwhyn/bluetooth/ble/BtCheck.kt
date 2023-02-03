@@ -61,6 +61,28 @@ class BtCheck(
         // you can selectively disable BLE-related features.
         val btPermission = Manifest.permission.BLUETOOTH_CONNECT
 
+        if (bleSupported()) {
+            permissionCheck.permissionsCheck(arrayOf(btPermission), object : PermissionMgr {
+                override fun onPermissionGranted() {
+                    if (bluetoothEnabled()) {
+                        btMgr.ableToScan()
+                    } else {
+                        launcher.enableBtLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+                    }
+                }
+
+                override fun onRequestRationale(permissions: Map<String, Boolean>) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onPermissionDenied(permissions: Map<String, Boolean>) {
+                    permissionRequest.requestPermission(btPermission, launcher.permissionLauncher)
+                }
+            })
+        } else {
+            btMgr.unableToScan()
+        }
+
         if (!bleSupported()) {
             btMgr.unableToScan()
         } else {

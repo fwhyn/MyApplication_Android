@@ -21,6 +21,7 @@ class BtCheck(
     private val permissionCheck: PermissionCheck,
     private val permissionRequest: PermissionRequest,
 ) {
+    private lateinit var launcher: BtLauncher
     private lateinit var btMgr: BtMgr
 
     private val bluetoothAdapter: BluetoothAdapter? by lazy(LazyThreadSafetyMode.NONE) {
@@ -50,7 +51,7 @@ class BtCheck(
     private fun permissionLauncher(activityResultCaller: ActivityResultCaller): ActivityResultLauncher<String> {
         return permissionRequest.registerLauncher(activityResultCaller) {
             if (it) {
-                btMgr.ableToScan()
+                runBt()
             } else {
                 btMgr.unableToScan(BtMgr.Reason.NO_PERMISSION)
             }
@@ -58,7 +59,9 @@ class BtCheck(
     }
 
     fun bleCheck(launcher: BtLauncher, btMgr: BtMgr) {
+        this.launcher = launcher
         this.btMgr = btMgr
+
         // Use this check to determine whether BLE is supported on the device. Then
         // you can selectively disable BLE-related features.
         if (bleSupported()) {
@@ -66,11 +69,7 @@ class BtCheck(
                 val btPermission = Manifest.permission.BLUETOOTH_CONNECT
                 permissionCheck.permissionsCheck(arrayOf(btPermission), object : PermissionMgr {
                     override fun onPermissionGranted() {
-                        if (bluetoothEnabled()) {
-                            btMgr.ableToScan()
-                        } else {
-                            launcher.enableBtLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
-                        }
+                        runBt()
                     }
 
                     override fun onRequestRationale(permissions: Map<String, Boolean>) {
@@ -83,8 +82,7 @@ class BtCheck(
                             launcher.permissionLauncher
                         )
                     }
-                }
-                )
+                })
             } else {
                 btMgr.ableToScan()
             }
@@ -97,8 +95,12 @@ class BtCheck(
         return activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
     }
 
-    private fun enableBt() {
-
+    private fun runBt() {
+        if (bluetoothEnabled()) {
+            btMgr.ableToScan()
+        } else {
+            launcher.enableBtLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+        }
     }
 
     private fun bluetoothEnabled(): Boolean = bluetoothAdapter?.isEnabled == true

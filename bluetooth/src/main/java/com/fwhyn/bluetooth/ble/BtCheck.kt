@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,17 +16,12 @@ import com.fwhyn.bluetooth.permission.PermissionCheck
 import com.fwhyn.bluetooth.permission.PermissionMgr
 import com.fwhyn.bluetooth.permission.PermissionRequest
 
-// Singleton, activity from Application
 class BtCheck(
     private val activity: Activity,
     private val permissionCheck: PermissionCheck,
     private val permissionRequest: PermissionRequest,
-    private val btMgr: BtMgr
-    ) {
-
-    init {
-
-    }
+) {
+    private lateinit var btMgr: BtMgr
 
     private val bluetoothAdapter: BluetoothAdapter? by lazy(LazyThreadSafetyMode.NONE) {
         (activity.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
@@ -34,84 +30,76 @@ class BtCheck(
     /**
      * Please register the launcher before activity created
      */
-    fun registerLauncher(activity: ActivityResultCaller): BtLauncher{
-        return BtLauncher(enableBtLauncher(activity), permissionLauncher(activity))
+    fun registerLauncher(activityResultCaller: ActivityResultCaller): BtLauncher {
+        return BtLauncher(
+            enableBtLauncher(activityResultCaller),
+            permissionLauncher(activityResultCaller)
+        )
     }
 
-    private fun enableBtLauncher(activity: ActivityResultCaller): ActivityResultLauncher<Intent> {
-        return activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private fun enableBtLauncher(activityResultCaller: ActivityResultCaller): ActivityResultLauncher<Intent> {
+        return activityResultCaller.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 btMgr.ableToScan()
             } else {
-                btMgr.unableToScan()
+                btMgr.unableToScan(BtMgr.Reason.BT_OFF)
             }
         }
     }
 
-    private fun permissionLauncher(activity: ActivityResultCaller): ActivityResultLauncher<String> {
-        return permissionRequest.registerLauncher(activity) {
+    private fun permissionLauncher(activityResultCaller: ActivityResultCaller): ActivityResultLauncher<String> {
+        return permissionRequest.registerLauncher(activityResultCaller) {
             if (it) {
                 btMgr.ableToScan()
+            } else {
+                btMgr.unableToScan(BtMgr.Reason.NO_PERMISSION)
             }
         }
     }
 
-    fun bleCheck(launcher: BtLauncher) {
+    fun bleCheck(launcher: BtLauncher, btMgr: BtMgr) {
+        this.btMgr = btMgr
         // Use this check to determine whether BLE is supported on the device. Then
         // you can selectively disable BLE-related features.
-        val btPermission = Manifest.permission.BLUETOOTH_CONNECT
-
         if (bleSupported()) {
-            permissionCheck.permissionsCheck(arrayOf(btPermission), object : PermissionMgr {
-                override fun onPermissionGranted() {
-                    if (bluetoothEnabled()) {
-                        btMgr.ableToScan()
-                    } else {
-                        launcher.enableBtLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val btPermission = Manifest.permission.BLUETOOTH_CONNECT
+                permissionCheck.permissionsCheck(arrayOf(btPermission), object : PermissionMgr {
+                    override fun onPermissionGranted() {
+                        if (bluetoothEnabled()) {
+                            btMgr.ableToScan()
+                        } else {
+                            launcher.enableBtLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+                        }
+                    }
+
+                    override fun onRequestRationale(permissions: Map<String, Boolean>) {
+                        btMgr.unableToScan(BtMgr.Reason.NEED_RATIONALE)
+                    }
+
+                    override fun onPermissionDenied(permissions: Map<String, Boolean>) {
+                        permissionRequest.requestPermission(
+                            btPermission,
+                            launcher.permissionLauncher
+                        )
                     }
                 }
-
-                override fun onRequestRationale(permissions: Map<String, Boolean>) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onPermissionDenied(permissions: Map<String, Boolean>) {
-                    permissionRequest.requestPermission(btPermission, launcher.permissionLauncher)
-                }
-            })
+                )
+            } else {
+                btMgr.ableToScan()
+            }
         } else {
-            btMgr.unableToScan()
-        }
-
-        if (!bleSupported()) {
-            btMgr.unableToScan()
-        } else {
-            permissionCheck.permissionsCheck(arrayOf(btPermission), object : PermissionMgr {
-                override fun onPermissionGranted() {
-                    // Ensures Bluetooth is available on the device and it is enabled. If not,
-                    // displays a dialog requesting user permission to enable Bluetooth.
-                    if (!bluetoothEnabled()) {
-                        launcher.enableBtLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
-                        // run permission and enable bluetooth
-                    } else {
-                        btMgr.ableToScan()
-                    }
-                }
-
-                override fun onRequestRationale(permissions: Map<String, Boolean>) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onPermissionDenied(permissions: Map<String, Boolean>) {
-                    permissionRequest.requestPermission(btPermission, launcher.permissionLauncher)
-                }
-            })
+            btMgr.unableToScan(BtMgr.Reason.NOT_SUPPORTED)
         }
     }
 
-    private fun bleSupported() : Boolean {
+    private fun bleSupported(): Boolean {
         return activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
     }
 
-    private fun bluetoothEnabled() : Boolean = bluetoothAdapter?.isEnabled == true
+    private fun enableBt() {
+
+    }
+
+    private fun bluetoothEnabled(): Boolean = bluetoothAdapter?.isEnabled == true
 }

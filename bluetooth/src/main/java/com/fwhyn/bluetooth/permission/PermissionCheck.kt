@@ -63,11 +63,6 @@ class PermissionCheck(private val activity: Activity) {
 
     // --------------------------------
     enum class Permission {
-        GRANTED, SHOW_RATIONALE, NOT_GRANTED
-    }
-
-    sealed class Result<out T : Any> {
-        data class Success<out T : Any>(val value: T) : Result<T>()
-        data class Failure<out T : Any>(val throwable: Throwable) : Result<T>()
+        NEED_RATIONALE, NOT_GRANTED, GRANTED
     }
 }

@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 
 // Singleton, activity from Application
 class PermissionCheck(private val activity: Activity) {
-    private lateinit var permissionMap: HashMap<String, Boolean>
+    private lateinit var deniedPermissions: List<String>
 
     fun permissionsCheck(permissions: Array<String>, permissionMgr: PermissionMgr) {
         when {
@@ -19,13 +19,13 @@ class PermissionCheck(private val activity: Activity) {
                 // features are disabled if it's declined. In this UI, include a
                 // "cancel" or "no thanks" button that lets the user continue
                 // using your app without granting the permission.
-                permissionMgr.onRequestRationale(permissionMap)
+                permissionMgr.onRequestRationale(deniedPermissions)
             }
 
             else -> {
                 // Other conditions
                 // change to request permission
-                permissionMgr.onPermissionDenied(permissionMap)
+                permissionMgr.onPermissionDenied(deniedPermissions)
             }
         }
     }
@@ -49,12 +49,12 @@ class PermissionCheck(private val activity: Activity) {
 
     private fun loopPermissionCheck(permissions: Array<String>, callback: (String) -> Boolean): Boolean {
         var retVal = true
-        permissionMap = HashMap()
 
         for (permission in permissions) {
             if (!callback(permission)) {
+                deniedPermissions = arrayListOf<String>()
+                (deniedPermissions as ArrayList<String>).add(permission)
                 retVal = false
-                permissionMap[permission] = false
             }
         }
 

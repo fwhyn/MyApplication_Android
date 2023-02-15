@@ -64,6 +64,7 @@ dependencies {
     implementation project(path: ':viewbinding')
     implementation project(path: ':databinding')
     implementation project(path: ':daggerhiltgreek')
+    implementation project(path: ':bluetooth')
 
     // Lifecycle
     def lifecycle_version = "2.5.1"

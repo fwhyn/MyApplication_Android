@@ -72,11 +72,11 @@ class BtCheck(
                         runBt()
                     }
 
-                    override fun onRequestRationale(permissions: Map<String, Boolean>) {
+                    override fun onRequestRationale(permissions: List<String>) {
                         btMgr.unableToScan(BtMgr.Reason.NEED_RATIONALE)
                     }
 
-                    override fun onPermissionDenied(permissions: Map<String, Boolean>) {
+                    override fun onPermissionDenied(permissions: List<String>) {
                         permissionRequest.requestPermission(
                             btPermission,
                             launcher.permissionLauncher

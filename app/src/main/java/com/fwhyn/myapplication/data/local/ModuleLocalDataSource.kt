@@ -7,6 +7,7 @@ import com.fwhyn.databinding.UserActivity
 import com.fwhyn.myapplication.domain.model.Module
 import com.fwhyn.viewbinding.ResultActivity
 import com.fwhyn.wishlist.app.WishlistSplashActivity
+import fwhyn.corp.googleanalyticstest.GoogleAnalyticsActivity
 
 class ModuleLocalDataSource {
     val moduleList = listOf(
@@ -15,7 +16,7 @@ class ModuleLocalDataSource {
         Module("View Binding", ResultActivity::class.java),
         Module("Data Binding", UserActivity::class.java),
         Module("Dagger Hilt Greek", DaggerHiltActivity::class.java),
-        Module("Google Analytics", DaggerHiltActivity::class.java),
+        Module("Google Analytics", GoogleAnalyticsActivity::class.java),
         Module("Bluetooth", BluetoothActivity::class.java),
     )
 }

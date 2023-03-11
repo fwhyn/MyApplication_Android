@@ -80,7 +80,7 @@ dependencies {
     implementation project(path: ':viewbinding')
     implementation project(path: ':databinding')
     implementation project(path: ':daggerhiltgreek')
-    implementation project(path: ':googleanalyticstest')
+    implementation project(path: ':googleanalytics')
     implementation project(path: ':bluetooth')
 
     // ---------------- Test ----------------

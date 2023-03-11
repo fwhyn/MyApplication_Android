@@ -6,9 +6,12 @@ buildscript {
     repositories {
         maven { url 'https://maven.google.com' }
         mavenLocal()
+
+        // Google Services
         google()
     }
     dependencies {
+        // Google Services
         classpath 'com.google.gms:google-services:4.3.15'
     }
 }

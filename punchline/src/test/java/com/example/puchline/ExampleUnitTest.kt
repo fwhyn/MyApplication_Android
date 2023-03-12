@@ -1,4 +1,4 @@
-package com.example.puchline
+package com.fwhyn.punchline
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

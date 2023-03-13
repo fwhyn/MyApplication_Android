@@ -61,7 +61,7 @@ dependencies {
     implementation 'androidx.test:monitor:1.6.1'
 
     // Koin
-    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "io.insert-koin:koin-android:3.2.0"
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"

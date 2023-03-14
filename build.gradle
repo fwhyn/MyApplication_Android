@@ -3,6 +3,9 @@ buildscript {
     // Dagger Hilt
     ext.dagger_version = "2.44.2"
 
+    // Koin
+    ext.koin_version = "3.2.0"
+
     repositories {
         maven { url 'https://maven.google.com' }
         mavenLocal()

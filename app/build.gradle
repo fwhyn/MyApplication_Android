@@ -59,10 +59,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.test:monitor:1.6.1'
-    implementation 'io.insert-koin:koin-android:3.2.0'
 
-    // Lifecycle
-    def lifecycle_version = "2.5.1"
+    // Koin
+    implementation "io.insert-koin:koin-android:3.2.0"
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"

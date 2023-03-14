@@ -9,8 +9,8 @@ import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-private const val id = "6"
-private const val joke = "How does a train eat? It goes chew, chew"
+const val id = "6"
+const val joke = "How does a train eat? It goes chew, chew"
 
 class JokeServiceTestUsingMockWebServer {
 

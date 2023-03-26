@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.domain.usecases
+package com.fwhyn.myapplication.domain.usecase
 
 import com.fwhyn.myapplication.data.ModuleRepository
 

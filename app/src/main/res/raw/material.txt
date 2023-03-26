@@ -1,0 +1,7 @@
+**** Clean Code ****
+by Robert C. Martin
+
+- Separate main code and error handling -> error handling in other function
+
+
+

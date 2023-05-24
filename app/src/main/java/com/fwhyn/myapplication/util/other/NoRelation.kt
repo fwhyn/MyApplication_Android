@@ -112,14 +112,39 @@ class NoRelation {
 
 
     fun getTime(doctors: List<Doctor>, patient: Int): Int? {
+        // TODO copy doctor list first
+
         var availableDoctor: Doctor? = null
         for (i in 1 .. patient) {
             availableDoctor = doctors.minBy { it.timeStep }
+            val minTimeStep = availableDoctor.timeStep
+
+            val duplicatedDoctorTimeStepList = getDuplicatedDoctorTimeStep(minTimeStep, doctors)
+            if (duplicatedDoctorTimeStepList.size >= 2) {
+                availableDoctor = getMinConsultationTime(duplicatedDoctorTimeStepList)
+            }
+
             availableDoctor.timeStep += availableDoctor.consultationTimeMinute
         }
 
         val timeStep: Int? = availableDoctor?.timeStep
 
         return timeStep
+    }
+
+    fun getDuplicatedDoctorTimeStep(timeStep: Int, doctors: List<Doctor>): List<Doctor> {
+        val duplicatedList = ArrayList<Doctor>()
+
+        doctors.map {
+            if (timeStep == it.timeStep) {
+                duplicatedList.add(it)
+            }
+        }
+
+        return duplicatedList
+    }
+
+    fun getMinConsultationTime(doctors: List<Doctor>): Doctor {
+        return doctors.minBy { it.consultationTimeMinute }
     }
 }

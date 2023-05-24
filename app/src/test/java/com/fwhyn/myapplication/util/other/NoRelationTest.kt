@@ -7,17 +7,10 @@ import org.junit.Test
 
 class NoRelationTest {
     private lateinit var noRelation: NoRelation
-    private lateinit var doctors: List<Doctor>
 
     @Before
     fun init() {
         noRelation = NoRelation()
-
-        val doctorA = Doctor(5)
-        val doctorB = Doctor(4)
-        val doctorC = Doctor(2)
-
-        doctors = listOf(doctorA, doctorB, doctorC)
     }
 
     @Test(expected = StorageException::class)
@@ -28,6 +21,26 @@ class NoRelationTest {
     @Test
     fun getTimeTest() {
         // doctor > patient -> expected 0
-        Assert.assertEquals(0, noRelation.getTime(doctors, doctors.size - 1))
+        Assert.assertEquals(0, noRelation.getTime(getDoctors1(), 1))
+        Assert.assertEquals(0, noRelation.getTime(getDoctors1(), 2))
+
+        // doctor = patient -> expected 0
+        Assert.assertEquals(0, noRelation.getTime(getDoctors1(), 3))
+
+        // doctor + 1 = patient
+        Assert.assertEquals(2, noRelation.getTime(getDoctors1(), 4))
+
+        // doctor > patient
+        Assert.assertEquals(4, noRelation.getTime(getDoctors1(), 5))
+    }
+
+    private fun getDoctors1(): List<Doctor> {
+        noRelation = NoRelation()
+
+        val doctorA = Doctor(5)
+        val doctorB = Doctor(2)
+        val doctorC = Doctor(4)
+
+        return listOf(doctorA, doctorB, doctorC)
     }
 }

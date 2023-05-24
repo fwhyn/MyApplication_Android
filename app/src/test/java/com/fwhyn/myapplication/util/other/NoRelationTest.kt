@@ -34,13 +34,24 @@ class NoRelationTest {
         Assert.assertEquals(4, noRelation.getTime(getDoctors1(), 5))
     }
 
-    private fun getDoctors1(): List<Doctor> {
-        noRelation = NoRelation()
+    @Test
+    fun getTimeTest2() {
+        // doctor > patient -> expected 0
+        Assert.assertEquals(20, noRelation.getTime(getDoctors2(), 11))
+    }
 
+    private fun getDoctors1(): List<Doctor> {
         val doctorA = Doctor(5)
         val doctorB = Doctor(2)
         val doctorC = Doctor(4)
 
         return listOf(doctorA, doctorB, doctorC)
+    }
+
+    private fun getDoctors2(): List<Doctor> {
+        val doctorA = Doctor(3)
+        val doctorB = Doctor(4)
+
+        return listOf(doctorA, doctorB)
     }
 }

@@ -116,12 +116,12 @@ class NoRelation {
 
         var availableDoctor: Doctor? = null
         for (i in 1 .. patient) {
-            availableDoctor = doctors.minBy { it.timeStep }
+            availableDoctor = getDoctorWithMinTimeStep(doctors)
             val minTimeStep = availableDoctor.timeStep
 
             val duplicatedDoctorTimeStepList = getDuplicatedDoctorTimeStep(minTimeStep, doctors)
             if (duplicatedDoctorTimeStepList.size >= 2) {
-                availableDoctor = getMinConsultationTime(duplicatedDoctorTimeStepList)
+                availableDoctor = getDoctorWithMinConsultationTime(duplicatedDoctorTimeStepList)
             }
 
             availableDoctor.timeStep += availableDoctor.consultationTimeMinute
@@ -132,7 +132,20 @@ class NoRelation {
         return timeStep
     }
 
-    fun getDuplicatedDoctorTimeStep(timeStep: Int, doctors: List<Doctor>): List<Doctor> {
+    private fun getCopyOfDoctors(doctorsToCopy: List<Doctor>): List<Doctor> {
+        val copiedArray = ArrayList<Doctor>()
+        doctorsToCopy.map {
+            copiedArray.add(it.copy())
+        }
+
+        return doctorsToCopy
+    }
+
+    private fun getDoctorWithMinTimeStep(doctors: List<Doctor>): Doctor {
+        return doctors.minBy { it.timeStep }
+    }
+
+    private fun getDuplicatedDoctorTimeStep(timeStep: Int, doctors: List<Doctor>): List<Doctor> {
         val duplicatedList = ArrayList<Doctor>()
 
         doctors.map {
@@ -144,7 +157,11 @@ class NoRelation {
         return duplicatedList
     }
 
-    fun getMinConsultationTime(doctors: List<Doctor>): Doctor {
+    private fun getDoctorWithMinConsultationTime(doctors: List<Doctor>): Doctor {
         return doctors.minBy { it.consultationTimeMinute }
+    }
+
+    private fun setNewDoctorTimeStep(doctor: Doctor) {
+        doctor.timeStep += doctor.consultationTimeMinute
     }
 }

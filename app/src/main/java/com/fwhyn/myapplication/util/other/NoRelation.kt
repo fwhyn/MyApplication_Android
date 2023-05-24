@@ -111,27 +111,15 @@ class NoRelation {
      */
 
 
-    fun getTime_caseStudy2Q1(patient: Int): Int {
-        var timeStep: Int = 0
-        val doctorA = Doctor(3)
-        val doctorB = Doctor(4)
-        val doctors: ArrayList<Doctor> = arrayListOf(doctorA, doctorB)
-
-        var previousMinTimeStep = 0
-        var currentMinTimeStep = 0
-        var previousMaxTimeStep = 0
-        var currentsMaxTimeStep = 0
-
-        doctors.map {
-            currentMinTimeStep = minOf(previousMinTimeStep, it.timeStep)
-            if (currentMinTimeStep < previousMinTimeStep) {
-
-            }
-            currentsMaxTimeStep = maxOf(previousMaxTimeStep, it.timeStep)
+    fun getTime(doctors: List<Doctor>, patient: Int): Int? {
+        var availableDoctor: Doctor? = null
+        for (i in 1 .. patient) {
+            availableDoctor = doctors.minBy { it.timeStep }
+            availableDoctor.timeStep += availableDoctor.consultationTimeMinute
         }
 
-        if (minTimeStep == 0) {
+        val timeStep: Int? = availableDoctor?.timeStep
 
-        }
+        return timeStep
     }
 }

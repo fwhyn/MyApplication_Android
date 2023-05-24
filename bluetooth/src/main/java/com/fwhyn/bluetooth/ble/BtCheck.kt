@@ -13,7 +13,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.fwhyn.bluetooth.permission.PermissionCheck
-import com.fwhyn.bluetooth.permission.PermissionMgr
 import com.fwhyn.bluetooth.permission.PermissionRequest
 
 class BtCheck(
@@ -67,7 +66,7 @@ class BtCheck(
         if (bleSupported()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val btPermission = Manifest.permission.BLUETOOTH_CONNECT
-                permissionCheck.permissionsCheck(arrayOf(btPermission), object : PermissionMgr {
+                permissionCheck.permissionsCheck(arrayOf(btPermission), object : PermissionCheck.PermissionCallback {
                     override fun onPermissionGranted() {
                         runBt()
                     }

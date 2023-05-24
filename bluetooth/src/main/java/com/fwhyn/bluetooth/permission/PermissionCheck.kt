@@ -7,10 +7,10 @@ import android.content.pm.PackageManager
 class PermissionCheck(private val activity: Activity) {
     private lateinit var deniedPermissions: List<String>
 
-    fun permissionsCheck(permissions: Array<String>, permissionMgr: PermissionMgr) {
+    fun permissionsCheck(permissions: Array<String>, permissionCallback: PermissionCallback) {
         when {
             permissionsGranted(permissions) -> {
-                permissionMgr.onPermissionGranted()
+                permissionCallback.onPermissionGranted()
             }
 
             shouldShowRequestPermissionsRationale(permissions) -> {
@@ -19,13 +19,13 @@ class PermissionCheck(private val activity: Activity) {
                 // features are disabled if it's declined. In this UI, include a
                 // "cancel" or "no thanks" button that lets the user continue
                 // using your app without granting the permission.
-                permissionMgr.onRequestRationale(deniedPermissions)
+                permissionCallback.onRequestRationale(deniedPermissions)
             }
 
             else -> {
                 // Other conditions
                 // change to request permission
-                permissionMgr.onPermissionDenied(deniedPermissions)
+                permissionCallback.onPermissionDenied(deniedPermissions)
             }
         }
     }
@@ -64,5 +64,11 @@ class PermissionCheck(private val activity: Activity) {
     // --------------------------------
     enum class Permission {
         NEED_RATIONALE, NOT_GRANTED, GRANTED
+    }
+
+    interface PermissionCallback{
+        fun onPermissionGranted()
+        fun onRequestRationale(permissions: List<String>)
+        fun onPermissionDenied(permissions: List<String>)
     }
 }

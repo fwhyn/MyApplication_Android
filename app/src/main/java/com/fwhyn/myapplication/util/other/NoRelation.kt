@@ -1,5 +1,6 @@
 package com.fwhyn.myapplication.util.other
 
+import com.fwhyn.myapplication.util.other.queue.Doctor
 import java.io.FileInputStream
 
 class NoRelation {
@@ -110,7 +111,27 @@ class NoRelation {
      */
 
 
-    fun case1() {
+    fun getTime_caseStudy2Q1(patient: Int): Int {
+        var timeStep: Int = 0
+        val doctorA = Doctor(3)
+        val doctorB = Doctor(4)
+        val doctors: ArrayList<Doctor> = arrayListOf(doctorA, doctorB)
 
+        var previousMinTimeStep = 0
+        var currentMinTimeStep = 0
+        var previousMaxTimeStep = 0
+        var currentsMaxTimeStep = 0
+
+        doctors.map {
+            currentMinTimeStep = minOf(previousMinTimeStep, it.timeStep)
+            if (currentMinTimeStep < previousMinTimeStep) {
+
+            }
+            currentsMaxTimeStep = maxOf(previousMaxTimeStep, it.timeStep)
+        }
+
+        if (minTimeStep == 0) {
+
+        }
     }
 }

@@ -111,25 +111,27 @@ class NoRelation {
      */
 
 
-    fun getTime(doctors: List<Doctor>, patient: Int): Int? {
-        // TODO copy doctor list first
+    fun getConsultationTime(doctors: List<Doctor>, patient: Int): Int? {
+        // make sure that do not edit original source of doctor
+        val copyOfDoctors = getCopyOfDoctors(doctors)
 
         var availableDoctor: Doctor? = null
-        for (i in 1 .. patient) {
-            availableDoctor = getDoctorWithMinTimeStep(doctors)
-            val minTimeStep = availableDoctor.timeStep
+        for (i in 1..patient) {
+            availableDoctor = getDoctorWithMinTimeStepIncrement(copyOfDoctors)
+            val minTimeStep: Int = availableDoctor.timeStep
 
-            val duplicatedDoctorTimeStepList = getDuplicatedDoctorTimeStep(minTimeStep, doctors)
-            if (duplicatedDoctorTimeStepList.size >= 2) {
+            val duplicatedDoctorTimeStepList =
+                getDuplicatedDoctorTimeStep(minTimeStep, copyOfDoctors)
+            if (duplicatedDoctorTimeStepList.size > 1) {
                 availableDoctor = getDoctorWithMinConsultationTime(duplicatedDoctorTimeStepList)
             }
 
-            availableDoctor.timeStep += availableDoctor.consultationTimeMinute
+            incrementDoctorTimeStep(availableDoctor)
         }
 
-        val timeStep: Int? = availableDoctor?.timeStep
+        val curentTimeStep: Int? = availableDoctor?.timeStep
 
-        return timeStep
+        return curentTimeStep
     }
 
     private fun getCopyOfDoctors(doctorsToCopy: List<Doctor>): List<Doctor> {
@@ -138,11 +140,7 @@ class NoRelation {
             copiedArray.add(it.copy())
         }
 
-        return doctorsToCopy
-    }
-
-    private fun getDoctorWithMinTimeStep(doctors: List<Doctor>): Doctor {
-        return doctors.minBy { it.timeStep }
+        return copiedArray
     }
 
     private fun getDuplicatedDoctorTimeStep(timeStep: Int, doctors: List<Doctor>): List<Doctor> {
@@ -161,7 +159,11 @@ class NoRelation {
         return doctors.minBy { it.consultationTimeMinute }
     }
 
-    private fun setNewDoctorTimeStep(doctor: Doctor) {
+    private fun getDoctorWithMinTimeStepIncrement(doctors: List<Doctor>): Doctor {
+        return doctors.minBy { it.timeStep + it.consultationTimeMinute }
+    }
+
+    private fun incrementDoctorTimeStep(doctor: Doctor) {
         doctor.timeStep += doctor.consultationTimeMinute
     }
 }

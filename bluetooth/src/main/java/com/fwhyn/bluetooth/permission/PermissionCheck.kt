@@ -2,18 +2,22 @@ package com.fwhyn.bluetooth.permission
 
 import android.app.Activity
 import android.content.pm.PackageManager
+import androidx.activity.result.ActivityResultCaller
 
-// Singleton, activity from Application
-class PermissionCheck(private val activity: Activity) {
-    private lateinit var deniedPermissions: List<String>
+abstract class PermissionCheck(activityResultCaller: ActivityResultCaller) : PermissionRequest(activityResultCaller) {
+    private lateinit var deniedPermissions: ArrayList<String>
 
-    fun permissionsCheck(permissions: Array<String>, permissionCallback: PermissionCallback) {
+    fun checkPermissions(
+        activity: Activity,
+        permissions: Array<String>,
+        permissionCallback: PermissionCallback
+    ) {
         when {
-            permissionsGranted(permissions) -> {
+            permissionsGranted(activity, permissions) -> {
                 permissionCallback.onPermissionGranted()
             }
 
-            shouldShowRequestPermissionsRationale(permissions) -> {
+            shouldShowRequestPermissionsRationale(activity, permissions) -> {
                 // In an educational UI, explain to the user why your app requires this
                 // permission for a specific feature to behave as expected, and what
                 // features are disabled if it's declined. In this UI, include a
@@ -31,29 +35,29 @@ class PermissionCheck(private val activity: Activity) {
     }
 
     // --------------------------------
-    private fun permissionsGranted(permissions: Array<String>): Boolean {
+    private fun permissionsGranted(activity: Activity, permissions: Array<String>): Boolean {
         return loopPermissionCheck(permissions) {
-            permissionGranted(it)
+            permissionGranted(activity, it)
         }
     }
 
-    private fun shouldShowRequestPermissionsRationale(permissions: Array<String>): Boolean {
+    private fun shouldShowRequestPermissionsRationale(activity: Activity, permissions: Array<String>): Boolean {
         return loopPermissionCheck(permissions) {
             activity.shouldShowRequestPermissionRationale(it)
         }
     }
 
-    private fun permissionGranted(permission: String): Boolean {
+    private fun permissionGranted(activity: Activity, permission: String): Boolean {
         return activity.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun loopPermissionCheck(permissions: Array<String>, callback: (String) -> Boolean): Boolean {
         var retVal = true
+        deniedPermissions = ArrayList()
 
         for (permission in permissions) {
             if (!callback(permission)) {
-                deniedPermissions = arrayListOf<String>()
-                (deniedPermissions as ArrayList<String>).add(permission)
+                deniedPermissions.add(permission)
                 retVal = false
             }
         }
@@ -66,7 +70,7 @@ class PermissionCheck(private val activity: Activity) {
         NEED_RATIONALE, NOT_GRANTED, GRANTED
     }
 
-    interface PermissionCallback{
+    interface PermissionCallback {
         fun onPermissionGranted()
         fun onRequestRationale(permissions: List<String>)
         fun onPermissionDenied(permissions: List<String>)

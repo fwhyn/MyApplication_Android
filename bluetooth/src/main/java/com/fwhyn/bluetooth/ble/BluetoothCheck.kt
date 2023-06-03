@@ -34,10 +34,10 @@ class BluetoothCheck(
 
     fun bleCheck(bluetoothCheckCallback: BluetoothCheckCallback) {
         if (bleSupported()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val btPermission = Manifest.permission.BLUETOOTH_CONNECT
+            val permissionsToRequest = getNecessaryPermissions()
+            if (permissionsToRequest.isNotEmpty()) {
 
-                checkPermissions(activity, arrayOf(btPermission), object :
+                checkOrRequestPermissions(activity, permissionsToRequest, object :
                     PermissionCallback {
                     override fun onPermissionGranted() {
                         checkEnabledBluetooth(bluetoothCheckCallback) { result ->
@@ -45,20 +45,12 @@ class BluetoothCheck(
                         }
                     }
 
-                    override fun onRequestRationale(permissions: List<String>) {
+                    override fun onRequestRationale(permissions: Array<String>) {
                         bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NEED_RATIONALE)
                     }
 
-                    override fun onPermissionDenied(permissions: List<String>) {
-                        requestPermission(btPermission) {
-                            if (it) {
-                                checkEnabledBluetooth(bluetoothCheckCallback) { result ->
-                                    setEnableBluetoothResult(result, bluetoothCheckCallback)
-                                }
-                            } else {
-                                bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NO_PERMISSION)
-                            }
-                        }
+                    override fun onPermissionDenied(permissions: Array<String>) {
+                        bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NO_PERMISSION)
                     }
                 })
             } else {
@@ -69,6 +61,23 @@ class BluetoothCheck(
         } else {
             bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NOT_SUPPORTED)
         }
+    }
+
+    private fun getNecessaryPermissions(): Array<String> {
+        val permissions = arrayListOf<String>()
+        val coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION
+        val fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION
+
+        permissions.add(coarseLocationPermission)
+        permissions.add(fineLocationPermission)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val bluetoothPermission = Manifest.permission.BLUETOOTH_CONNECT
+
+            permissions.add(bluetoothPermission)
+        }
+
+        return permissions.toTypedArray()
     }
 
     private fun bleSupported(): Boolean {

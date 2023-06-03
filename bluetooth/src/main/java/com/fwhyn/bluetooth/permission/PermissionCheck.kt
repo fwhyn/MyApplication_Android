@@ -2,63 +2,65 @@ package com.fwhyn.bluetooth.permission
 
 import android.app.Activity
 import android.content.pm.PackageManager
-import androidx.activity.result.ActivityResultCaller
 
-abstract class PermissionCheck(activityResultCaller: ActivityResultCaller) : PermissionRequest(activityResultCaller) {
-    private lateinit var deniedPermissions: ArrayList<String>
+abstract class PermissionCheck {
+    private val deniedPermissions = ArrayList<String>()
 
-    fun checkPermissions(
+    protected fun checkPermissions(
         activity: Activity,
         permissions: Array<String>,
         permissionCallback: PermissionCallback
     ) {
         when {
-            permissionsGranted(activity, permissions) -> {
-                permissionCallback.onPermissionGranted()
-            }
-
             shouldShowRequestPermissionsRationale(activity, permissions) -> {
                 // In an educational UI, explain to the user why your app requires this
                 // permission for a specific feature to behave as expected, and what
                 // features are disabled if it's declined. In this UI, include a
                 // "cancel" or "no thanks" button that lets the user continue
                 // using your app without granting the permission.
-                permissionCallback.onRequestRationale(deniedPermissions)
+                permissionCallback.onRequestRationale(deniedPermissions.toTypedArray())
             }
+
+            permissionsGranted(activity, permissions) -> {
+                permissionCallback.onPermissionGranted()
+            }
+
 
             else -> {
                 // Other conditions
                 // change to request permission
-                permissionCallback.onPermissionDenied(deniedPermissions)
+                permissionCallback.onPermissionDenied(deniedPermissions.toTypedArray())
             }
         }
     }
 
     // --------------------------------
-    private fun permissionsGranted(activity: Activity, permissions: Array<String>): Boolean {
-        return loopPermissionCheck(permissions) {
-            permissionGranted(activity, it)
+    private fun shouldShowRequestPermissionsRationale(activity: Activity, permissions: Array<String>): Boolean {
+        val result = deniedPermissionExist(permissions) {
+            !activity.shouldShowRequestPermissionRationale(it)
         }
+        return result
     }
 
-    private fun shouldShowRequestPermissionsRationale(activity: Activity, permissions: Array<String>): Boolean {
-        return loopPermissionCheck(permissions) {
-            activity.shouldShowRequestPermissionRationale(it)
+    private fun permissionsGranted(activity: Activity, permissions: Array<String>): Boolean {
+        val result = deniedPermissionExist(permissions) {
+            permissionGranted(activity, it)
         }
+        return !result
     }
 
     private fun permissionGranted(activity: Activity, permission: String): Boolean {
         return activity.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun loopPermissionCheck(permissions: Array<String>, callback: (String) -> Boolean): Boolean {
-        var retVal = true
-        deniedPermissions = ArrayList()
+    private fun deniedPermissionExist(permissions: Array<String>, isGranted: (String) -> Boolean): Boolean {
+        var retVal = false
+        deniedPermissions.clear()
 
         for (permission in permissions) {
-            if (!callback(permission)) {
+            if (!isGranted(permission)) {
                 deniedPermissions.add(permission)
-                retVal = false
+                retVal = true
             }
         }
 
@@ -72,7 +74,7 @@ abstract class PermissionCheck(activityResultCaller: ActivityResultCaller) : Per
 
     interface PermissionCallback {
         fun onPermissionGranted()
-        fun onRequestRationale(permissions: List<String>)
-        fun onPermissionDenied(permissions: List<String>)
+        fun onRequestRationale(permissions: Array<String>)
+        fun onPermissionDenied(permissions: Array<String>)
     }
 }

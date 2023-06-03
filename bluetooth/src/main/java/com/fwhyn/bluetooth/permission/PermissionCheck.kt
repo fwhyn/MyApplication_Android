@@ -2,6 +2,7 @@ package com.fwhyn.bluetooth.permission
 
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.os.Build
 
 abstract class PermissionCheck {
     private val deniedPermissions = ArrayList<String>()
@@ -36,10 +37,13 @@ abstract class PermissionCheck {
 
     // --------------------------------
     private fun shouldShowRequestPermissionsRationale(activity: Activity, permissions: Array<String>): Boolean {
-        val result = deniedPermissionExist(permissions) {
-            !activity.shouldShowRequestPermissionRationale(it)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            deniedPermissionExist(permissions) {
+                !activity.shouldShowRequestPermissionRationale(it)
+            }
+        } else {
+            false
         }
-        return result
     }
 
     private fun permissionsGranted(activity: Activity, permissions: Array<String>): Boolean {
@@ -50,7 +54,11 @@ abstract class PermissionCheck {
     }
 
     private fun permissionGranted(activity: Activity, permission: String): Boolean {
-        return activity.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            activity.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
     }
 
     private fun deniedPermissionExist(permissions: Array<String>, isGranted: (String) -> Boolean): Boolean {

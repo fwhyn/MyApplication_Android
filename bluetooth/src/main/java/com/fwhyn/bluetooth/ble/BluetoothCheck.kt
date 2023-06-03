@@ -64,12 +64,16 @@ class BluetoothCheck(
     }
 
     private fun getNecessaryPermissions(): Array<String> {
-        val permissions = arrayListOf<String>()
-        val coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION
-        val fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION
+        val permissions = ArrayList<String>()
 
-        permissions.add(coarseLocationPermission)
-        permissions.add(fineLocationPermission)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION
+            val fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION
+
+            permissions.add(coarseLocationPermission)
+            permissions.add(fineLocationPermission)
+        }
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val bluetoothPermission = Manifest.permission.BLUETOOTH_CONNECT

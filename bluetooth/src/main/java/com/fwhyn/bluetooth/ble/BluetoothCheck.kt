@@ -40,7 +40,7 @@ class BluetoothCheck(
                 checkPermissions(activity, arrayOf(btPermission), object :
                     PermissionCallback {
                     override fun onPermissionGranted() {
-                        enableBluetooth(bluetoothCheckCallback) { result ->
+                        checkEnabledBluetooth(bluetoothCheckCallback) { result ->
                             setEnableBluetoothResult(result, bluetoothCheckCallback)
                         }
                     }
@@ -52,7 +52,7 @@ class BluetoothCheck(
                     override fun onPermissionDenied(permissions: List<String>) {
                         requestPermission(btPermission) {
                             if (it) {
-                                enableBluetooth(bluetoothCheckCallback) { result ->
+                                checkEnabledBluetooth(bluetoothCheckCallback) { result ->
                                     setEnableBluetoothResult(result, bluetoothCheckCallback)
                                 }
                             } else {
@@ -62,7 +62,9 @@ class BluetoothCheck(
                     }
                 })
             } else {
-                bluetoothCheckCallback.ableToScan()
+                checkEnabledBluetooth(bluetoothCheckCallback) { result ->
+                    setEnableBluetoothResult(result, bluetoothCheckCallback)
+                }
             }
         } else {
             bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NOT_SUPPORTED)
@@ -73,7 +75,7 @@ class BluetoothCheck(
         return activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
     }
 
-    private fun enableBluetooth(
+    private fun checkEnabledBluetooth(
         bluetoothCheckCallback: BluetoothCheckCallback,
         enableBluetoothCallback: ActivityResultCallback<ActivityResult>
     ) {

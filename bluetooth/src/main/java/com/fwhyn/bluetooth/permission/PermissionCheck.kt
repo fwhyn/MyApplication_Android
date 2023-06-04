@@ -5,84 +5,70 @@ import android.content.pm.PackageManager
 import android.os.Build
 
 abstract class PermissionCheck {
-    private val deniedPermissions = ArrayList<String>()
-
     protected fun checkPermissions(
         activity: Activity,
         permissions: Array<String>,
         permissionCallback: PermissionCallback
     ) {
-        when {
-            shouldShowRequestPermissionsRationale(activity, permissions) -> {
-                // In an educational UI, explain to the user why your app requires this
-                // permission for a specific feature to behave as expected, and what
-                // features are disabled if it's declined. In this UI, include a
-                // "cancel" or "no thanks" button that lets the user continue
-                // using your app without granting the permission.
-                permissionCallback.onRequestRationale(deniedPermissions.toTypedArray())
-            }
-
-            permissionsGranted(activity, permissions) -> {
-                permissionCallback.onPermissionGranted()
-            }
-
-
-            else -> {
-                // Other conditions
-                // change to request permission
-                permissionCallback.onPermissionDenied(deniedPermissions.toTypedArray())
-            }
+        when (val permissionResult: PermissionResult = getPermissionResult(activity, permissions)) {
+            is PermissionResult.Denied -> permissionCallback.onPermissionDenied(permissionResult.deniedPermissions)
+            is PermissionResult.NeedRationale -> permissionCallback.onRequestRationale(permissionResult.rationalePermissions)
+            PermissionResult.Granted -> permissionCallback.onPermissionGranted()
         }
     }
 
     // --------------------------------
-    private fun shouldShowRequestPermissionsRationale(activity: Activity, permissions: Array<String>): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            deniedPermissionExist(permissions) {
-                !activity.shouldShowRequestPermissionRationale(it)
+    private fun getPermissionResult(activity: Activity, permissions: Array<String>): PermissionResult {
+        val deniedPermissions = ArrayList<String>()
+        val rationalePermissions = ArrayList<String>()
+
+        val remainPossiblyDeniedPermissions = ArrayList(permissions.toList())
+        for (permission in permissions) {
+            if (shouldShowRequestPermissionsRationale(activity, permission)) {
+                rationalePermissions.add(permission)
+                remainPossiblyDeniedPermissions.remove(permission)
             }
+        }
+
+        for (permission in remainPossiblyDeniedPermissions) {
+            if (permissionDenied(activity, permission)) {
+                deniedPermissions.add(permission)
+            }
+        }
+
+        return when {
+            deniedPermissions.isNotEmpty() -> PermissionResult.Denied(deniedPermissions.toTypedArray())
+            rationalePermissions.isNotEmpty() -> PermissionResult.NeedRationale(rationalePermissions.toTypedArray())
+            else -> PermissionResult.Granted
+        }
+    }
+
+    private fun shouldShowRequestPermissionsRationale(activity: Activity, permission: String): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            activity.shouldShowRequestPermissionRationale(permission)
         } else {
             false
         }
     }
 
-    private fun permissionsGranted(activity: Activity, permissions: Array<String>): Boolean {
-        val result = deniedPermissionExist(permissions) {
-            permissionGranted(activity, it)
-        }
-        return !result
-    }
-
-    private fun permissionGranted(activity: Activity, permission: String): Boolean {
+    private fun permissionDenied(activity: Activity, permission: String): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            activity.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+            activity.checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED
         } else {
-            true
+            false
         }
-    }
-
-    private fun deniedPermissionExist(permissions: Array<String>, isGranted: (String) -> Boolean): Boolean {
-        var retVal = false
-        deniedPermissions.clear()
-
-        for (permission in permissions) {
-            if (!isGranted(permission)) {
-                deniedPermissions.add(permission)
-                retVal = true
-            }
-        }
-
-        return retVal
     }
 
     // --------------------------------
-    enum class Permission {
-        NEED_RATIONALE, NOT_GRANTED, GRANTED
+    sealed class PermissionResult {
+        object Granted : PermissionResult()
+        class NeedRationale(val rationalePermissions: Array<String>) : PermissionResult()
+        class Denied(val deniedPermissions: Array<String>) : PermissionResult()
     }
 
     interface PermissionCallback {
         fun onPermissionGranted()
-        fun onRequestRationale(permissions: Array<String>)
-        fun onPermissionDenied(permissions: Array<String>)
+        fun onRequestRationale(rationalePermissions: Array<String>)
+        fun onPermissionDenied(deniedPermissions: Array<String>)
     }
 }

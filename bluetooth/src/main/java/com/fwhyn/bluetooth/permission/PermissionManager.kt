@@ -26,23 +26,17 @@ open class PermissionManager(activityResultCaller: ActivityResultCaller) : Permi
                     permissionCallback.onPermissionGranted()
                 }
 
-                override fun onRequestRationale(permissions: Array<String>) {
+                override fun onRequestRationale(rationalePermissions: Array<String>) {
                     permissionCallback.onRequestRationale(permissions)
                 }
 
-                override fun onPermissionDenied(permissions: Array<String>) {
+                override fun onPermissionDenied(deniedPermissions: Array<String>) {
                     requestPermissions(
-                        permissions,
+                        deniedPermissions,
                         object : RequestPermissionResult {
                             override fun onFinished(results: Map<String, Boolean>) {
-                                val deniedPermissions = getDeniedPermissions(permissions, results)
-
-                                if (deniedPermissions.isEmpty()) {
-                                    permissionCallback.onPermissionGranted()
-                                } else {
-                                    // checkPermissions(activity, deniedPermissions, permissionCallback)
-                                    permissionCallback.onPermissionDenied(deniedPermissions)
-                                }
+                                // check all permissions again, not from the results
+                                checkPermissions(activity, permissions, permissionCallback)
                             }
                         }
                     )
@@ -50,18 +44,5 @@ open class PermissionManager(activityResultCaller: ActivityResultCaller) : Permi
 
             }
         )
-    }
-
-    private fun getDeniedPermissions(permissions: Array<String>, results: Map<String, Boolean>): Array<String> {
-        val deniedPermissions = ArrayList<String>()
-
-        permissions.map { permission ->
-            val isGranted = results[permission]
-            isGranted?.let {
-                if (!it) deniedPermissions.add(permission)
-            }
-        }
-
-        return deniedPermissions.toTypedArray()
     }
 }

@@ -8,17 +8,17 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 
-abstract class PermissionRequest(activityResultCaller: ActivityResultCaller) : PermissionCheck() {
-
-    private lateinit var callback: RequestPermissionResult
+class PermissionRequest(
+    activityResultCaller: ActivityResultCaller,
+    requestPermissionResult: PermissionRequestCallback
+) {
 
     private val launcher: ActivityResultLauncher<Array<String>> =
         activityResultCaller.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
-            callback.onFinished(results)
+            requestPermissionResult.onFinishedRequest(results)
         }
 
-    protected fun requestPermissions(permissions: Array<String>, callback: RequestPermissionResult) {
-        this.callback = callback
+    fun requestPermissions(permissions: Array<String>) {
         launcher.launch(permissions)
     }
 
@@ -33,9 +33,5 @@ abstract class PermissionRequest(activityResultCaller: ActivityResultCaller) : P
         }
 
         activity.startActivity(intent)
-    }
-
-    interface RequestPermissionResult {
-        fun onFinished(results: Map<String, Boolean>)
     }
 }

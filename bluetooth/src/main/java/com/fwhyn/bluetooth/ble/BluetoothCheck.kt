@@ -9,60 +9,58 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.fwhyn.bluetooth.permission.PermissionCheckCallback
 import com.fwhyn.bluetooth.permission.PermissionManager
 
 class BluetoothCheck(
     private val activity: Activity,
-    activityResultCaller: ActivityResultCaller
-) : PermissionManager(activityResultCaller) {
+    activityResultCaller: ActivityResultCaller,
+    private val bluetoothCheckCallback: BluetoothCheckCallback
+) : PermissionCheckCallback {
 
-    private lateinit var enableBluetoothCallback: ActivityResultCallback<ActivityResult>
+    private val permissionManager = PermissionManager(activity, activityResultCaller, this, getNecessaryPermissions())
 
-    private var launcher: ActivityResultLauncher<Intent> =
+    private val enableBluetoothLauncher: ActivityResultLauncher<Intent> =
         activityResultCaller.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            enableBluetoothCallback.onActivityResult(result)
+            setEnableBluetoothResult(result, bluetoothCheckCallback)
         }
 
     private val bluetoothAdapter: BluetoothAdapter? by lazy(LazyThreadSafetyMode.NONE) {
         (activity.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
     }
 
-    fun bleCheck(bluetoothCheckCallback: BluetoothCheckCallback) {
+    fun bleCheck() {
         if (bleSupported()) {
             val permissionsToRequest = getNecessaryPermissions()
+
             if (permissionsToRequest.isNotEmpty()) {
-
-                checkOrRequestPermissions(activity, permissionsToRequest, object :
-                    PermissionCallback {
-                    override fun onPermissionGranted() {
-                        checkEnabledBluetooth(bluetoothCheckCallback) { result ->
-                            setEnableBluetoothResult(result, bluetoothCheckCallback)
-                        }
-                    }
-
-                    override fun onRequestRationale(permissions: Array<String>) {
-                        bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NEED_RATIONALE)
-                    }
-
-                    override fun onPermissionDenied(permissions: Array<String>) {
-                        bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NO_PERMISSION)
-                    }
-                })
+                permissionManager.checkOrRequestPermissions()
             } else {
-                checkEnabledBluetooth(bluetoothCheckCallback) { result ->
-                    setEnableBluetoothResult(result, bluetoothCheckCallback)
-                }
+                checkEnabledBluetooth(bluetoothCheckCallback)
             }
         } else {
             bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NOT_SUPPORTED)
         }
     }
 
+    // --------------------------------
+    override fun onPermissionGranted() {
+        checkEnabledBluetooth(bluetoothCheckCallback)
+    }
+
+    override fun onRequestRationale(rationalePermissions: Array<String>) {
+        bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NEED_RATIONALE)
+    }
+
+    override fun onPermissionDenied(deniedPermissions: Array<String>) {
+        bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NO_PERMISSION)
+    }
+
+    // --------------------------------
     private fun getNecessaryPermissions(): Array<String> {
         val permissions = ArrayList<String>()
 
@@ -88,12 +86,7 @@ class BluetoothCheck(
         return activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
     }
 
-    private fun checkEnabledBluetooth(
-        bluetoothCheckCallback: BluetoothCheckCallback,
-        enableBluetoothCallback: ActivityResultCallback<ActivityResult>
-    ) {
-        this.enableBluetoothCallback = enableBluetoothCallback
-
+    private fun checkEnabledBluetooth(bluetoothCheckCallback: BluetoothCheckCallback) {
         if (bluetoothEnabled()) {
             bluetoothCheckCallback.ableToScan()
         } else {
@@ -104,7 +97,7 @@ class BluetoothCheck(
     private fun bluetoothEnabled(): Boolean = bluetoothAdapter?.isEnabled == true
 
     private fun requestEnableBluetooth() {
-        launcher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+        enableBluetoothLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
     }
 
     private fun setEnableBluetoothResult(

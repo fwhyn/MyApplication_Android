@@ -12,37 +12,33 @@ import androidx.activity.result.ActivityResultCaller
 annotation class WarningMessage
 
 @WarningMessage
-open class PermissionManager(activityResultCaller: ActivityResultCaller) : PermissionRequest(activityResultCaller) {
-    fun checkOrRequestPermissions(
-        activity: Activity,
-        permissions: Array<String>,
-        permissionCallback: PermissionCallback
-    ) {
-        checkPermissions(
-            activity,
-            permissions,
-            object : PermissionCallback {
-                override fun onPermissionGranted() {
-                    permissionCallback.onPermissionGranted()
-                }
+class PermissionManager(
+    private val activity: Activity,
+    activityResultCaller: ActivityResultCaller,
+    private val permissionCallback: PermissionCheckCallback,
+    private val permissions: Array<String>
+) : PermissionCheckCallback, PermissionRequestCallback {
 
-                override fun onRequestRationale(rationalePermissions: Array<String>) {
-                    permissionCallback.onRequestRationale(permissions)
-                }
+    private val permissionRequest = PermissionRequest(activityResultCaller, this)
 
-                override fun onPermissionDenied(deniedPermissions: Array<String>) {
-                    requestPermissions(
-                        deniedPermissions,
-                        object : RequestPermissionResult {
-                            override fun onFinished(results: Map<String, Boolean>) {
-                                // check all permissions again, not from the results
-                                checkPermissions(activity, permissions, permissionCallback)
-                            }
-                        }
-                    )
-                }
+    fun checkOrRequestPermissions() {
+        PermissionCheck.checkPermissions(activity, permissions, this)
+    }
 
-            }
-        )
+    // --------------------------------
+    override fun onPermissionGranted() {
+        permissionCallback.onPermissionGranted()
+    }
+
+    override fun onRequestRationale(rationalePermissions: Array<String>) {
+        permissionCallback.onRequestRationale(rationalePermissions)
+    }
+
+    override fun onPermissionDenied(deniedPermissions: Array<String>) {
+        permissionRequest.requestPermissions(permissions)
+    }
+
+    override fun onFinishedRequest(results: Map<String, Boolean>) {
+        PermissionCheck.checkPermissions(activity, permissions, permissionCallback)
     }
 }

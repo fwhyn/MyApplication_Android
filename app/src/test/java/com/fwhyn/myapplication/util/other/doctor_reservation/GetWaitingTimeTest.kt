@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.util.other.queue
+package com.fwhyn.myapplication.util.other.doctor_reservation
 
 import com.fwhyn.myapplication.util.other.NoRelation
 import com.fwhyn.myapplication.util.other.StorageException

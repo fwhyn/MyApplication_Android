@@ -1,6 +1,6 @@
 package com.fwhyn.myapplication.util.other
 
-import com.fwhyn.myapplication.util.other.queue.Doctor
+import com.fwhyn.myapplication.util.other.doctor_reservation.Doctor
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

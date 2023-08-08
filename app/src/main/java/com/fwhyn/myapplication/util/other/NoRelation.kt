@@ -1,6 +1,6 @@
 package com.fwhyn.myapplication.util.other
 
-import com.fwhyn.myapplication.util.other.queue.Doctor
+import com.fwhyn.myapplication.util.other.doctor_reservation.Doctor
 import java.io.FileInputStream
 
 class NoRelation {

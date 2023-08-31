@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 // Java program to find shortest path in an undirected graph
-public class UnweightedGraph {
-    // function to form edge between two vertices
-    // source and dest
+public class UnweightedGraphNew {
+
     public void addEdge(ArrayList<ArrayList<Integer>> adj, int i, int j) {
         adj.get(i).add(j);
         adj.get(j).add(i);
@@ -15,42 +14,40 @@ public class UnweightedGraph {
     // function to print the shortest distance and path
     // between source vertex and destination vertex
     public void printShortestDistance(ArrayList<ArrayList<Integer>> adj, int s, int dest, int v) {
-        // predecessor[i] array stores predecessor of
-        // i and distance array stores distance of i
-        // from s
-        int[] pred = new int[v];
+        // predecessor[i] array stores predecessor of i and distance array stores distance of i from s
+//        int[] pred = new int[v];
         int[] dist = new int[v];
 
-        if (!BFS(adj, s, dest, v, pred, dist)) {
-            System.out.println("Given source and destination" +
-                    "are not connected");
+        if (!BFS(adj, s, dest, v, dist)) {
+            System.out.println("Given source and destination are not connected");
+
             return;
         }
 
-        // LinkedList to store path
-        LinkedList<Integer> path = new LinkedList<>();
-        int crawl = dest;
-        path.add(crawl);
-        while (pred[crawl] != -1) {
-            path.add(pred[crawl]);
-            crawl = pred[crawl];
-        }
-
         // Print distance
-        System.out.println("Shortest path length is: " + dist[dest]);
+        System.out.println("Shortest path length is " + dist[dest]);
+
+        // LinkedList to store path
+//        LinkedList<Integer> path = new LinkedList<>();
+//        int crawl = dest;
+//        path.add(crawl);
+
+//        while (pred[crawl] != -1) {
+//            path.add(pred[crawl]);
+//            crawl = pred[crawl];
+//        }
 
         // Print path
-        System.out.println("Path is ::");
-        for (int i = path.size() - 1; i >= 0; i--) {
-            System.out.print(path.get(i) + " ");
-        }
+//        System.out.println("Path is: ");
+//        for (int i = path.size() - 1; i >= 0; i--) {
+//            System.out.print(path.get(i) + " ");
+//        }
     }
 
     // a modified version of BFS that stores predecessor
     // of each vertex in array pred
     // and its distance from source in array dist
-    private boolean BFS(ArrayList<ArrayList<Integer>> adj, int src,
-                        int dest, int v, int[] pred, int[] dist) {
+    private boolean BFS(ArrayList<ArrayList<Integer>> adj, int src, int dest, int v, int[] dist) {
         // a queue to maintain queue of vertices whose
         // adjacency list is to be scanned as per normal
         // BFS algorithm using LinkedList of Integer type
@@ -68,7 +65,6 @@ public class UnweightedGraph {
         for (int i = 0; i < v; i++) {
             visited[i] = false;
             dist[i] = Integer.MAX_VALUE;
-            pred[i] = -1;
         }
 
         // now source is first to be visited and
@@ -79,23 +75,23 @@ public class UnweightedGraph {
 
         // bfs Algorithm
         while (!queue.isEmpty()) {
-            int u = queue.remove();
-            for (int i = 0; i < adj.get(u).size(); i++) {
-                int index = adj.get(u).get(i);
-                if (!visited[index]) {
-                    visited[index] = true;
-                    dist[index] = dist[u] + 1;
-                    pred[index] = u;
+            int prevVertex = queue.remove();
 
-                    queue.add(index);
+            for (int i = 0; i < adj.get(prevVertex).size(); i++) {
+                int nextVertex = adj.get(prevVertex).get(i);
 
-                    // stopping condition (when we find
-                    // our destination)
-                    if (index == dest)
+                if (!visited[nextVertex]) {
+                    visited[nextVertex] = true;
+                    dist[nextVertex] = dist[prevVertex] + 1;
+
+                    queue.add(nextVertex);
+                    if (nextVertex == dest) {
                         return true;
+                    }
                 }
             }
         }
+
         return false;
     }
 }

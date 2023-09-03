@@ -21,15 +21,13 @@ public class UnweightedGraphPractice {
     }
 
     // Add edge and return vertices number
-    public void addEdge(Map<Integer, Set<Integer>> adj, int src, int dst) {
-        Set<Integer> source = adj.get(src);
-        if (source == null) {
-            Set<Integer> destination = new HashSet<>();
-            destination.add(dst);
+    private void addEdge(Map<Integer, Set<Integer>> adj, int src, int dst) {
+        Set<Integer> destination = adj.get(src);
+        if (destination == null) {
+            destination = new HashSet<>();
             adj.put(src, destination);
-        } else {
-            source.add(dst);
         }
+        destination.add(dst);
     }
 
     public int getShortestPath(Map<Integer, Set<Integer>> adj, int src, int dst) {

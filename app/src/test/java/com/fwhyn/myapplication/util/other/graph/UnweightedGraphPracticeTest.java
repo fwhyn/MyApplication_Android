@@ -31,8 +31,8 @@ public class UnweightedGraphPracticeTest {
         graph.addEdge(adj, 5, 6, true);
         graph.addEdge(adj, 6, 7, true);
 
-        int source = 0, dest = 2;
+        int source = 2, dest = 5;
 
-        Assert.assertEquals(2, graph.getShortestPath(adj, source, dest));
+        Assert.assertEquals(5, graph.getShortestPath(adj, source, dest));
     }
 }

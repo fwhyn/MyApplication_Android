@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.util.javatest;
+package com.fwhyn.myapplication.util.other.graph;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

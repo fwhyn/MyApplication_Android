@@ -54,18 +54,18 @@ public class SnakesLadder {
 
         while (!queue.isEmpty()) {
 
-            int jump = queue.poll();
+            int prev = queue.poll();
 
-            for (int step = 1; step <= dice && jump + step < squares; ++step) {
-                int currentStep = jump + step;
+            for (int step = 1; step <= dice && prev + step < squares; ++step) {
+                int currentStep = prev + step;
                 while (!visited[currentStep]) {
                     visited[currentStep] = true;
 
                     if (currentStep == win) {
-                        return roll[jump] + 1;
+                        return roll[prev] + 1;
                     } else if (graph[currentStep] == -1) {
                         queue.add(currentStep);
-                        roll[currentStep] = roll[jump] + 1;
+                        roll[currentStep] = roll[prev] + 1;
                     } else {
                         currentStep = graph[currentStep];
                     }

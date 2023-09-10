@@ -30,6 +30,12 @@
                 android:value="" />
         </activity>
 
+        <activity
+            android:name=".util.compose.CocomposanActivity"
+            android:exported="false"
+            android:label="@string/title_activity_cocomposan"
+            android:theme="@style/Theme.MyApplication" />
+
     </application>
 
 </manifest>

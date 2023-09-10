@@ -25,14 +25,16 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
 
     buildFeatures {
-        // Enables viewBinding
         viewBinding true
-
-        // Enables dataBinding
         dataBinding true
+        compose true
     }
 
     buildTypes {
@@ -50,6 +52,16 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
+
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
 }
 
 dependencies {
@@ -59,6 +71,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.test:monitor:1.6.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
 
     // Koin
     implementation "io.insert-koin:koin-android:3.2.0"
@@ -71,7 +84,20 @@ dependencies {
 
     // Dagger Hilt
     implementation "com.google.dagger:hilt-android:2.44.2"
+    
     kapt "com.google.dagger:hilt-android-compiler:$dagger_version"
+
+    // Compose
+    implementation 'androidx.activity:activity-compose:1.5.1'
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
 
     // Module
     implementation project(path: ':wishlist')
@@ -94,4 +120,8 @@ dependencies {
 
     // Mockito-Kotlin
     testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
+
+    // Compose
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
 }

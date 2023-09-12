@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -88,6 +90,23 @@ fun MessageCard(msg: Message) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HelloContent() {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(
+            text = "Hello!",
+            modifier = Modifier.padding(bottom = 8.dp),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        OutlinedTextField(
+            value = "",
+            onValueChange = { },
+            label = { Text("Name") }
+        )
+    }
+}
+
 @Preview(name = "Light Mode")
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
@@ -98,9 +117,7 @@ fun MessageCard(msg: Message) {
 fun PreviewMessageCard() {
     MyApplicationTheme {
         Surface {
-            MessageCard(
-                msg = Message("Lexi", "Hey, take a look at Jetpack Compose, it's great!")
-            )
+            HelloContent()
         }
     }
 }

@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fwhyn.myapplication.databinding.ActivityMainBinding
 import com.fwhyn.myapplication.ui.common.recyclerview.CustomAdapter
-import com.fwhyn.myapplication.util.compose.CocomposanActivity
+import com.fwhyn.myapplication.util.compose.TryComposeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.buttonMain.setOnClickListener {
 //            Snackbar.make(binding.root, R.string.test, Snackbar.LENGTH_SHORT).show()
-            startActivity(Intent(this, CocomposanActivity::class.java))
+            startActivity(Intent(this, TryComposeActivity::class.java))
         }
 
         with(binding.mainList) {

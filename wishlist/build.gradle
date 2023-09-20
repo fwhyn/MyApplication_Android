@@ -10,6 +10,17 @@ android {
     namespace 'com.fwhyn.wishlist'
     compileSdk target_sdk
 
+    defaultConfig {
+        minSdk min_sdk
+        targetSdk target_sdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
     buildFeatures {
         viewBinding true
     }

@@ -6,35 +6,30 @@ plugins {
 
 android {
     namespace 'com.fwhyn.cocktails'
-    compileSdk 33
+    compileSdk target_sdk
 
     defaultConfig {
-        // applicationId "com.fwhyn.cocktails"
-        minSdk 23
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        minSdk min_sdk
+        targetSdk target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
 
     buildFeatures {
-        // Enables viewBinding
         viewBinding true
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility java_version
+        targetCompatibility java_version
     }
+
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = java_version.toString()
     }
 }
 
@@ -58,7 +53,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 
     // Mockito-Kotlin
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'
 
     // Arch Core
     testImplementation "androidx.arch.core:core-testing:2.1.0"

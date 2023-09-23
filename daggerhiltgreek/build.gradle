@@ -7,32 +7,26 @@ plugins {
 
 android {
     namespace 'com.fwhyn.daggerhiltgreek'
-    compileSdk 33
+    compileSdk target_sdk
 
     defaultConfig {
-        // applicationId "com.fwhyn.daggerhiltgreek"
-        minSdk 23
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        minSdk min_sdk
+        targetSdk target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        vectorDrawables {
+            useSupportLibrary true
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility java_version
+        targetCompatibility java_version
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = java_version.toString()
     }
 }
 

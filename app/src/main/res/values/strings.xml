@@ -5,4 +5,8 @@
     <string name="button">Button</string>
     <string name="element_text">Element Text</string>
     <string name="module_list">Module List</string>
+    <string name="title_activity_cocomposan">CocomposanActivity</string>
+
+    <string name="show_less">Show less</string>
+    <string name="show_more">Show more</string>
 </resources>

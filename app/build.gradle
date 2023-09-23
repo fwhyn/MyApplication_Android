@@ -15,24 +15,26 @@ plugins {
 
 android {
     namespace 'com.fwhyn.myapplication'
-    compileSdk 33
+    compileSdk target_sdk
 
     defaultConfig {
         applicationId "com.fwhyn.myapplication"
-        minSdk 23
-        targetSdk 33
+        minSdk min_sdk
+        targetSdk target_sdk
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
 
     buildFeatures {
-        // Enables viewBinding
         viewBinding true
-
-        // Enables dataBinding
         dataBinding true
+        compose true
     }
 
     buildTypes {
@@ -43,12 +45,22 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility java_version
+        targetCompatibility java_version
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = java_version.toString()
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.4'
+    }
+
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 }
 
@@ -59,6 +71,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.test:monitor:1.6.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
 
     // Koin
     implementation "io.insert-koin:koin-android:3.2.0"
@@ -70,8 +83,23 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
     // Dagger Hilt
-    implementation "com.google.dagger:hilt-android:2.44.2"
+    implementation "com.google.dagger:hilt-android:$dagger_version"
+
     kapt "com.google.dagger:hilt-android-compiler:$dagger_version"
+
+    // Compose
+    def compose_version = "1.5.1"
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-graphics:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "androidx.activity:activity-compose:1.7.2"
+    implementation "androidx.compose.material3:material3:1.1.1"
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
 
     // Module
     implementation project(path: ':wishlist')
@@ -86,9 +114,6 @@ dependencies {
     // JUnit4
     testImplementation 'junit:junit:4.13.2'
 
-    // ViewModel LiveData
-    testImplementation 'androidx.arch.core:core-testing:2.1.0'
-
     // Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
@@ -97,4 +122,8 @@ dependencies {
 
     // Mockito-Kotlin
     testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
+
+    // Compose
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
 }

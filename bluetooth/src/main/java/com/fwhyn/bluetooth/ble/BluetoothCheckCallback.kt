@@ -1,6 +1,7 @@
 package com.fwhyn.bluetooth.ble
 
-interface BtMgr {
+interface BluetoothCheckCallback {
+
     fun ableToScan()
     fun unableToScan(reason: Reason)
 

@@ -1,21 +1,37 @@
 package com.fwhyn.bluetooth.permission
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 
-class PermissionRequest {
+class PermissionRequest(
+    activityResultCaller: ActivityResultCaller,
+    requestPermissionResult: PermissionRequestCallback
+) {
 
-    /**
-     * Please register the launcher before activity created
-     */
-    fun registerLauncher(activity: ActivityResultCaller, callback: (Boolean) -> Unit) : ActivityResultLauncher<String> {
-        return activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            callback(isGranted)
+    private val launcher: ActivityResultLauncher<Array<String>> =
+        activityResultCaller.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+            requestPermissionResult.onFinishedRequest(results)
         }
+
+    fun requestPermissions(permissions: Array<String>) {
+        launcher.launch(permissions)
     }
 
-    fun requestPermission(permission: String, launcher: ActivityResultLauncher<String>) {
-        launcher.launch(permission)
+    fun openPermissionSetting(activity: Activity) {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.run {
+            data = Uri.fromParts("package", activity.packageName, null)
+            addCategory(Intent.CATEGORY_DEFAULT)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+        }
+
+        activity.startActivity(intent)
     }
 }

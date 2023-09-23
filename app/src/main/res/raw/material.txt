@@ -1,7 +1,16 @@
 **** Clean Code ****
 by Robert C. Martin
 
+- Pass max 3 arguments through a method/function exp: func(arg1, arg2, arg3), if need more, try to
+merge it in a class
 - Separate main code and error handling -> error handling in other function
-
+- Create learning tests for API/3rd Party
+- TDD laws:
+   * First Law You may not write production code until you have written a failing unit test.
+   * Second Law You may not write more of a unit test than is sufficient to fail, and not compiling
+   is failing.
+   * Third Law You may not write more production code than is sufficient to pass the cur- rently
+   failing test.
+-
 
 

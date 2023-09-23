@@ -30,6 +30,14 @@
                 android:value="" />
         </activity>
 
+        <activity
+            android:name=".util.compose.CocomposanActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".util.compose.TryComposeActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

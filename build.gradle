@@ -6,6 +6,7 @@ buildscript {
         target_sdk = 34
         min_sdk = 23
         java_version = JavaVersion.VERSION_17
+        compose_compiler = "1.4.4"
     }
 
     repositories {

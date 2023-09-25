@@ -54,7 +54,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.4'
+        kotlinCompilerExtensionVersion compose_compiler
     }
 
     packagingOptions {
@@ -108,6 +108,7 @@ dependencies {
     implementation project(path: ':databinding')
     implementation project(path: ':googleanalytics')
     implementation project(path: ':bluetooth')
+    implementation project(path: ':mysoothe')
 
     // ---------------- Test ----------------
     // JUnit4

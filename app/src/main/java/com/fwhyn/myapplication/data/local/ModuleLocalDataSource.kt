@@ -4,6 +4,7 @@ import com.fwhyn.bluetooth.BluetoothActivity
 import com.fwhyn.cocktails.CocktailsGameActivity
 import com.fwhyn.databinding.UserActivity
 import com.fwhyn.myapplication.domain.model.Module
+import com.fwhyn.mysoothe.MySootheActivity
 import com.fwhyn.viewbinding.ResultActivity
 import com.fwhyn.wishlist.app.WishlistSplashActivity
 import fwhyn.corp.googleanalyticstest.GoogleAnalyticsActivity
@@ -16,5 +17,6 @@ class ModuleLocalDataSource {
         Module("Data Binding", UserActivity::class.java),
         Module("Google Analytics", GoogleAnalyticsActivity::class.java),
         Module("Bluetooth", BluetoothActivity::class.java),
+        Module("My Soothe", MySootheActivity::class.java),
     )
 }

@@ -102,12 +102,11 @@ dependencies {
 
 
     // Module
-    implementation project(path: ':wishlist')
-    implementation project(path: ':cocktails')
     implementation project(path: ':view')
-    implementation project(path: ':databinding')
-    implementation project(path: ':analytics')
     implementation project(path: ':connectivity')
+    implementation project(path: ':analytics')
+    implementation project(path: ':cocktails')
+    implementation project(path: ':wishlist')
     implementation project(path: ':mysoothe')
 
     // ---------------- Test ----------------

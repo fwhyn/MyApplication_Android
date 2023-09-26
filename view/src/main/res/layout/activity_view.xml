@@ -18,14 +18,14 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_margin="@dimen/medium_margin"
         android:cropToPadding="true"
         app:layout_constraintBottom_toTopOf="@+id/button_result"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:src="@tools:sample/avatars"
+        app:srcCompat="@android:drawable/ic_menu_report_image"
         tools:ignore="ContentDescription" />
 
     <Button
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/medium_margin"
-        android:text="@string/test"
+        android:text="@string/data_binding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

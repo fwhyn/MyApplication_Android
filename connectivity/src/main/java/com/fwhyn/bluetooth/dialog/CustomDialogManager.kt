@@ -9,7 +9,8 @@ package com.fwhyn.bluetooth.dialog
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.util.*
+import java.util.ArrayDeque
+import java.util.Deque
 
 class CustomDialogManager : ViewModel() {
     private val dialogJob = MutableLiveData<Deque<Array<String>>>()

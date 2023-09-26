@@ -1,11 +1,11 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
 }
 
 android {
-    namespace 'com.fwhyn.cocktails'
+    namespace 'com.fwhyn.view'
     compileSdk target_sdk
 
     defaultConfig {
@@ -21,6 +21,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 
     compileOptions {
@@ -34,27 +35,12 @@ android {
 }
 
 dependencies {
-    // ---------------- Main ----------------
+
     implementation "androidx.core:core-ktx:$androidx_core_core_ktx"
     implementation "androidx.appcompat:appcompat:$androidx_appcompat_appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_constraintlayout"
     implementation "com.google.android.material:material:$com_google_android_material_material"
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-
-    // Glide
-    implementation 'com.github.bumptech.glide:glide:4.13.2'
-
-    // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
-    // ---------------- Tests ----------------
-    // JUnit4
     testImplementation 'junit:junit:4.13.2'
-
-    // Mockito-Kotlin
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'
-
-    // Arch Core
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 }

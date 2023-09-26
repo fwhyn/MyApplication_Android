@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Bluetooth</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="permission_granted">Permission granted</string>
+    <string name="bluetooth_enabled">Bluetooth enabled</string>
+    <string name="printing">Printing…</string>
+    <string name="show_dialog">Show Dialog</string>
+    <string name="click_me">Click Me!</string>
+</resources>

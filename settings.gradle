@@ -14,11 +14,10 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MyApplication"
 include ':app'
-include ':wishlist'
+include ':view'
+include ':connectivity'
+include ':analytics'
 include ':cocktails'
-include ':viewbinding'
-include ':databinding'
-include ':googleanalytics'
-include ':bluetooth'
+include ':wishlist'
 include ':punchline'
 include ':mysoothe'

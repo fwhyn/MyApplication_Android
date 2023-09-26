@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">View Binding</string>
+    <string name="test">Test</string>
+    <string name="dummy_text">Dummy Text</string>
+    <string name="button_test">Button Test</string>
+    <string name="data_binding">Data Binding</string>
+</resources>

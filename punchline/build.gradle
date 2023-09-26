@@ -34,10 +34,10 @@ android {
 
 dependencies {
     // ---------------- Main ----------------
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.core:core-ktx:$androidx_core_core_ktx"
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat_appcompat"
+    implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_constraintlayout"
+    "com.google.android.material:material:$com_google_android_material_material"
 
     // Koin
     implementation "io.insert-koin:koin-android:$koin_version"

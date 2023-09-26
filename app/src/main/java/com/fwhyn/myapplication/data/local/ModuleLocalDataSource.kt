@@ -5,13 +5,13 @@ import com.fwhyn.connectivity.ConnectivityActivity
 import com.fwhyn.databinding.UserActivity
 import com.fwhyn.myapplication.domain.model.Module
 import com.fwhyn.mysoothe.MySootheActivity
-import com.fwhyn.viewbinding.ResultActivity
+import com.fwhyn.view.ViewActivity
 import com.fwhyn.wishlist.app.WishlistSplashActivity
 import fwhyn.corp.analytics.AnalyticsActivity
 
 class ModuleLocalDataSource {
     val moduleList = listOf(
-        Module("View Binding", ResultActivity::class.java),
+        Module("View", ViewActivity::class.java),
         Module("Data Binding", UserActivity::class.java),
         Module("Connectivity", ConnectivityActivity::class.java),
         Module("Analytics", AnalyticsActivity::class.java),

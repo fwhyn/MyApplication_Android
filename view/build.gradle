@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.fwhyn.viewbinding'
+    namespace 'com.fwhyn.view'
     compileSdk target_sdk
 
     defaultConfig {

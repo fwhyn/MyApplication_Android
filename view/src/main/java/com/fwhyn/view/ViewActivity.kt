@@ -1,10 +1,10 @@
-package com.fwhyn.viewbinding
+package com.fwhyn.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.fwhyn.viewbinding.databinding.ActivityResultBinding
+import androidx.appcompat.app.AppCompatActivity
+import com.fwhyn.view.databinding.ActivityResultBinding
 
-class ResultActivity : AppCompatActivity() {
+class ViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -104,7 +104,7 @@ dependencies {
     // Module
     implementation project(path: ':wishlist')
     implementation project(path: ':cocktails')
-    implementation project(path: ':viewbinding')
+    implementation project(path: ':view')
     implementation project(path: ':databinding')
     implementation project(path: ':analytics')
     implementation project(path: ':connectivity')

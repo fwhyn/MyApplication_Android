@@ -1,4 +1,4 @@
-package com.fwhyn.bluetooth.permission
+package com.fwhyn.connectivity.permission
 
 import android.app.Activity
 import androidx.activity.result.ActivityResultCaller

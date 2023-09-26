@@ -1,21 +1,21 @@
-package com.fwhyn.bluetooth
+package com.fwhyn.connectivity
 
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.fwhyn.bluetooth.ble.BluetoothCheck
-import com.fwhyn.bluetooth.ble.BluetoothCheckCallback
+import com.fwhyn.connectivity.ble.BluetoothCheck
+import com.fwhyn.connectivity.ble.BluetoothCheckCallback
 
-class BluetoothActivity : AppCompatActivity() {
+class ConnectivityActivity : AppCompatActivity() {
     private val bluetoothCheck = BluetoothCheck(this, this, object : BluetoothCheckCallback {
         override fun ableToScan() {
-            Toast.makeText(this@BluetoothActivity, "Ok", Toast.LENGTH_SHORT)
+            Toast.makeText(this@ConnectivityActivity, "Ok", Toast.LENGTH_SHORT)
                 .show()
         }
 
         override fun unableToScan(reason: BluetoothCheckCallback.Reason) {
-            Toast.makeText(this@BluetoothActivity, reason.toString(), Toast.LENGTH_SHORT)
+            Toast.makeText(this@ConnectivityActivity, reason.toString(), Toast.LENGTH_SHORT)
                 .show()
         }
 

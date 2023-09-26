@@ -4,7 +4,7 @@
  *
  * CustomDialog class is a common class for creating dialog that using DialogFragment to show it
  */
-package com.fwhyn.bluetooth.dialog
+package com.fwhyn.connectivity.dialog
 
 import android.app.Dialog
 import android.content.DialogInterface

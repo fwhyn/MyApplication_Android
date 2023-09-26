@@ -1,4 +1,4 @@
-package com.fwhyn.bluetooth
+package com.fwhyn.connectivity
 
 //class BluetoothViewModel : AppCompatActivity() {
 //    private val bluetoothCheck = BluetoothCheck(this, this)

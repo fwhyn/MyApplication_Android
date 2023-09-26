@@ -1,4 +1,4 @@
-package com.fwhyn.bluetooth.ble
+package com.fwhyn.connectivity.ble
 
 import android.Manifest
 import android.app.Activity
@@ -13,8 +13,8 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.fwhyn.bluetooth.permission.PermissionCheckCallback
-import com.fwhyn.bluetooth.permission.PermissionManager
+import com.fwhyn.connectivity.permission.PermissionCheckCallback
+import com.fwhyn.connectivity.permission.PermissionManager
 
 class BluetoothCheck(
     private val activity: Activity,

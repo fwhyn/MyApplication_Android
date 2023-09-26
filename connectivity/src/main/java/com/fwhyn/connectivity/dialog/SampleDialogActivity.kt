@@ -1,4 +1,4 @@
-package com.fwhyn.bluetooth.dialog
+package com.fwhyn.connectivity.dialog
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.fwhyn.bluetooth.R
-import com.fwhyn.bluetooth.dialog.CustomDialog.ClickListener
-import com.fwhyn.bluetooth.dialog.CustomDialog.DialogCallback
-import com.fwhyn.bluetooth.dialog.smartpanel.SmartPanelDialog
+import com.fwhyn.connectivity.R
+import com.fwhyn.connectivity.dialog.CustomDialog.ClickListener
+import com.fwhyn.connectivity.dialog.CustomDialog.DialogCallback
+import com.fwhyn.connectivity.dialog.smartpanel.SmartPanelDialog
 
 // 0. we have to implement CustomDialog.DialogCallback and CustomDialog.ClickListener (if dialog has button)
 class SampleDialogActivity : AppCompatActivity(), DialogCallback, ClickListener {

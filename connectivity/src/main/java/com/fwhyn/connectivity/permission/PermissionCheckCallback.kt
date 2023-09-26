@@ -1,4 +1,4 @@
-package com.fwhyn.bluetooth.permission
+package com.fwhyn.connectivity.permission
 
 interface PermissionCheckCallback {
 

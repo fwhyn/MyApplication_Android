@@ -1,4 +1,4 @@
-package com.fwhyn.bluetooth.ble
+package com.fwhyn.connectivity.ble
 
 interface BluetoothCheckCallback {
 

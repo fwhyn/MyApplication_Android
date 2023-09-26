@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.fwhyn.bluetooth'
+    namespace 'com.fwhyn.connectivity'
     compileSdk target_sdk
 
     defaultConfig {

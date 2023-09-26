@@ -1,10 +1,10 @@
-package com.fwhyn.bluetooth.dialog.smartpanel
+package com.fwhyn.connectivity.dialog.smartpanel
 
 import android.content.DialogInterface
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
-import com.fwhyn.bluetooth.dialog.CustomDialog
-import com.fwhyn.bluetooth.dialog.CustomDialog.ClickListener
+import com.fwhyn.connectivity.dialog.CustomDialog
+import com.fwhyn.connectivity.dialog.CustomDialog.ClickListener
 
 class SmartPanelDialog(private val mFragmentActivity: FragmentActivity) : ClickListener {
     fun createDialog(): CustomDialog.Builder {

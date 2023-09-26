@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".BluetoothActivity"
+            android:name=".ConnectivityActivity"
             android:exported="false">
         </activity>
     </application>

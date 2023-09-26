@@ -4,7 +4,7 @@
  *
  * CustomDialogManager is used for storing dialog's flag and tag that is needed by CustomDialog class
  */
-package com.fwhyn.bluetooth.dialog
+package com.fwhyn.connectivity.dialog
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData

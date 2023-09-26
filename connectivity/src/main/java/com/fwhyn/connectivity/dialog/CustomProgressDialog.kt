@@ -1,4 +1,4 @@
-package com.fwhyn.bluetooth.dialog
+package com.fwhyn.connectivity.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
-import com.fwhyn.bluetooth.R
+import com.fwhyn.connectivity.R
 
 /**
  * This class provide progress bar which has lifecycle by DialogFragment

@@ -1,4 +1,4 @@
-package com.fwhyn.bluetooth
+package com.fwhyn.connectivity
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

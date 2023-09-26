@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".GoogleAnalyticsActivity"
+            android:name=".AnalyticsActivity"
             android:exported="false">
         </activity>
     </application>

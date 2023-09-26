@@ -106,7 +106,7 @@ dependencies {
     implementation project(path: ':cocktails')
     implementation project(path: ':viewbinding')
     implementation project(path: ':databinding')
-    implementation project(path: ':googleanalytics')
+    implementation project(path: ':analytics')
     implementation project(path: ':connectivity')
     implementation project(path: ':mysoothe')
 

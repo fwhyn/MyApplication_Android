@@ -1,4 +1,4 @@
-package fwhyn.corp.googleanalyticstest
+package fwhyn.corp.analytics
 
 //import com.google.android.gms.analytics.HitBuilders
 //import com.google.android.gms.analytics.ecommerce.Product
@@ -11,7 +11,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 
-class GoogleAnalyticsActivity : AppCompatActivity() {
+class AnalyticsActivity : AppCompatActivity() {
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 

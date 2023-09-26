@@ -32,7 +32,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$androidx_core_core_ktx"
     implementation "androidx.appcompat:appcompat:$androidx_appcompat_appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_constraintlayout"
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation "com.google.android.material:material:$com_google_android_material_material"
 
     // Add Google Universal Analytics
     implementation 'com.google.android.gms:play-services-analytics:18.0.2'

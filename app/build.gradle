@@ -66,40 +66,34 @@ android {
 
 dependencies {
     // ---------------- Main ----------------
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.test:monitor:1.6.1'
+    implementation "androidx.core:core-ktx:$androidx_core_core_ktx"
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat_appcompat"
+    implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_constraintlayout"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation 'androidx.test:monitor:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
 
     // Koin
     implementation "io.insert-koin:koin-android:3.2.0"
-
-    // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
 
     // Coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
     // Dagger Hilt
     implementation "com.google.dagger:hilt-android:$dagger_version"
-
     kapt "com.google.dagger:hilt-android-compiler:$dagger_version"
 
     // Compose
-    def compose_version = "1.5.1"
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-graphics:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
-    implementation "androidx.activity:activity-compose:1.7.2"
-    implementation "androidx.compose.material3:material3:1.1.1"
+    implementation "androidx.compose.material3:material3:$androidx_compose_material3"
+    implementation "androidx.activity:activity-compose:$androidx_activity_activity_compose"
     implementation platform('androidx.compose:compose-bom:2022.10.00')
-
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
-
 
     // Module
     implementation project(path: ':view')

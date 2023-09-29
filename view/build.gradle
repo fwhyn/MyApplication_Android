@@ -34,8 +34,14 @@ android {
         jvmTarget = java_version.toString()
     }
 
+
     composeOptions {
         kotlinCompilerExtensionVersion compose_compiler
+    }
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 }
 
@@ -53,7 +59,8 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.material3:material3:$androidx_compose_material3"
     implementation "androidx.activity:activity-compose:$androidx_activity_activity_compose"
-    implementation platform('androidx.compose:compose-bom:2022.10.00')
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
@@ -64,5 +71,5 @@ dependencies {
 
     // Compose
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
 }

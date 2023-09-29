@@ -8,15 +8,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-
+        <activity
+            android:name=".composestate.ComposeStateActivity"
+            android:exported="false"
+            android:label="@string/title_activity_compose_state"
+            android:theme="@style/Theme.MyApplication" />
         <activity
             android:name=".ViewActivity"
-            android:exported="false"></activity>
-
+            android:exported="false" />
         <activity
             android:name=".databinding.UserActivity"
-            android:exported="false"></activity>
-
+            android:exported="false" />
     </application>
 
 </manifest>

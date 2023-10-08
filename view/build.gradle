@@ -52,6 +52,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_constraintlayout"
     implementation "com.google.android.material:material:$com_google_android_material_material"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidx_lifecycle"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.6.0"
 
     // Compose
     implementation "androidx.compose.ui:ui:$compose_version"

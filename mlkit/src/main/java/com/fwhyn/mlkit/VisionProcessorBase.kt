@@ -27,6 +27,7 @@ import androidx.annotation.GuardedBy
 import androidx.annotation.RequiresApi
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
+import com.fwhyn.mlkit.preference.PreferenceUtils
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
@@ -38,11 +39,6 @@ import com.google.android.odml.image.MediaMlImageBuilder
 import com.google.android.odml.image.MlImage
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.demo.BitmapUtils
-import com.google.mlkit.vision.demo.CameraImageGraphic
-import com.google.mlkit.vision.demo.InferenceInfoGraphic
-import com.google.mlkit.vision.demo.ScopedExecutor
-import com.google.mlkit.vision.demo.preference.PreferenceUtils
 import java.lang.Math.max
 import java.lang.Math.min
 import java.nio.ByteBuffer

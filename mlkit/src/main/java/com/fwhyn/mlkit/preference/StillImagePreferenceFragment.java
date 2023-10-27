@@ -19,7 +19,7 @@ package com.fwhyn.mlkit.preference;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
-import com.google.mlkit.vision.demo.R;
+import com.fwhyn.mlkit.R;
 
 /**
  * Configures still image demo settings.

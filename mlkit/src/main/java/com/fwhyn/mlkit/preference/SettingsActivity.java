@@ -22,7 +22,7 @@ import android.preference.PreferenceFragment;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.mlkit.vision.demo.R;
+import com.fwhyn.mlkit.R;
 
 /**
  * Hosts the preference fragment to configure settings for a demo activity that specified by the

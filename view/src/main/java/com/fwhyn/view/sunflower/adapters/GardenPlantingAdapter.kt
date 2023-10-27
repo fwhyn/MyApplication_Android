@@ -24,10 +24,9 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.fwhyn.view.sunflower.HomeViewPagerFragmentDirections
-import com.fwhyn.view.sunflower.R
+import com.fwhyn.view.R
+import com.fwhyn.view.databinding.ListItemGardenPlantingBinding
 import com.fwhyn.view.sunflower.data.PlantAndGardenPlantings
-import com.fwhyn.view.sunflower.databinding.ListItemGardenPlantingBinding
 import com.fwhyn.view.sunflower.viewmodels.PlantAndGardenPlantingsViewModel
 
 class GardenPlantingAdapter :

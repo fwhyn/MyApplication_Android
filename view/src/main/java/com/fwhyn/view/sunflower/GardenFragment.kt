@@ -23,9 +23,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.fwhyn.view.R
+import com.fwhyn.view.databinding.FragmentGardenBinding
 import com.fwhyn.view.sunflower.adapters.GardenPlantingAdapter
 import com.fwhyn.view.sunflower.adapters.PLANT_LIST_PAGE_INDEX
-import com.fwhyn.view.sunflower.databinding.FragmentGardenBinding
 import com.fwhyn.view.sunflower.utilities.InjectorUtils
 import com.fwhyn.view.sunflower.viewmodels.GardenPlantingListViewModel
 

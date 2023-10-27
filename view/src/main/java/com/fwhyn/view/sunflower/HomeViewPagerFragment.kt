@@ -22,20 +22,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.fwhyn.view.R
 import com.fwhyn.view.databinding.FragmentViewPagerBinding
-import com.google.android.material.tabs.TabLayoutMediator
 import com.fwhyn.view.sunflower.adapters.MY_GARDEN_PAGE_INDEX
 import com.fwhyn.view.sunflower.adapters.PLANT_LIST_PAGE_INDEX
 import com.fwhyn.view.sunflower.adapters.SunflowerPagerAdapter
-import com.fwhyn.view.sunflower.databinding.FragmentViewPagerBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeViewPagerFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?,
+    ): View {
         val binding = FragmentViewPagerBinding.inflate(inflater, container, false)
         val tabLayout = binding.tabs
         val viewPager = binding.viewPager

@@ -30,12 +30,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.fwhyn.view.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import com.fwhyn.view.databinding.FragmentPlantDetailBinding
 import com.fwhyn.view.sunflower.data.Plant
-import com.fwhyn.view.sunflower.databinding.FragmentPlantDetailBinding
 import com.fwhyn.view.sunflower.utilities.InjectorUtils
 import com.fwhyn.view.sunflower.viewmodels.PlantDetailViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A fragment representing a single Plant detail screen.

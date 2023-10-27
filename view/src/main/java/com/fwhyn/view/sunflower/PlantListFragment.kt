@@ -25,8 +25,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.fwhyn.view.R
+import com.fwhyn.view.databinding.FragmentPlantListBinding
 import com.fwhyn.view.sunflower.adapters.PlantAdapter
-import com.fwhyn.view.sunflower.databinding.FragmentPlantListBinding
 import com.fwhyn.view.sunflower.utilities.InjectorUtils
 import com.fwhyn.view.sunflower.viewmodels.PlantListViewModel
 

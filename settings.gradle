@@ -5,13 +5,14 @@ pluginManagement {
         mavenCentral()
     }
 }
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+//dependencyResolutionManagement {
+//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//    repositories {
+//        google()
+//        mavenCentral()
+//    }
+//}
+
 rootProject.name = "MyApplication"
 include ':app'
 include ':view'
@@ -21,3 +22,4 @@ include ':cocktails'
 include ':wishlist'
 include ':punchline'
 include ':mysoothe'
+include ':mlkit'

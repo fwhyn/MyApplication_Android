@@ -1,0 +1,92 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.fwhyn.mlkit'
+    compileSdk target_sdk
+
+    defaultConfig {
+        minSdk min_sdk
+        targetSdk target_sdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    compileOptions {
+        sourceCompatibility java_version
+        targetCompatibility java_version
+    }
+
+    kotlinOptions {
+        jvmTarget = java_version.toString()
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_compiler
+    }
+}
+
+repositories {
+    // Depending on AndroidX Snapshot Builds to get the latest CameraX libs.
+    maven { url 'https://androidx.dev/snapshots/builds/6787662/artifacts/repository/' }
+}
+
+dependencies {
+    implementation "androidx.core:core-ktx:$androidx_core_core_ktx"
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat_appcompat"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation 'com.google.guava:guava:27.1-android'
+
+    // Compose
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-graphics:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation "androidx.compose.material3:material3:$androidx_compose_material3"
+    implementation "androidx.compose.material3:material3-window-size-class:$androidx_compose_material3"
+    implementation "androidx.activity:activity-compose:$androidx_activity_activity_compose"
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+
+    // CameraX
+    implementation "androidx.camera:camera-camera2:1.0.0-SNAPSHOT"
+    implementation "androidx.camera:camera-lifecycle:1.0.0-SNAPSHOT"
+    implementation "androidx.camera:camera-view:1.0.0-SNAPSHOT"
+
+    // ML Kit
+    implementation 'com.google.mlkit:segmentation-selfie:16.0.0-beta4'
+    // Object detection feature with bundled default classifier
+
+    implementation 'com.google.mlkit:object-detection:17.0.0'
+
+    // Object detection feature with custom classifier support
+    implementation 'com.google.mlkit:object-detection-custom:17.0.0'
+
+    // Face features
+    implementation 'com.google.mlkit:face-detection:16.1.5'
+
+    // Face Mesh Detection
+    implementation 'com.google.mlkit:face-mesh-detection:16.0.0-beta1'
+
+    // Pose detection with default models
+    implementation 'com.google.mlkit:pose-detection:18.0.0-beta3'
+
+    // Pose detection with accurate models
+    implementation 'com.google.mlkit:pose-detection-accurate:18.0.0-beta3'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+}

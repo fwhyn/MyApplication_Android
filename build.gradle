@@ -12,6 +12,8 @@ buildscript {
         androidx_appcompat_appcompat = "1.6.1"
         androidx_constraintlayout_constraintlayout = "2.1.4"
         androidx_lifecycle = "2.6.2"
+        androidx_navigation_navigation = "2.7.4"
+        androidx_room_room = "2.5.2"
 
         com_google_android_material_material = "1.9.0"
 
@@ -32,7 +34,7 @@ buildscript {
 
     dependencies {
         classpath 'com.google.gms:google-services:4.4.0'
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.7.4"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$androidx_navigation_navigation"
     }
 }
 

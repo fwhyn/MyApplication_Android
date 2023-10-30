@@ -44,6 +44,7 @@ repositories {
 dependencies {
     implementation "androidx.core:core-ktx:$androidx_core_core_ktx"
     implementation "androidx.appcompat:appcompat:$androidx_appcompat_appcompat"
+    implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_constraintlayout"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
     implementation 'com.google.guava:guava:27.1-android'
 

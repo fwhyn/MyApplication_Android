@@ -19,8 +19,8 @@ package com.fwhyn.mlkit.facedetector
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import com.fwhyn.mlkit.GraphicOverlay
-import com.fwhyn.mlkit.GraphicOverlay.Graphic
+import com.fwhyn.mlkit.base.GraphicOverlay
+import com.fwhyn.mlkit.base.GraphicOverlay.Graphic
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceLandmark
 import com.google.mlkit.vision.face.FaceLandmark.LandmarkType

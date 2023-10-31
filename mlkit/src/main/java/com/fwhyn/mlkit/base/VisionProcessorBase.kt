@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fwhyn.mlkit
+package com.fwhyn.mlkit.base
 
 import android.app.ActivityManager
 import android.content.Context
@@ -337,7 +337,12 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
           }
           graphicOverlay.clear()
           if (originalCameraImage != null) {
-            graphicOverlay.add(CameraImageGraphic(graphicOverlay, originalCameraImage))
+              graphicOverlay.add(
+                  CameraImageGraphic(
+                      graphicOverlay,
+                      originalCameraImage
+                  )
+              )
           }
           this@VisionProcessorBase.onSuccess(results, graphicOverlay)
           if (!PreferenceUtils.shouldHideDetectionInfo(graphicOverlay.context)) {

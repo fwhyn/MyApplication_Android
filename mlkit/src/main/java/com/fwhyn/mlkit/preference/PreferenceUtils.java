@@ -26,9 +26,9 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.camera.core.CameraSelector;
 
-import com.fwhyn.mlkit.CameraSource;
-import com.fwhyn.mlkit.CameraSource.SizePair;
 import com.fwhyn.mlkit.R;
+import com.fwhyn.mlkit.base.CameraSource;
+import com.fwhyn.mlkit.base.CameraSource.SizePair;
 import com.google.android.gms.common.images.Size;
 import com.google.common.base.Preconditions;
 import com.google.mlkit.common.model.LocalModel;

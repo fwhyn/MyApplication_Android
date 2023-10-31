@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fwhyn.mlkit;
+package com.fwhyn.mlkit.base;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

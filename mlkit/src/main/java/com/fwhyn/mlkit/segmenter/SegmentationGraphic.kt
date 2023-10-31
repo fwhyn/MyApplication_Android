@@ -21,7 +21,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import androidx.annotation.ColorInt
-import com.fwhyn.mlkit.GraphicOverlay
+import com.fwhyn.mlkit.base.GraphicOverlay
 import com.google.mlkit.vision.segmentation.SegmentationMask
 import java.nio.ByteBuffer
 

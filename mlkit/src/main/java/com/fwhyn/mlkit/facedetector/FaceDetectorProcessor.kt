@@ -18,8 +18,8 @@ package com.fwhyn.mlkit.facedetector
 
 import android.content.Context
 import android.util.Log
-import com.fwhyn.mlkit.GraphicOverlay
-import com.fwhyn.mlkit.VisionProcessorBase
+import com.fwhyn.mlkit.base.GraphicOverlay
+import com.fwhyn.mlkit.base.VisionProcessorBase
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face

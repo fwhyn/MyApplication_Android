@@ -37,17 +37,16 @@ import android.widget.PopupMenu
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.fwhyn.mlkit.BitmapUtils
-import com.fwhyn.mlkit.GraphicOverlay
 import com.fwhyn.mlkit.R
-import com.fwhyn.mlkit.VisionImageProcessor
+import com.fwhyn.mlkit.base.BitmapUtils
+import com.fwhyn.mlkit.base.GraphicOverlay
+import com.fwhyn.mlkit.base.VisionImageProcessor
+import com.fwhyn.mlkit.facedetector.FaceDetectorProcessor
 import com.fwhyn.mlkit.preference.PreferenceUtils
 import com.fwhyn.mlkit.preference.SettingsActivity
 import com.fwhyn.mlkit.preference.SettingsActivity.LaunchSource
 import com.fwhyn.mlkit.segmenter.SegmenterProcessor
 import com.google.android.gms.common.annotation.KeepName
-import com.google.mlkit.common.model.LocalModel
-import com.google.mlkit.vision.demo.kotlin.objectdetector.ObjectDetectorProcessor
 import java.io.IOException
 
 /** Activity demonstrating different image detector features with a still image from camera. */
@@ -147,17 +146,7 @@ class StillImageActivity : AppCompatActivity() {
     options.add(OBJECT_DETECTION_CUSTOM)
     options.add(CUSTOM_AUTOML_OBJECT_DETECTION)
     options.add(FACE_DETECTION)
-    options.add(BARCODE_SCANNING)
-    options.add(IMAGE_LABELING)
-    options.add(IMAGE_LABELING_CUSTOM)
-    options.add(CUSTOM_AUTOML_LABELING)
-    options.add(POSE_DETECTION)
     options.add(SELFIE_SEGMENTATION)
-    options.add(TEXT_RECOGNITION_LATIN)
-    options.add(TEXT_RECOGNITION_CHINESE)
-    options.add(TEXT_RECOGNITION_DEVANAGARI)
-    options.add(TEXT_RECOGNITION_JAPANESE)
-    options.add(TEXT_RECOGNITION_KOREAN)
     options.add(FACE_MESH_DETECTION)
 
     // Creating adapter for featureSpinner
@@ -340,107 +329,14 @@ class StillImageActivity : AppCompatActivity() {
   private fun createImageProcessor() {
     try {
       when (selectedMode) {
-        OBJECT_DETECTION -> {
-          Log.i(TAG, "Using Object Detector Processor")
-          val objectDetectorOptions = PreferenceUtils.getObjectDetectorOptionsForStillImage(this)
-          imageProcessor = ObjectDetectorProcessor(this, objectDetectorOptions)
-        }
-
-        OBJECT_DETECTION_CUSTOM -> {
-          Log.i(TAG, "Using Custom Object Detector Processor")
-          val localModel =
-            LocalModel.Builder().setAssetFilePath("custom_models/object_labeler.tflite").build()
-          val customObjectDetectorOptions =
-            PreferenceUtils.getCustomObjectDetectorOptionsForStillImage(this, localModel)
-          imageProcessor = ObjectDetectorProcessor(this, customObjectDetectorOptions)
-        }
-
-        CUSTOM_AUTOML_OBJECT_DETECTION -> {
-          Log.i(TAG, "Using Custom AutoML Object Detector Processor")
-          val customAutoMLODTLocalModel =
-            LocalModel.Builder().setAssetManifestFilePath("automl/manifest.json").build()
-          val customAutoMLODTOptions =
-            PreferenceUtils.getCustomObjectDetectorOptionsForStillImage(
-              this,
-              customAutoMLODTLocalModel
-            )
-          imageProcessor = ObjectDetectorProcessor(this, customAutoMLODTOptions)
-        }
-
         FACE_DETECTION -> {
           Log.i(TAG, "Using Face Detector Processor")
           val faceDetectorOptions = PreferenceUtils.getFaceDetectorOptions(this)
           imageProcessor = FaceDetectorProcessor(this, faceDetectorOptions)
         }
 
-        BARCODE_SCANNING -> imageProcessor = BarcodeScannerProcessor(this, zoomCallback = null)
-        TEXT_RECOGNITION_LATIN ->
-          imageProcessor = TextRecognitionProcessor(this, TextRecognizerOptions.Builder().build())
-
-        TEXT_RECOGNITION_CHINESE ->
-          imageProcessor =
-            TextRecognitionProcessor(this, ChineseTextRecognizerOptions.Builder().build())
-
-        TEXT_RECOGNITION_DEVANAGARI ->
-          imageProcessor =
-            TextRecognitionProcessor(this, DevanagariTextRecognizerOptions.Builder().build())
-
-        TEXT_RECOGNITION_JAPANESE ->
-          imageProcessor =
-            TextRecognitionProcessor(this, JapaneseTextRecognizerOptions.Builder().build())
-
-        TEXT_RECOGNITION_KOREAN ->
-          imageProcessor =
-            TextRecognitionProcessor(this, KoreanTextRecognizerOptions.Builder().build())
-
-        IMAGE_LABELING ->
-          imageProcessor = LabelDetectorProcessor(this, ImageLabelerOptions.DEFAULT_OPTIONS)
-
-        IMAGE_LABELING_CUSTOM -> {
-          Log.i(TAG, "Using Custom Image Label Detector Processor")
-          val localClassifier =
-            LocalModel.Builder().setAssetFilePath("custom_models/bird_classifier.tflite").build()
-          val customImageLabelerOptions = CustomImageLabelerOptions.Builder(localClassifier).build()
-          imageProcessor = LabelDetectorProcessor(this, customImageLabelerOptions)
-        }
-
-        CUSTOM_AUTOML_LABELING -> {
-          Log.i(TAG, "Using Custom AutoML Image Label Detector Processor")
-          val customAutoMLLabelLocalModel =
-            LocalModel.Builder().setAssetManifestFilePath("automl/manifest.json").build()
-          val customAutoMLLabelOptions =
-            CustomImageLabelerOptions.Builder(customAutoMLLabelLocalModel)
-              .setConfidenceThreshold(0f)
-              .build()
-          imageProcessor = LabelDetectorProcessor(this, customAutoMLLabelOptions)
-        }
-
-        POSE_DETECTION -> {
-          val poseDetectorOptions = PreferenceUtils.getPoseDetectorOptionsForStillImage(this)
-          Log.i(TAG, "Using Pose Detector with options $poseDetectorOptions")
-          val shouldShowInFrameLikelihood =
-            PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodStillImage(this)
-          val visualizeZ = PreferenceUtils.shouldPoseDetectionVisualizeZ(this)
-          val rescaleZ = PreferenceUtils.shouldPoseDetectionRescaleZForVisualization(this)
-          val runClassification = PreferenceUtils.shouldPoseDetectionRunClassification(this)
-          imageProcessor =
-            PoseDetectorProcessor(
-              this,
-              poseDetectorOptions,
-              shouldShowInFrameLikelihood,
-              visualizeZ,
-              rescaleZ,
-              runClassification,
-              isStreamMode = false
-            )
-        }
-
         SELFIE_SEGMENTATION -> {
           imageProcessor = SegmenterProcessor(this, isStreamMode = false)
-        }
-
-        FACE_MESH_DETECTION -> {
-          imageProcessor = FaceMeshDetectorProcessor(this)
         }
 
         else -> Log.e(TAG, "Unknown selectedMode: $selectedMode")
@@ -462,16 +358,6 @@ class StillImageActivity : AppCompatActivity() {
     private const val OBJECT_DETECTION_CUSTOM = "Custom Object Detection"
     private const val CUSTOM_AUTOML_OBJECT_DETECTION = "Custom AutoML Object Detection (Flower)"
     private const val FACE_DETECTION = "Face Detection"
-    private const val BARCODE_SCANNING = "Barcode Scanning"
-    private const val TEXT_RECOGNITION_LATIN = "Text Recognition Latin"
-    private const val TEXT_RECOGNITION_CHINESE = "Text Recognition Chinese"
-    private const val TEXT_RECOGNITION_DEVANAGARI = "Text Recognition Devanagari"
-    private const val TEXT_RECOGNITION_JAPANESE = "Text Recognition Japanese"
-    private const val TEXT_RECOGNITION_KOREAN = "Text Recognition Korean"
-    private const val IMAGE_LABELING = "Image Labeling"
-    private const val IMAGE_LABELING_CUSTOM = "Custom Image Labeling (Birds)"
-    private const val CUSTOM_AUTOML_LABELING = "Custom AutoML Image Labeling (Flower)"
-    private const val POSE_DETECTION = "Pose Detection"
     private const val SELFIE_SEGMENTATION = "Selfie Segmentation"
     private const val FACE_MESH_DETECTION = "Face Mesh Detection (Beta)"
 

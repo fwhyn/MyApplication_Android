@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fwhyn.mlkit;
+package com.fwhyn.mlkit.base;
 
 import android.content.ContentResolver;
 import android.graphics.Bitmap;

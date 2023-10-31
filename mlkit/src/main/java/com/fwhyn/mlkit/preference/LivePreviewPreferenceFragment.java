@@ -26,9 +26,9 @@ import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 
-import com.fwhyn.mlkit.CameraSource;
-import com.fwhyn.mlkit.CameraSource.SizePair;
 import com.fwhyn.mlkit.R;
+import com.fwhyn.mlkit.base.CameraSource;
+import com.fwhyn.mlkit.base.CameraSource.SizePair;
 
 import java.util.HashMap;
 import java.util.List;

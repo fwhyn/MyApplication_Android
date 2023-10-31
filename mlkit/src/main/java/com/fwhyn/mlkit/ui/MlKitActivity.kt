@@ -1,4 +1,4 @@
-package com.fwhyn.mlkit
+package com.fwhyn.mlkit.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

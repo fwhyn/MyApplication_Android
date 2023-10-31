@@ -18,8 +18,8 @@ package com.fwhyn.mlkit.segmenter
 
 import android.content.Context
 import android.util.Log
-import com.fwhyn.mlkit.GraphicOverlay
-import com.fwhyn.mlkit.VisionProcessorBase
+import com.fwhyn.mlkit.base.GraphicOverlay
+import com.fwhyn.mlkit.base.VisionProcessorBase
 import com.fwhyn.mlkit.preference.PreferenceUtils
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage

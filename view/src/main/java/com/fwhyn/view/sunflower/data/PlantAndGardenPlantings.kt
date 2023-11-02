@@ -18,8 +18,6 @@ package com.fwhyn.view.sunflower.data
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.fwhyn.view.sunflower.data.GardenPlanting
-import com.fwhyn.view.sunflower.data.Plant
 
 /**
  * This class captures the relationship between a [Plant] and a user's [GardenPlanting], which is
@@ -30,5 +28,5 @@ data class PlantAndGardenPlantings(
     val plant: Plant,
 
     @Relation(parentColumn = "id", entityColumn = "plant_id")
-    val gardenPlantings: List<GardenPlanting> = emptyList()
+    val gardenPlantings: List<GardenPlanting> = emptyList(),
 )

@@ -13,12 +13,20 @@
             android:exported="false"
             android:label="@string/title_activity_compose_state"
             android:theme="@style/Theme.MyApplication" />
+
         <activity
             android:name=".ViewActivity"
             android:exported="false" />
+
         <activity
             android:name=".databinding.UserActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".sunflower.GardenActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Sunflower" />
+
     </application>
 
 </manifest>

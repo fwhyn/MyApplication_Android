@@ -56,15 +56,14 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$androidx_navigation_navigation"
     implementation "androidx.navigation:navigation-ui-ktx:$androidx_navigation_navigation"
     implementation "androidx.fragment:fragment-ktx:1.6.1"
-    implementation "com.github.bumptech.glide:glide:4.16.0"
     implementation "androidx.work:work-runtime-ktx:2.8.1"
     implementation "com.google.code.gson:gson:2.10.1"
 
     // Compose
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-graphics:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "androidx.compose.ui:ui:$androidx_compose_version"
+    implementation "androidx.compose.ui:ui-graphics:$androidx_compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$androidx_compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$androidx_compose_version"
     implementation "androidx.compose.material3:material3:$androidx_compose_material3"
     implementation "androidx.activity:activity-compose:$androidx_activity_activity_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidx_lifecycle"
@@ -75,6 +74,11 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$androidx_room_room"
     implementation "androidx.room:room-ktx:$androidx_room_room"
+    kapt "androidx.room:room-compiler:$androidx_room_room"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     // ---------------- Test ----------------
     testImplementation 'junit:junit:4.13.2'

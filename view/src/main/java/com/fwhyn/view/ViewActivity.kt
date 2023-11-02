@@ -3,8 +3,8 @@ package com.fwhyn.view
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.fwhyn.view.composestate.ComposeStateActivity
 import com.fwhyn.view.databinding.ActivityViewBinding
+import com.fwhyn.view.sunflower.GardenActivity
 
 class ViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityViewBinding
@@ -16,7 +16,7 @@ class ViewActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.buttonResult.setOnClickListener {
-            startActivity(Intent(this@ViewActivity, ComposeStateActivity::class.java))
+            startActivity(Intent(this@ViewActivity, GardenActivity::class.java))
         }
     }
 }

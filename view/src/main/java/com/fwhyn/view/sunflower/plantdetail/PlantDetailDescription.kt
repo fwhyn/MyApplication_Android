@@ -16,13 +16,63 @@
 
 package com.fwhyn.view.sunflower.plantdetail
 
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.fwhyn.view.R
+import com.fwhyn.view.sunflower.data.Plant
+import com.fwhyn.view.sunflower.viewmodels.PlantDetailViewModel
 
 @Composable
-fun PlantDetailDescription() {
-    Surface {
-        Text("Hello Compose")
+fun PlantDetailDescription(plantDetailViewModel: PlantDetailViewModel) {
+    // Observes values coming from the VM's LiveData<Plant> field
+    val plant by plantDetailViewModel.plant.observeAsState()
+
+    // If plant is not null, display the content
+    plant?.let {
+        PlantDetailContent(it)
+    }
+}
+
+@Composable
+fun PlantDetailContent(plant: Plant) {
+    PlantName(plant.name)
+}
+
+@Preview
+@Composable
+private fun PlantDetailContentPreview() {
+    val plant = Plant("id", "Apple", "description", 3, 30, "")
+    MaterialTheme {
+        PlantDetailContent(plant)
+    }
+}
+
+@Composable
+private fun PlantName(name: String) {
+    Text(
+        text = name,
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(R.dimen.margin_small))
+            .wrapContentWidth(Alignment.CenterHorizontally)
+    )
+}
+
+@Preview
+@Composable
+private fun PlantNamePreview() {
+    MaterialTheme {
+        PlantName("Apple")
     }
 }

@@ -16,6 +16,7 @@
 
 package com.fwhyn.view.sunflower.plantdetail
 
+import android.content.res.Configuration
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.fwhyn.view.R
 import com.fwhyn.view.sunflower.data.Plant
+import com.fwhyn.view.sunflower.theme.SunflowerTheme
 import com.fwhyn.view.sunflower.viewmodels.PlantDetailViewModel
 
 @Composable
@@ -65,15 +67,6 @@ fun PlantDetailContent(plant: Plant) {
     }
 }
 
-@Preview
-@Composable
-private fun PlantDetailContentPreview() {
-    val plant = Plant("id", "Apple", "HTML<br><br>description", 3, 30, "")
-    MaterialTheme {
-        PlantDetailContent(plant)
-    }
-}
-
 @Composable
 private fun PlantName(name: String) {
     Text(
@@ -84,14 +77,6 @@ private fun PlantName(name: String) {
             .padding(horizontal = dimensionResource(R.dimen.margin_small))
             .wrapContentWidth(Alignment.CenterHorizontally)
     )
-}
-
-@Preview
-@Composable
-private fun PlantNamePreview() {
-    MaterialTheme {
-        PlantName("Apple")
-    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -122,14 +107,6 @@ private fun PlantWatering(wateringInterval: Int) {
     }
 }
 
-@Preview
-@Composable
-private fun PlantWateringPreview() {
-    MaterialTheme {
-        PlantWatering(7)
-    }
-}
-
 @Composable
 private fun PlantDescription(description: String) {
     // Remembers the HTML formatted description. Re-executes on a new description
@@ -153,8 +130,42 @@ private fun PlantDescription(description: String) {
 
 @Preview
 @Composable
+private fun PlantDetailContentPreview() {
+    val plant = Plant("id", "Apple", "HTML<br><br>description", 3, 30, "")
+    SunflowerTheme {
+        PlantDetailContent(plant)
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PlantDetailContentDarkPreview() {
+    val plant = Plant("id", "Apple", "HTML<br><br>description", 3, 30, "")
+    SunflowerTheme {
+        PlantDetailContent(plant)
+    }
+}
+
+@Preview
+@Composable
+private fun PlantNamePreview() {
+    SunflowerTheme {
+        PlantName("Apple")
+    }
+}
+
+@Preview
+@Composable
+private fun PlantWateringPreview() {
+    SunflowerTheme {
+        PlantWatering(7)
+    }
+}
+
+@Preview
+@Composable
 private fun PlantDescriptionPreview() {
-    MaterialTheme {
+    SunflowerTheme {
         PlantDescription("HTML<br><br>description")
     }
 }

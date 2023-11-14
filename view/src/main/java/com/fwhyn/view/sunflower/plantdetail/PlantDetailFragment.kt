@@ -21,7 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ShareCompat
 import androidx.core.widget.NestedScrollView
@@ -33,6 +33,7 @@ import androidx.navigation.fragment.navArgs
 import com.fwhyn.view.R
 import com.fwhyn.view.databinding.FragmentPlantDetailBinding
 import com.fwhyn.view.sunflower.data.Plant
+import com.fwhyn.view.sunflower.theme.SunflowerTheme
 import com.fwhyn.view.sunflower.utilities.InjectorUtils
 import com.fwhyn.view.sunflower.viewmodels.PlantDetailViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -112,9 +113,16 @@ class PlantDetailFragment : Fragment() {
                 }
             }
 
-            composeView.setContent {
-                MaterialTheme {
-                    PlantDetailDescription(plantDetailViewModel)
+            composeView.apply {
+                // Dispose the Composition when the view's LifecycleOwner
+                // is destroyed
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                )
+                setContent {
+                    SunflowerTheme {
+                        PlantDetailDescription(plantDetailViewModel)
+                    }
                 }
             }
         }

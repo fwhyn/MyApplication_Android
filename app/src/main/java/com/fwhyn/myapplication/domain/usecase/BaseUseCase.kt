@@ -10,10 +10,10 @@ import kotlinx.coroutines.withContext
 
 abstract class BaseUseCase<PARAM, RESULT> {
 
-    private var statusNotifier: ((Results<RESULT, Throwable>) -> Unit)? = null
+    private var statusNotifier: ((Results<RESULT, Exception>) -> Unit)? = null
     private var job: Job? = null
 
-    fun setResultNotifier(statusNotifier: (Results<RESULT, Throwable>) -> Unit): BaseUseCase<PARAM, RESULT> {
+    fun setResultNotifier(statusNotifier: (Results<RESULT, Exception>) -> Unit): BaseUseCase<PARAM, RESULT> {
         this.statusNotifier = statusNotifier
 
         return this
@@ -23,13 +23,13 @@ abstract class BaseUseCase<PARAM, RESULT> {
 
     open fun execute(param: PARAM) {}
 
-    suspend fun notifyStatusFromBackground(result: Results<RESULT, Throwable>) {
+    suspend fun notifyStatusFromBackground(result: Results<RESULT, Exception>) {
         withContext(Dispatchers.Main) {
             statusNotifier?.let { it(result) }
         }
     }
 
-    fun notifyStatus(result: Results<RESULT, Throwable>) {
+    fun notifyStatus(result: Results<RESULT, Exception>) {
         statusNotifier?.let { it(result) }
     }
 

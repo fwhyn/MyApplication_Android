@@ -37,7 +37,7 @@ class ModuleAdapter(
      * (custom ViewHolder).
      */
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        lateinit var textItem: TextView
+        private lateinit var textItem: TextView
 
         constructor(itemBinding: TextRowItemBinding) : this(itemBinding.root) {
             textItem = itemBinding.textElement

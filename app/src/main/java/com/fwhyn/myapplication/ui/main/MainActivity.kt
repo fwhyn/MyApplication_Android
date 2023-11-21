@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : BaseActivityBinding<ActivityMainBinding>() {
 
     private val viewModel: MainActivityViewModel by viewModels()
+
     override fun onBinding(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
     }
@@ -28,6 +29,7 @@ class MainActivity : BaseActivityBinding<ActivityMainBinding>() {
         init()
     }
 
+    // ----------------------------------------------------------------
     private fun init() {
         initView()
         observeData()

@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.ui.common.recyclerview
+package com.fwhyn.myapplication.ui.common.adapter
 
 import android.view.LayoutInflater
 import android.view.View

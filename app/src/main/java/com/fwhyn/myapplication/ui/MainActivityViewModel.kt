@@ -14,6 +14,8 @@ import javax.inject.Inject
 class MainActivityViewModel @Inject constructor(private val getModuleUseCaseModel: BaseUseCase<Unit, List<ModuleModel>>) :
     ViewModel() {
 
+    val modules = arrayListOf<ModuleModel>()
+
     private val _observableModules = MutableLiveData<Results<List<ModuleModel>, Exception>>()
     val observableModules: LiveData<Results<List<ModuleModel>, Exception>> = _observableModules
 

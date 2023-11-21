@@ -94,6 +94,10 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
+    // CameraX
+    implementation "androidx.camera:camera-camera2:$androidx_camera_camera"
+    implementation "androidx.camera:camera-core:$androidx_camera_camera"
+
     // Module
     implementation project(path: ':view')
     implementation project(path: ':connectivity')

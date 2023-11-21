@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.ui
+package com.fwhyn.myapplication.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

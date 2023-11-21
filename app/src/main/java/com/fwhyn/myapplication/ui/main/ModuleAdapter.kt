@@ -1,4 +1,4 @@
-package com.fwhyn.myapplication.ui.common.adapter
+package com.fwhyn.myapplication.ui.main
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fwhyn.myapplication.databinding.TextRowItemBinding
 import com.fwhyn.myapplication.domain.model.ModuleModel
 
-class CustomAdapter(
+class ModuleAdapter(
     private val dataSet: List<ModuleModel>,
     private val clickListener: (ModuleModel) -> Unit,
-) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {

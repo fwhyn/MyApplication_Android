@@ -1,53 +1,53 @@
-package com.fwhyn.myapplication.ui
+package com.fwhyn.myapplication.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fwhyn.myapplication.R
 import com.fwhyn.myapplication.databinding.ActivityMainBinding
 import com.fwhyn.myapplication.domain.helper.Results
 import com.fwhyn.myapplication.domain.model.ModuleModel
-import com.fwhyn.myapplication.ui.common.adapter.CustomAdapter
+import com.fwhyn.myapplication.ui.common.BaseActivityBinding
 import com.fwhyn.myapplication.ui.helper.showToast
 import com.fwhyn.myapplication.util.compose.TryComposeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivityBinding<ActivityMainBinding>() {
 
-    private lateinit var binding: ActivityMainBinding
     private val viewModel: MainActivityViewModel by viewModels()
+    override fun onBinding(): ActivityMainBinding {
+        return ActivityMainBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // set view
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        init()
+    }
 
-        binding.buttonMain.setOnClickListener {
+    private fun init() {
+        initView()
+        observeData()
+    }
+
+    private fun initView() {
+        viewBinding.buttonMain.setOnClickListener {
             // Snackbar.make(binding.root, R.string.test, Snackbar.LENGTH_SHORT).show()
             startActivity(Intent(this, TryComposeActivity::class.java))
         }
 
-        with(binding.mainList) {
+        with(viewBinding.mainList) {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = CustomAdapter(
+            adapter = ModuleAdapter(
                 viewModel.modules,
                 clickListener = {
                     startActivity(Intent(this@MainActivity, it.cls))
                 }
             )
         }
-
-        init()
-    }
-
-    private fun init() {
-        observeData()
     }
 
     private fun observeData() {
@@ -67,6 +67,6 @@ class MainActivity : AppCompatActivity() {
             addAll(modules)
         }
 
-        binding.mainList.adapter?.notifyDataSetChanged()
+        viewBinding.mainList.adapter?.notifyDataSetChanged()
     }
 }

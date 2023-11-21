@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fwhyn.myapplication.databinding.TextRowItemBinding
-import com.fwhyn.myapplication.domain.model.Module
+import com.fwhyn.myapplication.domain.model.ModuleModel
 
 class CustomAdapter(
-    private val dataSet: List<Module>,
-    private val clickListener: (Module) -> Unit,
+    private val dataSet: List<ModuleModel>,
+    private val clickListener: (ModuleModel) -> Unit,
 ) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     // Create new views (invoked by the layout manager)
@@ -43,11 +43,11 @@ class CustomAdapter(
             textItem = itemBinding.textElement
         }
 
-        fun bind(module: Module) {
-            textItem.text = module.name
+        fun bind(moduleModel: ModuleModel) {
+            textItem.text = moduleModel.name
 
             textItem.setOnClickListener {
-                clickListener(module)
+                clickListener(moduleModel)
             }
         }
     }

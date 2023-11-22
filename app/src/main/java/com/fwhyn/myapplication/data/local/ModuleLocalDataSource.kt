@@ -7,8 +7,11 @@ import com.fwhyn.mysoothe.MySootheActivity
 import com.fwhyn.view.ViewActivity
 import com.fwhyn.wishlist.app.WishlistSplashActivity
 import fwhyn.corp.analytics.AnalyticsActivity
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ModuleLocalDataSource {
+@Singleton
+class ModuleLocalDataSource @Inject constructor() {
     val moduleModelLists = listOf(
         ModuleModel("View", ViewActivity::class.java),
         ModuleModel("Connectivity", ConnectivityActivity::class.java),

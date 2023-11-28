@@ -8,17 +8,14 @@ import com.fwhyn.connectivity.ble.BluetoothCheck
 import com.fwhyn.connectivity.ble.BluetoothCheckCallback
 
 class ConnectivityActivity : AppCompatActivity() {
-    private val bluetoothCheck = BluetoothCheck(this, this, object : BluetoothCheckCallback {
+    private val bluetoothCheck = BluetoothCheck(this, object : BluetoothCheckCallback {
         override fun ableToScan() {
-            Toast.makeText(this@ConnectivityActivity, "Ok", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this@ConnectivityActivity, "Ok", Toast.LENGTH_SHORT).show()
         }
 
         override fun unableToScan(reason: BluetoothCheckCallback.Reason) {
-            Toast.makeText(this@ConnectivityActivity, reason.toString(), Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this@ConnectivityActivity, reason.toString(), Toast.LENGTH_SHORT).show()
         }
-
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {

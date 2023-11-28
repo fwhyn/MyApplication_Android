@@ -64,7 +64,7 @@ class PermissionCheck {
 
     // --------------------------------
     sealed class PermissionResult {
-        object Granted : PermissionResult()
+        data object Granted : PermissionResult()
         class NeedRationale(val rationalePermissions: Array<String>) : PermissionResult()
         class Denied(val deniedPermissions: Array<String>) : PermissionResult()
     }

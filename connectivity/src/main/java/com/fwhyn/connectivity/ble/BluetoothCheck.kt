@@ -15,7 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.fwhyn.connectivity.permission.PermissionCheckCallback
 import com.fwhyn.connectivity.permission.PermissionManager
-import com.fwhyn.connectivity.permission.SuppressWarning
+import com.fwhyn.connectivity.permission.PermissionManagerWarning
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -24,41 +24,41 @@ import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 
+@PermissionManagerWarning
 class BluetoothCheck(
-    private val componentActivity: ComponentActivity,
-    private val bluetoothCheckCallback: BluetoothCheckCallback
+    private val activity: ComponentActivity,
+    private val callback: BluetoothCheckCallback
 ) {
 
     companion object {
         const val BLUETOOTH_CHECK = 19248
     }
 
-    private val permissionManager = PermissionManager(
-        componentActivity,
+    private val permissionManager = PermissionManager.getInstance(
+        activity,
         object : PermissionCheckCallback {
             override fun onPermissionGranted() {
                 checkPhoneSensors()
             }
 
             override fun onRequestRationale(rationalePermissions: Array<String>) {
-                bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NEED_RATIONALE)
+                callback.unableToScan(BluetoothCheckCallback.Reason.NEED_RATIONALE)
             }
 
             override fun onPermissionDenied(deniedPermissions: Array<String>) {
-                bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NO_PERMISSION)
+                callback.unableToScan(BluetoothCheckCallback.Reason.NO_PERMISSION)
             }
         })
 
     private val enableBluetoothLauncher: ActivityResultLauncher<Intent> =
-        componentActivity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             setEnableBluetoothResult(result)
         }
 
     private val bluetoothAdapter: BluetoothAdapter? by lazy(LazyThreadSafetyMode.NONE) {
-        (componentActivity.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
+        (activity.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
     }
 
-    @SuppressWarning
     fun bleCheck() {
         if (bleSupported()) {
             val permissionsToRequest = getNecessaryPermissions()
@@ -69,40 +69,35 @@ class BluetoothCheck(
                 checkPhoneSensors()
             }
         } else {
-            bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.NOT_SUPPORTED)
+            callback.unableToScan(BluetoothCheckCallback.Reason.NOT_SUPPORTED)
         }
     }
 
     private fun getNecessaryPermissions(): Array<String> {
-        val permissions = ArrayList<String>()
+        val permissions = hashSetOf<String>()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION
-            permissions.add(coarseLocationPermission)
-
-            val fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION
-            permissions.add(fineLocationPermission)
+            permissions.run {
+                add(Manifest.permission.ACCESS_COARSE_LOCATION)
+                add(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val bluetoothScanPermission = Manifest.permission.BLUETOOTH_SCAN
-            permissions.add(bluetoothScanPermission)
-
-            val bluetoothAdvertisePermission = Manifest.permission.BLUETOOTH_ADVERTISE
-            permissions.add(bluetoothAdvertisePermission)
-
-            val bluetoothConnectPermission = Manifest.permission.BLUETOOTH_CONNECT
-            permissions.add(bluetoothConnectPermission)
-
-            val fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION
-            permissions.remove(fineLocationPermission)
+            permissions.run {
+                add(Manifest.permission.BLUETOOTH_ADMIN)
+                add(Manifest.permission.BLUETOOTH_ADVERTISE)
+                add(Manifest.permission.BLUETOOTH_CONNECT)
+                add(Manifest.permission.BLUETOOTH_SCAN)
+                // remove(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
         }
 
         return permissions.toTypedArray()
     }
 
     private fun bleSupported(): Boolean {
-        return componentActivity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+        return activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
     }
 
     private fun checkPhoneSensors() {
@@ -123,7 +118,7 @@ class BluetoothCheck(
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             createLocationRequest()
         } else {
-            bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.BT_OFF)
+            callback.unableToScan(BluetoothCheckCallback.Reason.BT_OFF)
         }
     }
 
@@ -137,11 +132,11 @@ class BluetoothCheck(
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest)
 
-        val client: SettingsClient = LocationServices.getSettingsClient(componentActivity)
+        val client: SettingsClient = LocationServices.getSettingsClient(activity)
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
 
         task.addOnSuccessListener {
-            bluetoothCheckCallback.ableToScan()
+            callback.ableToScan()
         }
             .addOnFailureListener { exception ->
                 if (exception is ResolvableApiException) {
@@ -150,12 +145,12 @@ class BluetoothCheck(
                     try {
                         // Show the dialog by calling startResolutionForResult(),
                         // and check the result in onActivityResult().
-                        exception.startResolutionForResult(componentActivity, BLUETOOTH_CHECK)
+                        exception.startResolutionForResult(activity, BLUETOOTH_CHECK)
                     } catch (sendEx: IntentSender.SendIntentException) {
-                        bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.LOCATION_OFF)
+                        callback.unableToScan(BluetoothCheckCallback.Reason.LOCATION_OFF)
                     }
                 } else {
-                    bluetoothCheckCallback.unableToScan(BluetoothCheckCallback.Reason.LOCATION_OFF)
+                    callback.unableToScan(BluetoothCheckCallback.Reason.LOCATION_OFF)
                 }
             }
     }

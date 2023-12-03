@@ -11,20 +11,27 @@ import androidx.activity.ComponentActivity
     level = RequiresOptIn.Level.WARNING,
     message = "Please create the object before the activity created"
 )
+annotation class PermissionManagerWarning
 
-annotation class SuppressWarning
-
-@SuppressWarning
-class PermissionManager(
-    private val componentActivity: ComponentActivity,
-    private val permissionCallback: PermissionCheckCallback,
+class PermissionManager private constructor(
+    private val activity: ComponentActivity,
+    private val callback: PermissionCheckCallback,
 ) {
-
-    private lateinit var permissions: Array<String>
 
     companion object {
 
-        fun openPermissionSetting(activity: Activity) {
+        @PermissionManagerWarning
+        fun getInstance(
+            componentActivity: ComponentActivity,
+            permissionCallback: PermissionCheckCallback,
+        ): PermissionManager {
+            return PermissionManager(
+                componentActivity,
+                permissionCallback,
+            )
+        }
+
+        fun openSetting(activity: Activity) {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             intent.run {
                 data = Uri.fromParts("package", activity.packageName, null)
@@ -38,11 +45,12 @@ class PermissionManager(
         }
     }
 
+    private lateinit var permissions: Array<String>
     private val permissionRequest = PermissionRequest(
-        componentActivity,
+        activity,
         object : PermissionRequestCallback {
             override fun onFinishedRequest(results: Map<String, Boolean>) {
-                PermissionCheck.checkPermissions(componentActivity, permissions, permissionCallback)
+                PermissionCheck.checkPermissions(activity, permissions, callback)
             }
         }
     )
@@ -50,15 +58,15 @@ class PermissionManager(
     fun checkOrRequestPermissions(permissions: Array<String>) {
         this.permissions = permissions
         PermissionCheck.checkPermissions(
-            componentActivity,
+            activity,
             permissions,
             object : PermissionCheckCallback {
                 override fun onPermissionGranted() {
-                    permissionCallback.onPermissionGranted()
+                    callback.onPermissionGranted()
                 }
 
                 override fun onRequestRationale(rationalePermissions: Array<String>) {
-                    permissionCallback.onRequestRationale(rationalePermissions)
+                    callback.onRequestRationale(rationalePermissions)
                 }
 
                 override fun onPermissionDenied(deniedPermissions: Array<String>) {

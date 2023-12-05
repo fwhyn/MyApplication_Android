@@ -7,15 +7,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.fwhyn.mlkit.ui.theme.MyApplicationTheme
 import com.fwhyn.mlkit.util.getCameraProvider
@@ -26,10 +31,6 @@ class MlKitActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
-                }
                 CameraPreview()
             }
         }
@@ -37,11 +38,16 @@ class MlKitActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun MainScreen(
+    modifier: Modifier = Modifier,
+) {
+    Box {
+        CameraPreview()
+        CameraButton(
+            onClick = { /*TODO*/ },
+            modifier = Modifier
+        )
+    }
 }
 
 @Composable
@@ -89,18 +95,44 @@ fun CameraPreview(
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        Greeting("Android")
+fun CameraButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val modifier = Modifier
+    Button(
+        onClick = onClick,
+        shape = CircleShape,
+        modifier = Modifier
+            .padding(0.dp)
+            .size(64.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = null,
+        )
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun CameraPreviewPreview() {
-//    MyApplicationTheme {
-//        CameraPreview()
-//    }
-//}
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    MyApplicationTheme {
+        MainScreen()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CameraPreviewPreview() {
+    MyApplicationTheme {
+        CameraPreview()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CameraButtonPreview() {
+    CameraButton({})
+}

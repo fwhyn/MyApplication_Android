@@ -11,13 +11,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.activity.ComponentActivity
-import com.fwhyn.connectivity.ble.BluetoothLeService.Companion.ACTION_GATT_CONNECTED
-import com.fwhyn.connectivity.ble.BluetoothLeService.Companion.ACTION_GATT_DISCONNECTED
 
 class BleManager(private val activity: ComponentActivity) {
 
@@ -27,8 +26,11 @@ class BleManager(private val activity: ComponentActivity) {
         private const val SCAN_PERIOD: Long = 10000
     }
 
+    private var connecting: Boolean = false
+
     private val bluetoothManager = activity.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter = bluetoothManager.adapter
+    private val bleScanner = bluetoothAdapter.bluetoothLeScanner
 
     private var bleService: BluetoothLeService? = null
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
@@ -36,6 +38,7 @@ class BleManager(private val activity: ComponentActivity) {
             componentName: ComponentName,
             service: IBinder
         ) {
+            Log.d(TAG, "BLE service connected")
             bleService = (service as BluetoothLeService.LocalBinder).getService()
             bleService?.let { bluetooth ->
                 if (!bluetooth.initialize()) {
@@ -49,6 +52,7 @@ class BleManager(private val activity: ComponentActivity) {
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
+            Log.d(TAG, "BLE service disconnected")
             bleService = null
         }
     }
@@ -56,24 +60,30 @@ class BleManager(private val activity: ComponentActivity) {
     init {
         val gattServiceIntent = Intent(activity, BluetoothLeService::class.java)
         activity.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        Log.d(TAG, "BLE service connection initialized")
     }
 
     private val gattUpdateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-//            when (intent.action) {
-//                BluetoothLeService.ACTION_GATT_CONNECTED -> {
+            when (intent.action) {
+                BluetoothLeService.ACTION_GATT_CONNECTED -> {
 //                    connected = true
 //                    updateConnectionState(R.string.connected)
-//                }
-//                BluetoothLeService.ACTION_GATT_DISCONNECTED -> {
+                    Log.d(TAG, "Connected")
+                }
+
+                BluetoothLeService.ACTION_GATT_DISCONNECTED -> {
 //                    connected = false
 //                    updateConnectionState(R.string.disconnected)
-//                }
-//                BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED -> {
-//                    // Show all the supported services and characteristics on the user interface.
-//                    displayGattServices(bleService?.getSupportedGattServices())
-//                }
-//            }
+                    Log.d(TAG, "Disconnected")
+                    connecting = false
+                }
+
+                BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED -> {
+                    // Show all the supported services and characteristics on the user interface.
+                    displayGattServices(bleService?.getSupportedGattServices())
+                }
+            }
         }
     }
 
@@ -118,21 +128,43 @@ class BleManager(private val activity: ComponentActivity) {
     }
 
     fun callWhenOnResume() {
-        activity.registerReceiver(gattUpdateReceiver, makeGattUpdateIntentFilter())
-//        if (bleService != null) {
-//            val result = bleService?.connect(deviceAddress)
-//            Log.d(TAG, "Connect request result = $result")
-//        }
+        registerReceiver()
+//        connectToDevice()
+//        activity
+    }
+
+    private fun registerReceiver() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            activity.registerReceiver(gattUpdateReceiver, makeGattUpdateIntentFilter(), Context.RECEIVER_NOT_EXPORTED)
+
+        } else {
+            activity.registerReceiver(gattUpdateReceiver, makeGattUpdateIntentFilter())
+        }
+    }
+
+    fun connectToDevice(deviceAddress: String) {
+        if (bleService != null) {
+            val result = bleService?.connect(deviceAddress)
+            Log.d(TAG, "Connect request result = $result")
+        } else {
+            Log.d(TAG, "BLE service is null")
+        }
     }
 
     private fun makeGattUpdateIntentFilter(): IntentFilter {
         return IntentFilter().apply {
-            addAction(ACTION_GATT_CONNECTED)
-            addAction(ACTION_GATT_DISCONNECTED)
+            addAction(BluetoothLeService.ACTION_GATT_CONNECTED)
+            addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED)
+            addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED)
+            addAction(BluetoothLeService.ACTION_DATA_AVAILABLE)
         }
     }
 
     fun callWhenOnPause() {
+        unregisterReceiver()
+    }
+
+    private fun unregisterReceiver() {
         activity.unregisterReceiver(gattUpdateReceiver)
     }
 
@@ -144,14 +176,20 @@ class BleManager(private val activity: ComponentActivity) {
     private val leScanCallback: ScanCallback = object : ScanCallback() {
         @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            Log.d(TAG, "BLEW Found: ${result.device.name}")
-            leDeviceList.add(result)
+            Log.d(TAG, "BLE Found: ${result.device.name}")
+            val device = result.device
+            if (device.name == "PM102266" && !connecting) {
+                bleScanner.stopScan(this)
+                connectToDevice(device.address)
+                Log.d(TAG, "Connecting ${device.name}")
+                connecting = true
+            }
+//            leDeviceList.add(result)
         }
     }
 
     @SuppressLint("MissingPermission")
     fun scanDevice() {
-        val bleScanner = bluetoothAdapter.bluetoothLeScanner
 
         if (!scanning) {
             handler.postDelayed(

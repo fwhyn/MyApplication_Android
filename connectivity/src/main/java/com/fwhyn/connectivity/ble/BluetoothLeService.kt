@@ -35,6 +35,7 @@ class BluetoothLeService : Service() {
 
     // ----------------------------------------------------------------
     override fun onBind(intent: Intent): IBinder {
+        Log.d(TAG, "BLE service onBind")
         return LocalBinder()
     }
 
@@ -158,6 +159,7 @@ class BluetoothLeService : Service() {
             try {
                 val device = adapter.getRemoteDevice(address)
                 bluetoothGatt = device.connectGatt(this, false, bluetoothGattCallback)
+                Log.w(TAG, "Connecting to $address")
                 return true
             } catch (exception: IllegalArgumentException) {
                 Log.w(TAG, "Device not found with provided address.  Unable to connect.")

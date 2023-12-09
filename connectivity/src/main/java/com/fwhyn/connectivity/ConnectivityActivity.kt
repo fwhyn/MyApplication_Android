@@ -11,6 +11,9 @@ import com.fwhyn.connectivity.permission.PermissionManager
 import com.fwhyn.connectivity.permission.PermissionManagerWarning
 
 class ConnectivityActivity : AppCompatActivity() {
+
+    private lateinit var bleManager: BleManager
+
     private val bluetoothCheck = BluetoothCheck(this, object : BluetoothCheckCallback {
         override fun ableToScan() {
             onBleAbleToScan()
@@ -21,19 +24,36 @@ class ConnectivityActivity : AppCompatActivity() {
         }
     })
 
+    // ----------------------------------------------------------------
     @OptIn(PermissionManagerWarning::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bluetooth)
+
+        bleManager = BleManager(this@ConnectivityActivity)
 
         findViewById<TextView>(R.id.hello_textview).setOnClickListener {
             bluetoothCheck.bleCheck()
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        bleManager.callWhenOnResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        bleManager.callWhenOnPause()
+    }
+
+    // ----------------------------------------------------------------
     private fun onBleAbleToScan() {
         Toast.makeText(this@ConnectivityActivity, "Scanning...", Toast.LENGTH_SHORT).show()
-        BleManager(this@ConnectivityActivity).scanDevice()
+
+        bleManager.scanDevice()
     }
 
     private fun onBleUnableToScan(reason: BluetoothCheckCallback.Reason) {

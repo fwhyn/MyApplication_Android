@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.fwhyn.view.databinding.ListItemPlantBinding
 import com.fwhyn.view.sunflower.HomeViewPagerFragmentDirections
-import com.fwhyn.view.sunflower.PlantListFragment
 import com.fwhyn.view.sunflower.data.Plant
 
 /**

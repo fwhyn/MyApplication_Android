@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -19,10 +23,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
+
         <activity
             android:name=".ConnectivityActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
+
+        <activity
+            android:name="com.fwhyn.connectivity.bluetoothlegatt.DeviceScanActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Holo.Light" />
+
+        <activity
+            android:name="com.fwhyn.connectivity.bluetoothlegatt.DeviceControlActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Holo.Light" />
+
+        <service
+            android:name=".bluetoothlegatt.BluetoothLeService"
+            android:enabled="true" />
+
+        <service
+            android:name=".ble.BluetoothLeService"
+            android:enabled="true" />
+
     </application>
 
 </manifest>

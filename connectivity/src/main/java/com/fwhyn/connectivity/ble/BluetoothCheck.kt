@@ -89,7 +89,7 @@ class BluetoothCheck(
                 add(Manifest.permission.BLUETOOTH_ADVERTISE)
                 add(Manifest.permission.BLUETOOTH_CONNECT)
                 add(Manifest.permission.BLUETOOTH_SCAN)
-                // remove(Manifest.permission.ACCESS_FINE_LOCATION)
+                remove(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
 

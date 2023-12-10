@@ -33,6 +33,7 @@ class ConnectivityActivity : AppCompatActivity() {
         bleManager = BleManager(this@ConnectivityActivity)
 
         findViewById<TextView>(R.id.hello_textview).setOnClickListener {
+//            startActivity(Intent(this, DeviceScanActivity::class.java))
             bluetoothCheck.bleCheck()
         }
     }

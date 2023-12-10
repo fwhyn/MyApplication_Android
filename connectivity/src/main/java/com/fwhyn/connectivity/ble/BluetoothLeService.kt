@@ -3,6 +3,7 @@ package com.fwhyn.connectivity.ble
 import android.annotation.SuppressLint
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
@@ -40,6 +41,7 @@ class BluetoothLeService : Service() {
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
+        Log.d(TAG, "BLE service onUnbind")
         close()
         return super.onUnbind(intent)
     }
@@ -68,6 +70,8 @@ class BluetoothLeService : Service() {
     private val bluetoothGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
         @SuppressLint("MissingPermission")
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+            Log.d(TAG, "onConnectionStateChange; status: $status; newState: $newState")
+
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 // successfully connected to the GATT Server
                 broadcastUpdate(ACTION_GATT_CONNECTED)
@@ -86,7 +90,7 @@ class BluetoothLeService : Service() {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED)
             } else {
-                Log.w(TAG, "onServicesDiscovered received: $status")
+                Log.d(TAG, "onServicesDiscovered received: $status")
             }
         }
 
@@ -158,15 +162,15 @@ class BluetoothLeService : Service() {
         bluetoothAdapter?.let { adapter ->
             try {
                 val device = adapter.getRemoteDevice(address)
-                bluetoothGatt = device.connectGatt(this, false, bluetoothGattCallback)
-                Log.w(TAG, "Connecting to $address")
+                bluetoothGatt = device.connectGatt(this, false, bluetoothGattCallback, BluetoothDevice.TRANSPORT_LE)
+                Log.d(TAG, "Connecting to $address")
                 return true
             } catch (exception: IllegalArgumentException) {
-                Log.w(TAG, "Device not found with provided address.  Unable to connect.")
+                Log.d(TAG, "Device not found with provided address.  Unable to connect.")
                 return false
             }
         } ?: run {
-            Log.w(TAG, "BluetoothAdapter not initialized")
+            Log.d(TAG, "BluetoothAdapter not initialized")
             return false
         }
     }
@@ -178,7 +182,7 @@ class BluetoothLeService : Service() {
     @SuppressLint("MissingPermission")
     fun readCharacteristic(characteristic: BluetoothGattCharacteristic) {
         bluetoothGatt?.readCharacteristic(characteristic) ?: run {
-            Log.w(TAG, "BluetoothGatt not initialized")
+            Log.d(TAG, "BluetoothGatt not initialized")
         }
     }
 
@@ -199,7 +203,7 @@ class BluetoothLeService : Service() {
                 gatt.writeDescriptor(descriptor)
             }
         } ?: run {
-            Log.w(TAG, "BluetoothGatt not initialized")
+            Log.d(TAG, "BluetoothGatt not initialized")
         }
     }
 

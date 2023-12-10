@@ -17,6 +17,8 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.activity.ComponentActivity
+import com.fwhyn.connectivity.helper.startScanning
+import com.fwhyn.connectivity.helper.stopScanning
 
 class BleManager(private val activity: ComponentActivity) {
 
@@ -60,22 +62,18 @@ class BleManager(private val activity: ComponentActivity) {
     init {
         val gattServiceIntent = Intent(activity, BluetoothLeService::class.java)
         activity.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-        Log.d(TAG, "BLE service connection initialized")
+        Log.d(TAG, "BLE service initialized")
     }
 
     private val gattUpdateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
                 BluetoothLeService.ACTION_GATT_CONNECTED -> {
-//                    connected = true
-//                    updateConnectionState(R.string.connected)
-                    Log.d(TAG, "Connected")
+                    Log.d(TAG, "BluetoothLeService.ACTION_GATT_CONNECTED")
                 }
 
                 BluetoothLeService.ACTION_GATT_DISCONNECTED -> {
-//                    connected = false
-//                    updateConnectionState(R.string.disconnected)
-                    Log.d(TAG, "Disconnected")
+                    Log.d(TAG, "BluetoothLeService.ACTION_GATT_DISCONNECTED")
                     connecting = false
                 }
 
@@ -130,9 +128,9 @@ class BleManager(private val activity: ComponentActivity) {
     fun callWhenOnResume() {
         registerReceiver()
 //        connectToDevice()
-//        activity
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             activity.registerReceiver(gattUpdateReceiver, makeGattUpdateIntentFilter(), Context.RECEIVER_NOT_EXPORTED)
@@ -172,19 +170,16 @@ class BleManager(private val activity: ComponentActivity) {
     private var scanning = false
     private val handler = Handler(Looper.getMainLooper())
 
-    private val leDeviceList = arrayListOf<ScanResult>()
+    @SuppressLint("MissingPermission")
     private val leScanCallback: ScanCallback = object : ScanCallback() {
-        @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             Log.d(TAG, "BLE Found: ${result.device.name}")
             val device = result.device
             if (device.name == "PM102266" && !connecting) {
-                bleScanner.stopScan(this)
+                bleScanner.stopScanning(this)
                 connectToDevice(device.address)
-                Log.d(TAG, "Connecting ${device.name}")
                 connecting = true
             }
-//            leDeviceList.add(result)
         }
     }
 
@@ -194,16 +189,14 @@ class BleManager(private val activity: ComponentActivity) {
         if (!scanning) {
             handler.postDelayed(
                 {
-                    bleScanner.stopScan(leScanCallback)
+                    bleScanner.stopScanning(leScanCallback)
                     scanning = false
-                    Log.d(TAG, "Scan stopped. Found Items: ${leDeviceList.size}")
                 },
                 SCAN_PERIOD
             )
 
-            bleScanner.startScan(leScanCallback)
+            bleScanner.startScanning(leScanCallback)
             scanning = true
-            Log.d(TAG, "Scanning...")
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.fwhyn.connectivity
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
@@ -8,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.fwhyn.connectivity.ble.BleManager
 import com.fwhyn.connectivity.ble.BluetoothCheck
 import com.fwhyn.connectivity.ble.BluetoothCheckCallback
-import com.fwhyn.connectivity.bluetoothlegatt.DeviceScanActivity
 import com.fwhyn.connectivity.permission.PermissionManager
 import com.fwhyn.connectivity.permission.PermissionManagerWarning
 
@@ -35,8 +33,8 @@ class ConnectivityActivity : AppCompatActivity() {
         bleManager = BleManager(this@ConnectivityActivity)
 
         findViewById<TextView>(R.id.hello_textview).setOnClickListener {
-            startActivity(Intent(this, DeviceScanActivity::class.java))
-//            bluetoothCheck.bleCheck()
+//            startActivity(Intent(this, DeviceScanActivity::class.java))
+            bluetoothCheck.bleCheck()
         }
     }
 

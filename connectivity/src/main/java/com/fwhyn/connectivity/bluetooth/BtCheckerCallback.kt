@@ -5,7 +5,7 @@ import java.io.Serializable
 interface BtCheckerCallback {
 
     fun ableToScan()
-    fun unableToScan(reason: Reason)
+    fun unableToScan(reason: Reason, permissions: Array<String>?)
 
     // --------------------------------
     enum class Reason : Serializable {

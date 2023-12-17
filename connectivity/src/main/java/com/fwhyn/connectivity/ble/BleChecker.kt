@@ -25,7 +25,7 @@ import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 
 @PermissionManagerWarning
-class BluetoothCheck(
+class BleChecker(
     private val activity: ComponentActivity,
     private val callback: BluetoothCheckCallback
 ) {

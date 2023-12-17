@@ -2,7 +2,7 @@ package com.fwhyn.connectivity.ble
 
 import java.io.Serializable
 
-interface BluetoothCheckCallback {
+interface BleCheckerCallback {
 
     fun ableToScan()
     fun unableToScan(reason: Reason)

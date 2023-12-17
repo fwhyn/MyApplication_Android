@@ -5,8 +5,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fwhyn.connectivity.ble.BleChecker
+import com.fwhyn.connectivity.ble.BleCheckerCallback
 import com.fwhyn.connectivity.ble.BleManager
-import com.fwhyn.connectivity.ble.BluetoothCheckCallback
 import com.fwhyn.connectivity.permission.PermissionManager
 import com.fwhyn.connectivity.permission.PermissionManagerWarning
 
@@ -14,12 +14,12 @@ class ConnectivityActivity : AppCompatActivity() {
 
     private lateinit var bleManager: BleManager
 
-    private val bleChecker = BleChecker(this, object : BluetoothCheckCallback {
+    private val bleChecker = BleChecker(this, object : BleCheckerCallback {
         override fun ableToScan() {
             onBleAbleToScan()
         }
 
-        override fun unableToScan(reason: BluetoothCheckCallback.Reason) {
+        override fun unableToScan(reason: BleCheckerCallback.Reason) {
             onBleUnableToScan(reason)
         }
     })
@@ -57,13 +57,13 @@ class ConnectivityActivity : AppCompatActivity() {
         bleManager.scanDevice()
     }
 
-    private fun onBleUnableToScan(reason: BluetoothCheckCallback.Reason) {
+    private fun onBleUnableToScan(reason: BleCheckerCallback.Reason) {
         when (reason) {
-            BluetoothCheckCallback.Reason.NEED_RATIONALE -> PermissionManager.openSetting(this@ConnectivityActivity)
-            BluetoothCheckCallback.Reason.NO_PERMISSION -> showToast(reason.toString())
-            BluetoothCheckCallback.Reason.BT_OFF -> showToast(reason.toString())
-            BluetoothCheckCallback.Reason.LOCATION_OFF -> showToast(reason.toString())
-            BluetoothCheckCallback.Reason.NOT_SUPPORTED -> showToast(reason.toString())
+            BleCheckerCallback.Reason.NEED_RATIONALE -> PermissionManager.openSetting(this@ConnectivityActivity)
+            BleCheckerCallback.Reason.NO_PERMISSION -> showToast(reason.toString())
+            BleCheckerCallback.Reason.BT_OFF -> showToast(reason.toString())
+            BleCheckerCallback.Reason.LOCATION_OFF -> showToast(reason.toString())
+            BleCheckerCallback.Reason.NOT_SUPPORTED -> showToast(reason.toString())
         }
     }
 

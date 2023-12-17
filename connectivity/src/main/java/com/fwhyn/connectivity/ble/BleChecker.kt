@@ -27,7 +27,7 @@ import com.google.android.gms.tasks.Task
 @PermissionManagerWarning
 class BleChecker(
     private val activity: ComponentActivity,
-    private val callback: BluetoothCheckCallback
+    private val callback: BleCheckerCallback
 ) {
 
     companion object {
@@ -42,11 +42,11 @@ class BleChecker(
             }
 
             override fun onRequestRationale(rationalePermissions: Array<String>) {
-                callback.unableToScan(BluetoothCheckCallback.Reason.NEED_RATIONALE)
+                callback.unableToScan(BleCheckerCallback.Reason.NEED_RATIONALE)
             }
 
             override fun onPermissionDenied(deniedPermissions: Array<String>) {
-                callback.unableToScan(BluetoothCheckCallback.Reason.NO_PERMISSION)
+                callback.unableToScan(BleCheckerCallback.Reason.NO_PERMISSION)
             }
         })
 
@@ -69,7 +69,7 @@ class BleChecker(
                 checkPhoneSensors()
             }
         } else {
-            callback.unableToScan(BluetoothCheckCallback.Reason.NOT_SUPPORTED)
+            callback.unableToScan(BleCheckerCallback.Reason.NOT_SUPPORTED)
         }
     }
 
@@ -118,7 +118,7 @@ class BleChecker(
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             createLocationRequest()
         } else {
-            callback.unableToScan(BluetoothCheckCallback.Reason.BT_OFF)
+            callback.unableToScan(BleCheckerCallback.Reason.BT_OFF)
         }
     }
 
@@ -147,10 +147,10 @@ class BleChecker(
                         // and check the result in onActivityResult().
                         exception.startResolutionForResult(activity, BLUETOOTH_CHECK)
                     } catch (sendEx: IntentSender.SendIntentException) {
-                        callback.unableToScan(BluetoothCheckCallback.Reason.LOCATION_OFF)
+                        callback.unableToScan(BleCheckerCallback.Reason.LOCATION_OFF)
                     }
                 } else {
-                    callback.unableToScan(BluetoothCheckCallback.Reason.LOCATION_OFF)
+                    callback.unableToScan(BleCheckerCallback.Reason.LOCATION_OFF)
                 }
             }
     }

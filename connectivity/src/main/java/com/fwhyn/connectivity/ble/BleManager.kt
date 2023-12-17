@@ -12,10 +12,10 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.activity.ComponentActivity
-import com.fwhyn.connectivity.ble.BluetoothLeService.BleServiceConstant.CONNECTED
-import com.fwhyn.connectivity.ble.BluetoothLeService.BleServiceConstant.DATA_AVAILABLE
-import com.fwhyn.connectivity.ble.BluetoothLeService.BleServiceConstant.DISCONNECTED
-import com.fwhyn.connectivity.ble.BluetoothLeService.BleServiceConstant.SERVICES_DISCOVERED
+import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.CONNECTED
+import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.DATA_AVAILABLE
+import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.DISCONNECTED
+import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.SERVICES_DISCOVERED
 
 
 class BleManager(private val activity: ComponentActivity) {
@@ -24,13 +24,13 @@ class BleManager(private val activity: ComponentActivity) {
         private val TAG: String = "fwhyn_test_" + BleManager::class.java.simpleName
     }
 
-    private var bleService: BluetoothLeService? = null
+    private var bleService: BleService? = null
 
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
             Log.d(TAG, "BLE service connected")
 
-            bleService = (service as BluetoothLeService.LocalBinder).getService()
+            bleService = (service as BleService.LocalBinder).getService()
             bleService?.let {
                 if (!it.initialize()) {
                     Log.e(TAG, "Unable to initialize Bluetooth")
@@ -50,7 +50,7 @@ class BleManager(private val activity: ComponentActivity) {
     }
 
     private fun bindBleService() {
-        val gattServiceIntent = Intent(activity, BluetoothLeService::class.java)
+        val gattServiceIntent = Intent(activity, BleService::class.java)
         activity.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
         Log.d(TAG, "bindBleService invoked")
     }

@@ -23,10 +23,10 @@ import android.os.Looper
 import android.util.Log
 import java.util.UUID
 
-class BluetoothLeService : Service() {
+class BleService : Service() {
 
     companion object {
-        private val TAG: String = "fwhyn_test_" + BluetoothLeService::class.java.simpleName
+        private val TAG: String = "fwhyn_test_" + BleService::class.java.simpleName
 
         const val EXTRA_DATA = "EXTRA_DATA"
         val UUID_HEART_RATE_MEASUREMENT: UUID = UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT)
@@ -273,8 +273,8 @@ class BluetoothLeService : Service() {
 
     // ----------------------------------------------------------------
     inner class LocalBinder : Binder() {
-        fun getService(): BluetoothLeService {
-            return this@BluetoothLeService
+        fun getService(): BleService {
+            return this@BleService
         }
     }
 }

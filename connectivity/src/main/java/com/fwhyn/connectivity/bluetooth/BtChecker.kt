@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Build
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -61,16 +60,8 @@ class BtChecker(
 
     // ----------------------------------------------------------------
     override fun onCreate(owner: LifecycleOwner) {
-        Log.d(TAG, "onCreate invoked")
+        // Log.d(TAG, "onCreate invoked")
         init()
-    }
-
-    override fun onResume(owner: LifecycleOwner) {
-        Log.d(TAG, "onResume invoked")
-    }
-
-    override fun onPause(owner: LifecycleOwner) {
-        Log.d(TAG, "onPause invoked")
     }
 
     // ----------------------------------------------------------------
@@ -111,8 +102,9 @@ class BtChecker(
 //            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                add(Manifest.permission.BLUETOOTH_ADMIN)
+                add(Manifest.permission.BLUETOOTH_SCAN)
                 add(Manifest.permission.BLUETOOTH_CONNECT)
-                remove(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
 

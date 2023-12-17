@@ -82,9 +82,9 @@ class ConnectivityActivity : AppCompatActivity() {
     }
 
     private fun onBtAbleToScan() {
-        Toast.makeText(this@ConnectivityActivity, "Able to scan", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this@ConnectivityActivity, "Able to scan", Toast.LENGTH_SHORT).show()
 
-//        btManager.scanDevice()
+        btManager.scan()
     }
 
     private fun onBtUnableToScan(reason: BtCheckerCallback.Reason, permissions: Array<String>?) {

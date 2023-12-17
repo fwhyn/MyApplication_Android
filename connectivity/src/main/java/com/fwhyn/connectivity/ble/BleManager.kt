@@ -12,6 +12,10 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.activity.ComponentActivity
+import com.fwhyn.connectivity.ble.BluetoothLeService.BleServiceConstant.CONNECTED
+import com.fwhyn.connectivity.ble.BluetoothLeService.BleServiceConstant.DATA_AVAILABLE
+import com.fwhyn.connectivity.ble.BluetoothLeService.BleServiceConstant.DISCONNECTED
+import com.fwhyn.connectivity.ble.BluetoothLeService.BleServiceConstant.SERVICES_DISCOVERED
 
 
 class BleManager(private val activity: ComponentActivity) {
@@ -21,6 +25,7 @@ class BleManager(private val activity: ComponentActivity) {
     }
 
     private var bleService: BluetoothLeService? = null
+
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
             Log.d(TAG, "BLE service connected")
@@ -53,15 +58,15 @@ class BleManager(private val activity: ComponentActivity) {
     private val gattUpdateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-                BluetoothLeService.ACTION_GATT_CONNECTED -> {
+                CONNECTED.value -> {
                     // TODO implementation
                 }
 
-                BluetoothLeService.ACTION_GATT_DISCONNECTED -> {
+                DISCONNECTED.value -> {
                     // TODO implementation
                 }
 
-                BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED -> {
+                SERVICES_DISCOVERED.value -> {
                     // Show all the supported services and characteristics on the user interface.
                     displayGattServices(bleService?.getSupportedGattServices())
                 }
@@ -125,10 +130,10 @@ class BleManager(private val activity: ComponentActivity) {
 
     private fun makeGattUpdateIntentFilter(): IntentFilter {
         return IntentFilter().apply {
-            addAction(BluetoothLeService.ACTION_GATT_CONNECTED)
-            addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED)
-            addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED)
-            addAction(BluetoothLeService.ACTION_DATA_AVAILABLE)
+            addAction(CONNECTED.value)
+            addAction(DISCONNECTED.value)
+            addAction(SERVICES_DISCOVERED.value)
+            addAction(DATA_AVAILABLE.value)
         }
     }
 
@@ -140,12 +145,18 @@ class BleManager(private val activity: ComponentActivity) {
         activity.unregisterReceiver(gattUpdateReceiver)
     }
 
+    fun scanDevice() {
+        bleService?.scanDevice() ?: run {
+            Log.e(TAG, "BLE service is null")
+        }
+    }
+
     fun connectToDevice(deviceAddress: String) {
-        if (bleService != null) {
-            val result = bleService?.connect(deviceAddress)
+        bleService?.let {
+            val result = it.connect(deviceAddress)
             Log.d(TAG, "Connect request result = $result")
-        } else {
-            Log.d(TAG, "BLE service is null")
+        } ?: run {
+            Log.e(TAG, "BLE service is null")
         }
     }
 }

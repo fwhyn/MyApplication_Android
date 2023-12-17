@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
+import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
@@ -20,8 +21,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
-import com.fwhyn.connectivity.helper.startScanning
-import com.fwhyn.connectivity.helper.stopScanning
 import java.util.UUID
 
 class BluetoothLeService : Service() {
@@ -29,16 +28,10 @@ class BluetoothLeService : Service() {
     companion object {
         private val TAG: String = "fwhyn_test_" + BluetoothLeService::class.java.simpleName
 
-        const val ACTION_GATT_CONNECTED = "ACTION_GATT_CONNECTED"
-        const val ACTION_GATT_DISCONNECTED = "ACTION_GATT_DISCONNECTED"
-        const val ACTION_GATT_SERVICES_DISCOVERED = "ACTION_GATT_SERVICES_DISCOVERED"
-        const val ACTION_DATA_AVAILABLE = "ACTION_DATA_AVAILABLE"
         const val EXTRA_DATA = "EXTRA_DATA"
         val UUID_HEART_RATE_MEASUREMENT: UUID = UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT)
 
         private const val SCAN_PERIOD: Long = 10000
-        private const val STATE_DISCONNECTED = 0
-        private const val STATE_CONNECTED = 2
     }
 
     private var bluetoothGatt: BluetoothGatt? = null
@@ -64,13 +57,15 @@ class BluetoothLeService : Service() {
         }
     }
 
-    private val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private val bluetoothAdapter = bluetoothManager.adapter
-    private val bleScanner = bluetoothAdapter.bluetoothLeScanner
+    private var bluetoothAdapter: BluetoothAdapter? = null
+    private var bleScanner: BluetoothLeScanner? = null
 
     fun initialize(): Boolean {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null) {
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothAdapter = bluetoothManager.adapter
+        bleScanner = bluetoothAdapter?.bluetoothLeScanner
+
+        if (bluetoothAdapter == null || bleScanner == null) {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.")
             return false
         }
@@ -79,16 +74,22 @@ class BluetoothLeService : Service() {
 
     // ----------------------------------------------------------------
     private var scanning = false
+    private var connecting = false
     private val handler = Handler(Looper.getMainLooper())
 
     @SuppressLint("MissingPermission")
     private val leScanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            Log.d(TAG, "BLE Found: ${result.device.name}")
             val device = result.device
-            if (device.name == "PM102266" && !connecting) {
-                bleScanner.stopScanning(this)
-                connectToDevice(device.address)
+            val deviceName = device.name
+            val deviceAddress = device.address
+
+            Log.d(TAG, "BLE Found: $deviceName $deviceAddress")
+            broadcastUpdate(BleServiceConstant.DEVICE_FOUND, BleData(device, null, null))
+
+            if (deviceName == "PM102266" && !connecting) {
+                bleScanner?.stopScanning(this)
+                connect(device.address)
                 connecting = true
             }
         }
@@ -100,15 +101,29 @@ class BluetoothLeService : Service() {
         if (!scanning) {
             handler.postDelayed(
                 {
-                    bleScanner.stopScanning(leScanCallback)
+                    bleScanner?.stopScanning(leScanCallback)
                     scanning = false
                 },
                 SCAN_PERIOD
             )
 
-            bleScanner.startScanning(leScanCallback)
+            bleScanner?.startScanning(leScanCallback)
             scanning = true
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun BluetoothLeScanner.startScanning(callback: ScanCallback) {
+        Log.d(com.fwhyn.connectivity.helper.TAG, "BluetoothLeScanner startScanning invoked")
+        broadcastUpdate(BleServiceConstant.SCANNING)
+        this.startScan(callback)
+    }
+
+    @SuppressLint("MissingPermission")
+    fun BluetoothLeScanner.stopScanning(callback: ScanCallback) {
+        Log.d(com.fwhyn.connectivity.helper.TAG, "BluetoothLeScanner stopScanning invoked")
+        broadcastUpdate(BleServiceConstant.SCAN_STOPPED)
+        this.stopScan(callback)
     }
 
     // ----------------------------------------------------------------
@@ -119,45 +134,43 @@ class BluetoothLeService : Service() {
 
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 // successfully connected to the GATT Server
-                broadcastUpdate(ACTION_GATT_CONNECTED)
+                broadcastUpdate(BleServiceConstant.CONNECTED)
 
                 // Attempts to discover services after successful connection.
                 bluetoothGatt?.discoverServices()
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            } else {
                 // disconnected from the GATT Server
-                broadcastUpdate(ACTION_GATT_DISCONNECTED)
+                broadcastUpdate(BleServiceConstant.DISCONNECTED)
             }
         }
 
         @SuppressLint("MissingPermission")
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED)
+            Log.d(TAG, "onServicesDiscovered received: $status")
 
-                // Find the desired service
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                broadcastUpdate(BleServiceConstant.SERVICES_DISCOVERED)
 
                 val service: BluetoothGattService? =
                     gatt?.getService(UUID.fromString("49535343-FE7D-4AE5-8FA9-9FAFD205E455"))
 
                 // Find the desired characteristic
-                val characteristic = service?.getCharacteristic(UUID.fromString("49535343-6DAA-4D02-ABF6-19569ACA69FE"))
+                val characteristic = service?.getCharacteristic(
+                    UUID.fromString("49535343-1E4D-4BD9-BA61-23C647249616")
+                ).also {
+                    Log.d(TAG, "ECG Service found")
+                }
 
                 // Read the characteristic value
-                gatt?.readCharacteristic(characteristic)
+                gatt?.run {
+                    setCharacteristicNotification(characteristic, true)
+                    readCharacteristic(characteristic)
+                }.also {
+                    Log.d(TAG, "Gatt found")
+                }
 
             } else {
-                Log.d(TAG, "onServicesDiscovered received: $status")
-            }
-        }
-
-        override fun onCharacteristicRead(
-            gatt: BluetoothGatt,
-            characteristic: BluetoothGattCharacteristic,
-            value: ByteArray,
-            status: Int
-        ) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic)
+                // TODO service error
             }
         }
 
@@ -166,50 +179,34 @@ class BluetoothLeService : Service() {
             characteristic: BluetoothGattCharacteristic,
             value: ByteArray
         ) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic)
+            Log.d(TAG, "onCharacteristicChanged invoked")
+            broadcastUpdate(BleServiceConstant.DATA_AVAILABLE, BleData(gatt.device, characteristic, value))
+
+        }
+
+        override fun onCharacteristicRead(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic,
+            value: ByteArray,
+            status: Int
+        ) {
+            Log.d(TAG, "onCharacteristicRead received: $status")
+
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                broadcastUpdate(BleServiceConstant.DATA_AVAILABLE, BleData(gatt.device, characteristic, value))
+            } else {
+                // TODO service error
+            }
         }
     }
 
-    private fun broadcastUpdate(action: String) {
-        val intent = Intent(action)
-        sendBroadcast(intent)
-    }
+    private fun broadcastUpdate(action: BleServiceConstant, bleData: BleData? = null) {
+        val intent = Intent(action.name)
 
-    private fun broadcastUpdate(action: String, characteristic: BluetoothGattCharacteristic) {
-        val intent = Intent(action)
-
-        // This is special handling for the Heart Rate Measurement profile. Data
-        // parsing is carried out as per profile specifications.
-        when (characteristic.uuid) {
-            UUID_HEART_RATE_MEASUREMENT -> {
-                val flag = characteristic.properties
-                val format = when (flag and 0x01) {
-                    0x01 -> {
-                        Log.d(TAG, "Heart rate format UINT16.")
-                        BluetoothGattCharacteristic.FORMAT_UINT16
-                    }
-
-                    else -> {
-                        Log.d(TAG, "Heart rate format UINT8.")
-                        BluetoothGattCharacteristic.FORMAT_UINT8
-                    }
-                }
-                val heartRate = characteristic.getIntValue(format, 1)
-                Log.d(TAG, String.format("Received heart rate: %d", heartRate))
-                intent.putExtra(EXTRA_DATA, (heartRate).toString())
-            }
-
-            else -> {
-                // For all other profiles, writes the data formatted in HEX.
-                val data: ByteArray? = characteristic.value
-                if (data?.isNotEmpty() == true) {
-                    val hexString: String = data.joinToString(separator = " ") {
-                        String.format("%02X", it)
-                    }
-                    intent.putExtra(EXTRA_DATA, "$data\n$hexString")
-                }
-            }
+        bleData.let {
+            intent.putExtra(EXTRA_DATA, bleData)
         }
+
         sendBroadcast(intent)
     }
 
@@ -222,11 +219,11 @@ class BluetoothLeService : Service() {
                 Log.d(TAG, "Connecting to $address")
                 return true
             } catch (exception: IllegalArgumentException) {
-                Log.d(TAG, "Device not found with provided address.  Unable to connect.")
+                Log.e(TAG, "Device not found with provided address. Unable to connect.")
                 return false
             }
         } ?: run {
-            Log.d(TAG, "BluetoothAdapter not initialized")
+            Log.e(TAG, "BluetoothAdapter not initialized")
             return false
         }
     }
@@ -261,6 +258,17 @@ class BluetoothLeService : Service() {
         } ?: run {
             Log.d(TAG, "BluetoothGatt not initialized")
         }
+    }
+
+    // ----------------------------------------------------------------
+    enum class BleServiceConstant(val value: String) {
+        SCANNING("SCANNING"),
+        SCAN_STOPPED("SCAN_STOPPED"),
+        DEVICE_FOUND("DEVICE_FOUND"),
+        CONNECTED("CONNECTED"),
+        DISCONNECTED("DISCONNECTED"),
+        SERVICES_DISCOVERED("SERVICES_DISCOVERED"),
+        DATA_AVAILABLE("DATA_AVAILABLE"),
     }
 
     // ----------------------------------------------------------------

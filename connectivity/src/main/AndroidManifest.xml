@@ -43,7 +43,7 @@
             android:enabled="true" />
 
         <service
-            android:name=".ble.BluetoothLeService"
+            android:name=".ble.BleService"
             android:enabled="true" />
 
     </application>

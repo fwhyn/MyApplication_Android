@@ -1,11 +1,11 @@
-package com.fwhyn.connectivity.ble
+package com.fwhyn.connectivity.bluetooth
 
 import java.io.Serializable
 
-interface BluetoothCheckCallback {
+interface BtCheckerCallback {
 
     fun ableToScan()
-    fun unableToScan(reason: Reason)
+    fun unableToScan(reason: Reason, permissions: Array<String>?)
 
     // --------------------------------
     enum class Reason : Serializable {

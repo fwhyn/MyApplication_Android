@@ -2,9 +2,6 @@ package com.fwhyn.connectivity.ble
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothGattService
-import android.bluetooth.BluetoothManager
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanResult
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
@@ -12,44 +9,33 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.util.Log
 import androidx.activity.ComponentActivity
-import com.fwhyn.connectivity.helper.startScanning
-import com.fwhyn.connectivity.helper.stopScanning
+import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.CONNECTED
+import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.DATA_AVAILABLE
+import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.DISCONNECTED
+import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.SERVICES_DISCOVERED
+
 
 class BleManager(private val activity: ComponentActivity) {
 
     companion object {
         private val TAG: String = "fwhyn_test_" + BleManager::class.java.simpleName
-
-        private const val SCAN_PERIOD: Long = 10000
     }
 
-    private var connecting: Boolean = false
+    private var bleService: BleService? = null
 
-    private val bluetoothManager = activity.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private val bluetoothAdapter = bluetoothManager.adapter
-    private val bleScanner = bluetoothAdapter.bluetoothLeScanner
-
-    private var bleService: BluetoothLeService? = null
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(
-            componentName: ComponentName,
-            service: IBinder
-        ) {
+        override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
             Log.d(TAG, "BLE service connected")
-            bleService = (service as BluetoothLeService.LocalBinder).getService()
-            bleService?.let { bluetooth ->
-                if (!bluetooth.initialize()) {
+
+            bleService = (service as BleService.LocalBinder).getService()
+            bleService?.let {
+                if (!it.initialize()) {
                     Log.e(TAG, "Unable to initialize Bluetooth")
                     activity.finish()
                 }
-
-                // perform device connection
-//                bluetooth.connect(deviceAddress)
             }
         }
 
@@ -60,24 +46,27 @@ class BleManager(private val activity: ComponentActivity) {
     }
 
     init {
-        val gattServiceIntent = Intent(activity, BluetoothLeService::class.java)
+        bindBleService()
+    }
+
+    private fun bindBleService() {
+        val gattServiceIntent = Intent(activity, BleService::class.java)
         activity.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-        Log.d(TAG, "BLE service initialized")
+        Log.d(TAG, "bindBleService invoked")
     }
 
     private val gattUpdateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-                BluetoothLeService.ACTION_GATT_CONNECTED -> {
-                    Log.d(TAG, "BluetoothLeService.ACTION_GATT_CONNECTED")
+                CONNECTED.value -> {
+                    // TODO implementation
                 }
 
-                BluetoothLeService.ACTION_GATT_DISCONNECTED -> {
-                    Log.d(TAG, "BluetoothLeService.ACTION_GATT_DISCONNECTED")
-                    connecting = false
+                DISCONNECTED.value -> {
+                    // TODO implementation
                 }
 
-                BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED -> {
+                SERVICES_DISCOVERED.value -> {
                     // Show all the supported services and characteristics on the user interface.
                     displayGattServices(bleService?.getSupportedGattServices())
                 }
@@ -127,7 +116,6 @@ class BleManager(private val activity: ComponentActivity) {
 
     fun callWhenOnResume() {
         registerReceiver()
-//        connectToDevice()
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -140,21 +128,12 @@ class BleManager(private val activity: ComponentActivity) {
         }
     }
 
-    fun connectToDevice(deviceAddress: String) {
-        if (bleService != null) {
-            val result = bleService?.connect(deviceAddress)
-            Log.d(TAG, "Connect request result = $result")
-        } else {
-            Log.d(TAG, "BLE service is null")
-        }
-    }
-
     private fun makeGattUpdateIntentFilter(): IntentFilter {
         return IntentFilter().apply {
-            addAction(BluetoothLeService.ACTION_GATT_CONNECTED)
-            addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED)
-            addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED)
-            addAction(BluetoothLeService.ACTION_DATA_AVAILABLE)
+            addAction(CONNECTED.value)
+            addAction(DISCONNECTED.value)
+            addAction(SERVICES_DISCOVERED.value)
+            addAction(DATA_AVAILABLE.value)
         }
     }
 
@@ -166,37 +145,18 @@ class BleManager(private val activity: ComponentActivity) {
         activity.unregisterReceiver(gattUpdateReceiver)
     }
 
-    // ----------------------------------------------------------------
-    private var scanning = false
-    private val handler = Handler(Looper.getMainLooper())
-
-    @SuppressLint("MissingPermission")
-    private val leScanCallback: ScanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult) {
-            Log.d(TAG, "BLE Found: ${result.device.name}")
-            val device = result.device
-            if (device.name == "PM102266" && !connecting) {
-                bleScanner.stopScanning(this)
-                connectToDevice(device.address)
-                connecting = true
-            }
+    fun scanDevice() {
+        bleService?.scanDevice() ?: run {
+            Log.e(TAG, "BLE service is null")
         }
     }
 
-    @SuppressLint("MissingPermission")
-    fun scanDevice() {
-
-        if (!scanning) {
-            handler.postDelayed(
-                {
-                    bleScanner.stopScanning(leScanCallback)
-                    scanning = false
-                },
-                SCAN_PERIOD
-            )
-
-            bleScanner.startScanning(leScanCallback)
-            scanning = true
+    fun connectToDevice(deviceAddress: String) {
+        bleService?.let {
+            val result = it.connect(deviceAddress)
+            Log.d(TAG, "Connect request result = $result")
+        } ?: run {
+            Log.e(TAG, "BLE service is null")
         }
     }
 }

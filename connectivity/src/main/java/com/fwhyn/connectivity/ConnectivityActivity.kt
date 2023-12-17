@@ -1,28 +1,41 @@
 package com.fwhyn.connectivity
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.fwhyn.connectivity.ble.BleManager
-import com.fwhyn.connectivity.ble.BluetoothCheck
-import com.fwhyn.connectivity.ble.BluetoothCheckCallback
-import com.fwhyn.connectivity.bluetoothlegatt.DeviceScanActivity
+import com.fwhyn.connectivity.ble.BleChecker
+import com.fwhyn.connectivity.ble.BleCheckerCallback
+import com.fwhyn.connectivity.bluetooth.BtChecker
+import com.fwhyn.connectivity.bluetooth.BtCheckerCallback
+import com.fwhyn.connectivity.bluetooth.BtManager
 import com.fwhyn.connectivity.permission.PermissionManager
 import com.fwhyn.connectivity.permission.PermissionManagerWarning
 
 class ConnectivityActivity : AppCompatActivity() {
 
-    private lateinit var bleManager: BleManager
-
-    private val bluetoothCheck = BluetoothCheck(this, object : BluetoothCheckCallback {
+    //    private val bleManager = BleManager(this)
+    @OptIn(PermissionManagerWarning::class)
+    private val bleChecker = BleChecker(this, object : BleCheckerCallback {
         override fun ableToScan() {
             onBleAbleToScan()
         }
 
-        override fun unableToScan(reason: BluetoothCheckCallback.Reason) {
+        override fun unableToScan(reason: BleCheckerCallback.Reason) {
             onBleUnableToScan(reason)
+        }
+    })
+
+    private val btManager = BtManager(this)
+
+    @OptIn(PermissionManagerWarning::class)
+    private val btChecker = BtChecker(this, object : BtCheckerCallback {
+        override fun ableToScan() {
+            onBtAbleToScan()
+        }
+
+        override fun unableToScan(reason: BtCheckerCallback.Reason, permissions: Array<String>?) {
+            onBtUnableToScan(reason, permissions)
         }
     })
 
@@ -32,40 +45,58 @@ class ConnectivityActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bluetooth)
 
-        bleManager = BleManager(this@ConnectivityActivity)
-
         findViewById<TextView>(R.id.hello_textview).setOnClickListener {
-            startActivity(Intent(this, DeviceScanActivity::class.java))
-//            bluetoothCheck.bleCheck()
+//            startActivity(Intent(this, DeviceScanActivity::class.java))
+//            bleChecker.bleCheck()
+            btChecker.btCheck()
         }
     }
 
     override fun onResume() {
         super.onResume()
 
-        bleManager.callWhenOnResume()
+//        bleManager.callWhenOnResume()
     }
 
     override fun onPause() {
         super.onPause()
 
-        bleManager.callWhenOnPause()
+//        bleManager.callWhenOnPause()
     }
 
     // ----------------------------------------------------------------
     private fun onBleAbleToScan() {
         Toast.makeText(this@ConnectivityActivity, "Scanning...", Toast.LENGTH_SHORT).show()
 
-        bleManager.scanDevice()
+//        bleManager.scanDevice()
     }
 
-    private fun onBleUnableToScan(reason: BluetoothCheckCallback.Reason) {
+    private fun onBleUnableToScan(reason: BleCheckerCallback.Reason) {
         when (reason) {
-            BluetoothCheckCallback.Reason.NEED_RATIONALE -> PermissionManager.openSetting(this@ConnectivityActivity)
-            BluetoothCheckCallback.Reason.NO_PERMISSION -> showToast(reason.toString())
-            BluetoothCheckCallback.Reason.BT_OFF -> showToast(reason.toString())
-            BluetoothCheckCallback.Reason.LOCATION_OFF -> showToast(reason.toString())
-            BluetoothCheckCallback.Reason.NOT_SUPPORTED -> showToast(reason.toString())
+            BleCheckerCallback.Reason.NEED_RATIONALE -> PermissionManager.openSetting(this@ConnectivityActivity)
+            BleCheckerCallback.Reason.NO_PERMISSION -> showToast(reason.toString())
+            BleCheckerCallback.Reason.BT_OFF -> showToast(reason.toString())
+            BleCheckerCallback.Reason.LOCATION_OFF -> showToast(reason.toString())
+            BleCheckerCallback.Reason.NOT_SUPPORTED -> showToast(reason.toString())
+        }
+    }
+
+    private fun onBtAbleToScan() {
+        // Toast.makeText(this@ConnectivityActivity, "Able to scan", Toast.LENGTH_SHORT).show()
+
+        btManager.scan()
+    }
+
+    private fun onBtUnableToScan(reason: BtCheckerCallback.Reason, permissions: Array<String>?) {
+        when (reason) {
+            BtCheckerCallback.Reason.NEED_RATIONALE -> PermissionManager.openSetting(this@ConnectivityActivity)
+            BtCheckerCallback.Reason.NO_PERMISSION -> {
+                showToast("$reason ${permissions?.size}")
+            }
+
+            BtCheckerCallback.Reason.BT_OFF -> showToast(reason.toString())
+            BtCheckerCallback.Reason.LOCATION_OFF -> showToast(reason.toString())
+            BtCheckerCallback.Reason.NOT_SUPPORTED -> showToast(reason.toString())
         }
     }
 

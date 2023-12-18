@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fwhyn.connectivity.ble.BleChecker
 import com.fwhyn.connectivity.ble.BleCheckerCallback
+import com.fwhyn.connectivity.ble.BleManager
 import com.fwhyn.connectivity.bluetooth.BtChecker
 import com.fwhyn.connectivity.bluetooth.BtCheckerCallback
 import com.fwhyn.connectivity.bluetooth.BtManager
@@ -14,7 +15,8 @@ import com.fwhyn.connectivity.permission.PermissionManagerWarning
 
 class ConnectivityActivity : AppCompatActivity() {
 
-    //    private val bleManager = BleManager(this)
+    private val bleManager = BleManager(this)
+
     @OptIn(PermissionManagerWarning::class)
     private val bleChecker = BleChecker(this, object : BleCheckerCallback {
         override fun ableToScan() {
@@ -47,33 +49,21 @@ class ConnectivityActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.hello_textview).setOnClickListener {
 //            startActivity(Intent(this, DeviceScanActivity::class.java))
-//            bleChecker.bleCheck()
-            btChecker.btCheck()
+            bleChecker.bleCheck()
+//            btChecker.btCheck()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-//        bleManager.callWhenOnResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-//        bleManager.callWhenOnPause()
     }
 
     // ----------------------------------------------------------------
     private fun onBleAbleToScan() {
-        Toast.makeText(this@ConnectivityActivity, "Scanning...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Able to scan", Toast.LENGTH_SHORT).show()
 
-//        bleManager.scanDevice()
+        bleManager.scanDevice()
     }
 
     private fun onBleUnableToScan(reason: BleCheckerCallback.Reason) {
         when (reason) {
-            BleCheckerCallback.Reason.NEED_RATIONALE -> PermissionManager.openSetting(this@ConnectivityActivity)
+            BleCheckerCallback.Reason.NEED_RATIONALE -> PermissionManager.openSetting(this)
             BleCheckerCallback.Reason.NO_PERMISSION -> showToast(reason.toString())
             BleCheckerCallback.Reason.BT_OFF -> showToast(reason.toString())
             BleCheckerCallback.Reason.LOCATION_OFF -> showToast(reason.toString())
@@ -82,7 +72,7 @@ class ConnectivityActivity : AppCompatActivity() {
     }
 
     private fun onBtAbleToScan() {
-        // Toast.makeText(this@ConnectivityActivity, "Able to scan", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Able to scan", Toast.LENGTH_SHORT).show()
 
         btManager.scan()
     }

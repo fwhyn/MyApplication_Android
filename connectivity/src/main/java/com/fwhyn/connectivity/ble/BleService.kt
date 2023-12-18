@@ -102,28 +102,28 @@ class BleService : Service() {
             handler.postDelayed(
                 {
                     bleScanner?.stopScanning(leScanCallback)
-                    scanning = false
                 },
                 SCAN_PERIOD
             )
 
             bleScanner?.startScanning(leScanCallback)
-            scanning = true
         }
     }
 
     @SuppressLint("MissingPermission")
     fun BluetoothLeScanner.startScanning(callback: ScanCallback) {
-        Log.d(com.fwhyn.connectivity.helper.TAG, "BluetoothLeScanner startScanning invoked")
+        Log.d(TAG, "BluetoothLeScanner startScanning invoked")
         broadcastUpdate(BleServiceConstant.SCANNING)
         this.startScan(callback)
+        scanning = true
     }
 
     @SuppressLint("MissingPermission")
     fun BluetoothLeScanner.stopScanning(callback: ScanCallback) {
-        Log.d(com.fwhyn.connectivity.helper.TAG, "BluetoothLeScanner stopScanning invoked")
+        Log.d(TAG, "BluetoothLeScanner stopScanning invoked")
         broadcastUpdate(BleServiceConstant.SCAN_STOPPED)
         this.stopScan(callback)
+        scanning = false
     }
 
     // ----------------------------------------------------------------

@@ -185,7 +185,12 @@ class BtManager(private val activity: ComponentActivity) : DefaultLifecycleObser
             val uuid = device.uuids?.toString()
             uuid?.let {
                 mmSocket =
-                    device.createRfcommSocketToServiceRecord(UUID.fromString("9535343-1E4D-4BD9-BA61-23C647249616"))
+                    device.createRfcommSocketToServiceRecord(
+                        UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+//                    device.createRfcommSocketToServiceRecord(UUID.fromString("00001106-0000-1000-8000-00805F9B34FB")
+//                    device.createRfcommSocketToServiceRecord(UUID.fromString("F9EC7BC4-953C-11D2-984E-525400DC9E09")
+//                    device.createRfcommSocketToServiceRecord(UUID.fromString("00001810-0000-1000-8000-00805f9b34fb")
+                    )
                 Log.d(TAG, "setting socket")
             }
         }
@@ -197,6 +202,7 @@ class BtManager(private val activity: ComponentActivity) : DefaultLifecycleObser
             mmSocket?.use { socket ->
                 // Connect to the remote device through the socket. This call blocks
                 // until it succeeds or throws an exception.
+                // TODO pair before connect
                 socket.connect()
 
                 Log.d(TAG, "device connected")

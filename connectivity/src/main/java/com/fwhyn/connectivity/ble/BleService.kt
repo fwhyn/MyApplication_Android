@@ -163,8 +163,8 @@ class BleService : Service() {
 
                 // Read the characteristic value
                 gatt?.run {
-                    setCharacteristicNotification(characteristic, true)
-                    readCharacteristic(characteristic)
+//                    setCharacteristicNotification(characteristic, true)
+//                    readCharacteristic(characteristic)
                 }.also {
                     Log.d(TAG, "Gatt found")
                 }
@@ -194,6 +194,15 @@ class BleService : Service() {
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(BleServiceConstant.DATA_AVAILABLE, BleData(gatt.device, characteristic, value))
+            } else {
+                // TODO service error
+            }
+        }
+
+        override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
+            Log.d(TAG, "onDescriptorWrite received: $status")
+
+            if (status == BluetoothGatt.GATT_SUCCESS) {
             } else {
                 // TODO service error
             }

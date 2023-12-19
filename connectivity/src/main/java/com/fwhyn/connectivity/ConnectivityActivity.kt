@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fwhyn.connectivity.ble.BleChecker
 import com.fwhyn.connectivity.ble.BleCheckerCallback
+import com.fwhyn.connectivity.ble.BleManager
 import com.fwhyn.connectivity.bluetooth.BtChecker
 import com.fwhyn.connectivity.bluetooth.BtCheckerCallback
 import com.fwhyn.connectivity.bluetooth.BtManager
@@ -14,7 +15,7 @@ import com.fwhyn.connectivity.permission.PermissionManagerWarning
 
 class ConnectivityActivity : AppCompatActivity() {
 
-//    private val bleManager = BleManager(this)
+    private val bleManager = BleManager(this)
 
     @OptIn(PermissionManagerWarning::class)
     private val bleChecker = BleChecker(this, object : BleCheckerCallback {
@@ -57,7 +58,7 @@ class ConnectivityActivity : AppCompatActivity() {
     private fun onBleAbleToScan() {
         Toast.makeText(this, "Able to scan", Toast.LENGTH_SHORT).show()
 
-//        bleManager.scanDevice()
+        bleManager.scanDevice()
     }
 
     private fun onBleUnableToScan(reason: BleCheckerCallback.Reason) {

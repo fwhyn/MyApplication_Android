@@ -17,10 +17,12 @@ import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import com.fwhyn.connectivity.helper.hexToByteArrayOrNull
 import java.util.UUID
 
 class BleService : Service() {
@@ -31,7 +33,7 @@ class BleService : Service() {
         const val EXTRA_DATA = "EXTRA_DATA"
         val UUID_HEART_RATE_MEASUREMENT: UUID = UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT)
 
-        private const val SCAN_PERIOD: Long = 10000
+        private const val SCAN_PERIOD: Long = 30000 // msec
     }
 
     private var bluetoothGatt: BluetoothGatt? = null
@@ -127,6 +129,7 @@ class BleService : Service() {
     }
 
     // ----------------------------------------------------------------
+    private var sequence: AndesfitPM10Sequence = AndesfitPM10Sequence.UNINITIALIZED
     private val bluetoothGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
         @SuppressLint("MissingPermission")
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
@@ -141,6 +144,7 @@ class BleService : Service() {
             } else {
                 // disconnected from the GATT Server
                 broadcastUpdate(BleServiceConstant.DISCONNECTED)
+                connecting = false
             }
         }
 
@@ -161,14 +165,8 @@ class BleService : Service() {
                     Log.d(TAG, "ECG Service found")
                 }
 
-                // Read the characteristic value
-                gatt?.run {
-//                    setCharacteristicNotification(characteristic, true)
-//                    readCharacteristic(characteristic)
-                }.also {
-                    Log.d(TAG, "Gatt found")
-                }
-
+                notifyCharacteristic(characteristic, true)
+                setDevice(characteristic)
             } else {
                 // TODO service error
             }
@@ -181,7 +179,6 @@ class BleService : Service() {
         ) {
             Log.d(TAG, "onCharacteristicChanged invoked")
             broadcastUpdate(BleServiceConstant.DATA_AVAILABLE, BleData(gatt.device, characteristic, value))
-
         }
 
         override fun onCharacteristicRead(
@@ -194,29 +191,45 @@ class BleService : Service() {
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(BleServiceConstant.DATA_AVAILABLE, BleData(gatt.device, characteristic, value))
+
+                Log.d(TAG, sequence.name)
+                when (sequence) {
+                    AndesfitPM10Sequence.SET_DEVICE_COMPLETED -> confirmSetDevice(characteristic)
+                    else -> {}
+                }
             } else {
                 // TODO service error
             }
+        }
+
+        override fun onCharacteristicWrite(
+            gatt: BluetoothGatt?,
+            characteristic: BluetoothGattCharacteristic?,
+            status: Int
+        ) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+
+                Log.d(TAG, sequence.name)
+                when (sequence) {
+                    AndesfitPM10Sequence.SET_DEVICE -> readCompletedSetDevice(characteristic)
+                    else -> {}
+                }
+            } else {
+                // TODO service error
+            }
+
+            super.onCharacteristicWrite(gatt, characteristic, status)
         }
 
         override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
             Log.d(TAG, "onDescriptorWrite received: $status")
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
+
             } else {
                 // TODO service error
             }
         }
-    }
-
-    private fun broadcastUpdate(action: BleServiceConstant, bleData: BleData? = null) {
-        val intent = Intent(action.name)
-
-        bleData.let {
-            intent.putExtra(EXTRA_DATA, bleData)
-        }
-
-        sendBroadcast(intent)
     }
 
     @SuppressLint("MissingPermission")
@@ -241,32 +254,65 @@ class BleService : Service() {
         return bluetoothGatt?.services
     }
 
+    private fun setDevice(characteristic: BluetoothGattCharacteristic?) {
+        writeCharacteristic(characteristic, "8301".hexToByteArrayOrNull())
+        sequence = AndesfitPM10Sequence.SET_DEVICE
+    }
+
+    private fun readCompletedSetDevice(characteristic: BluetoothGattCharacteristic?) {
+        readCharacteristic(characteristic)
+        sequence = AndesfitPM10Sequence.SET_DEVICE_COMPLETED
+    }
+
+    private fun confirmSetDevice(characteristic: BluetoothGattCharacteristic?) {
+        writeCharacteristic(characteristic, "FE".hexToByteArrayOrNull())
+        sequence = AndesfitPM10Sequence.CONFIRMED_SET_DEVICE
+    }
+
     @SuppressLint("MissingPermission")
-    fun readCharacteristic(characteristic: BluetoothGattCharacteristic) {
-        bluetoothGatt?.readCharacteristic(characteristic) ?: run {
-            Log.d(TAG, "BluetoothGatt not initialized")
+    fun notifyCharacteristic(characteristic: BluetoothGattCharacteristic?, enable: Boolean) {
+        if (bluetoothGatt != null && characteristic != null) {
+            bluetoothGatt?.setCharacteristicNotification(characteristic, enable)
+        } else {
+            Log.e(TAG, "notifyCharacteristic error")
         }
     }
 
     @SuppressLint("MissingPermission")
-    fun setCharacteristicNotification(
-        characteristic: BluetoothGattCharacteristic,
-        enabled: Boolean
-    ) {
-        bluetoothGatt?.let { gatt ->
-            gatt.setCharacteristicNotification(characteristic, enabled)
-
-            // This is specific to Heart Rate Measurement.
-            if (UUID_HEART_RATE_MEASUREMENT == characteristic.uuid) {
-                val descriptor = characteristic.getDescriptor(
-                    UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG)
-                )
-                descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                gatt.writeDescriptor(descriptor)
-            }
-        } ?: run {
-            Log.d(TAG, "BluetoothGatt not initialized")
+    fun readCharacteristic(characteristic: BluetoothGattCharacteristic?) {
+        if (bluetoothGatt != null && characteristic != null) {
+            bluetoothGatt?.readCharacteristic(characteristic)
+        } else {
+            Log.e(TAG, "readCharacteristic error")
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun writeCharacteristic(characteristic: BluetoothGattCharacteristic?, byteArray: ByteArray?) {
+        if (bluetoothGatt != null && characteristic != null && byteArray != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bluetoothGatt?.writeCharacteristic(
+                    characteristic,
+                    byteArray,
+                    BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                )
+            } else {
+                characteristic.value = byteArray
+                bluetoothGatt?.writeCharacteristic(characteristic)
+            }
+        } else {
+            Log.e(TAG, "readCharacteristic error")
+        }
+    }
+
+    private fun broadcastUpdate(action: BleServiceConstant, bleData: BleData? = null) {
+        val intent = Intent(action.name)
+
+        bleData.let {
+            intent.putExtra(EXTRA_DATA, bleData)
+        }
+
+        sendBroadcast(intent)
     }
 
     // ----------------------------------------------------------------
@@ -278,6 +324,17 @@ class BleService : Service() {
         DISCONNECTED("DISCONNECTED"),
         SERVICES_DISCOVERED("SERVICES_DISCOVERED"),
         DATA_AVAILABLE("DATA_AVAILABLE"),
+    }
+
+    enum class AndesfitPM10Sequence {
+        UNINITIALIZED,
+        INITIALIZED,
+        SET_DEVICE,
+        SET_DEVICE_COMPLETED,
+        CONFIRMED_SET_DEVICE,
+        SET_DATE_TIME,
+        SET_DATE_TIME_COMPLETED,
+        CONFIRMED_SET_DATE_TIME,
     }
 
     // ----------------------------------------------------------------

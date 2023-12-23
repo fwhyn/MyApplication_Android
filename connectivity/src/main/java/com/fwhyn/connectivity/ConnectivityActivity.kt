@@ -9,7 +9,6 @@ import com.fwhyn.connectivity.ble.BleCheckerCallback
 import com.fwhyn.connectivity.ble.BleManager
 import com.fwhyn.connectivity.bluetooth.BtChecker
 import com.fwhyn.connectivity.bluetooth.BtCheckerCallback
-import com.fwhyn.connectivity.bluetooth.BtManager
 import com.fwhyn.connectivity.permission.PermissionManager
 import com.fwhyn.connectivity.permission.PermissionManagerWarning
 
@@ -28,7 +27,7 @@ class ConnectivityActivity : AppCompatActivity() {
         }
     })
 
-    private val btManager = BtManager(this)
+//    private val btManager = BtManager(this)
 
     @OptIn(PermissionManagerWarning::class)
     private val btChecker = BtChecker(this, object : BtCheckerCallback {
@@ -49,8 +48,8 @@ class ConnectivityActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.hello_textview).setOnClickListener {
 //            startActivity(Intent(this, DeviceScanActivity::class.java))
-//            bleChecker.bleCheck()
-            btChecker.btCheck()
+            bleChecker.bleCheck()
+//            btChecker.btCheck()
         }
     }
 
@@ -74,7 +73,7 @@ class ConnectivityActivity : AppCompatActivity() {
     private fun onBtAbleToScan() {
         Toast.makeText(this, "Able to scan", Toast.LENGTH_SHORT).show()
 
-        btManager.scan()
+//        btManager.scan()
     }
 
     private fun onBtUnableToScan(reason: BtCheckerCallback.Reason, permissions: Array<String>?) {

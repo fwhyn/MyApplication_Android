@@ -23,7 +23,6 @@ data class BleData(
         parcel.createByteArray()
     )
 
-    @Suppress("DEPRECATION")
     constructor(parcel: Parcel) : this(
         parcel.readParcelable(BluetoothDevice::class.java.classLoader),
         parcel.readParcelable(BluetoothGattCharacteristic::class.java.classLoader),

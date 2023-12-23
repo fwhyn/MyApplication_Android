@@ -20,6 +20,7 @@ import com.fwhyn.connectivity.helper.getParcelable
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.math.BigInteger
 import java.util.UUID
 
 
@@ -208,8 +209,64 @@ class BtManager(private val activity: ComponentActivity) : DefaultLifecycleObser
                 Log.d(TAG, "device connected")
                 // The connection attempt succeeded. Perform work associated with
                 // the connection in a separate thread.
-                ConnectedThread(socket).start()
+                val outStream: OutputStream = socket.outputStream
+                val inStream: InputStream = socket.inputStream
+                val mmBuffer: ByteArray = ByteArray(1024)
+                var numBytes: Int
+
+                // ----------------------------------------------------------------
+                val binaryString = "10010000"
+                val binaryString2 = "0"
+
+                // Convert binary string to BigInteger
+                val bigInteger = BigInteger(binaryString, 2)
+                val bigInteger2 = BigInteger(binaryString2, 2)
+
+                // Convert BigInteger to byte array
+                val byte = bigInteger.toByte()
+                val byte2 = bigInteger2.toByte()
+
+                val byteArray = byteArrayOf(byte, byte2)
+
+                outStream.write(byteArray)
+
+                while (true) {
+                    // Read from the InputStream.
+                    numBytes = try {
+                        inStream.read(mmBuffer)
+                    } catch (e: IOException) {
+                        Log.d(TAG, "Input stream was disconnected", e)
+                        break
+                    }
+
+                    // Send the obtained bytes to the UI activity.
+                    val readMsg = handler.obtainMessage(
+                        MESSAGE_READ,
+                        numBytes,
+                        -1,
+                        mmBuffer
+                    )
+                    readMsg.sendToTarget()
+                }
             }
+
+//            try {
+//                // TODO pair before connect
+//
+//                mmSocket?.let {
+//                    // Connect to the remote device through the socket. This call blocks
+//                    // until it succeeds or throws an exception.
+//                    it.connect()
+//                    Log.d(TAG, "device connected")
+//                    // The connection attempt succeeded. Perform work associated with
+//                    // the connection in a separate thread.
+//                    ConnectedThread(it).start()
+//                }
+//            } catch (e: IOException) {
+//                Log.e(TAG, "Could not connect", e)
+//            } finally {
+//                cancel()
+//            }
         }
 
         // Closes the client socket and causes the thread to finish.
@@ -250,6 +307,7 @@ class BtManager(private val activity: ComponentActivity) : DefaultLifecycleObser
                 )
                 readMsg.sendToTarget()
             }
+            mmInStream.close()
         }
 
         // Call this from the main activity to send data to the remote device.

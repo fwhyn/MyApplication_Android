@@ -22,6 +22,7 @@ import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.SERVICES_DISCOVE
 
 class BleManager(private val activity: ComponentActivity) : DefaultLifecycleObserver {
 
+    // TODO pindah ble checker ke ble manager
     companion object {
         private val TAG: String = "fwhyn_test_" + BleManager::class.java.simpleName
     }

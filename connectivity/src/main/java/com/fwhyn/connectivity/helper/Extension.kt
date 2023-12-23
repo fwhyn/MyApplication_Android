@@ -24,11 +24,23 @@ fun Activity.getBtAdapterOrNull(): BluetoothAdapter? {
     }
 }
 
-@Suppress("DEPRECATION")
 fun <T : Parcelable> Intent.getParcelable(key: String, cls: Class<T>): T? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         this.getParcelableExtra(key, cls)
     } else {
         this.getParcelableExtra(key) as? T
     }
+}
+
+fun String.hexToByteArrayOrNull(): ByteArray? {
+    // check(length % 2 == 0) { "Must have an even length" }
+    if (length % 2 != 0) {
+        Log.e(TAG, "Must have an even length")
+        return null
+    }
+
+    val oneByteStringList: List<String> = chunked(2)
+    val byteList: List<Byte> = oneByteStringList.map { it.toInt(16).toByte() }
+
+    return byteList.toByteArray()
 }

@@ -35,7 +35,9 @@ class BleService : Service() {
         private const val SCAN_PERIOD: Long = 30000 // msec
 
         private const val ANDESFIT_PM102266_SERVICE_UUID = "49535343-FE7D-4AE5-8FA9-9FAFD205E455"
-        private const val ANDESFIT_PM102266_READ_UUID = "49535343-1E4D-4BD9-BA61-23C647249616"
+
+        //        private const val ANDESFIT_PM102266_READ_UUID = "49535343-1E4D-4BD9-BA61-23C647249616"
+        private const val ANDESFIT_PM102266_READ_UUID = "0000ff02-0000-1000-8000-00805f9b34fb"
         private const val ANDESFIT_PM102266_WRITE_UUID = "49535343-8841-43F4-A8D4-ECBE34729BB3"
         private const val CLIENT_CHARACTERISTIC_CONFIG_UUID = "00002902-0000-1000-8000-00805f9b34fb"
     }
@@ -272,7 +274,14 @@ class BleService : Service() {
 //            BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
 //            BluetoothGattCharacteristic.PERMISSION_READ
 //        )
-        notifyCharacteristic(characteristicMap[ANDESFIT_PM102266_READ_UUID], true)
+
+//        notifyCharacteristic(characteristicMap[ANDESFIT_PM102266_READ_UUID], true)
+        val byteArray = if (true) {
+            BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+        } else {
+            BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
+        }
+        writeDescriptor(characteristicMap[ANDESFIT_PM102266_READ_UUID], byteArray)
         sequence = AndesfitPM10Sequence.INITIALIZED
     }
 
@@ -332,7 +341,7 @@ class BleService : Service() {
                 bluetoothGatt?.writeCharacteristic(characteristic)
             }
         } else {
-            Log.e(TAG, "readCharacteristic error")
+            Log.e(TAG, "writeCharacteristic error")
         }
     }
 
@@ -348,7 +357,7 @@ class BleService : Service() {
                 bluetoothGatt?.writeDescriptor(descriptor)
             }
         } else {
-            Log.e(TAG, "readCharacteristic error")
+            Log.e(TAG, "writeDescriptor error")
         }
     }
 

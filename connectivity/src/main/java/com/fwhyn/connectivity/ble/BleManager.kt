@@ -12,14 +12,17 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.CONNECTED
 import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.DATA_AVAILABLE
 import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.DISCONNECTED
 import com.fwhyn.connectivity.ble.BleService.BleServiceConstant.SERVICES_DISCOVERED
 
 
-class BleManager(private val activity: ComponentActivity) {
+class BleManager(private val activity: ComponentActivity) : DefaultLifecycleObserver {
 
+    // TODO pindah ble checker ke ble manager
     companion object {
         private val TAG: String = "fwhyn_test_" + BleManager::class.java.simpleName
     }
@@ -46,9 +49,24 @@ class BleManager(private val activity: ComponentActivity) {
     }
 
     init {
+        activity.lifecycle.addObserver(this)
+
+    }
+
+    // ----------------------------------------------------------------
+    override fun onCreate(owner: LifecycleOwner) {
         bindBleService()
     }
 
+    override fun onResume(owner: LifecycleOwner) {
+        registerReceiver()
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        unregisterReceiver()
+    }
+
+    // ----------------------------------------------------------------
     private fun bindBleService() {
         val gattServiceIntent = Intent(activity, BleService::class.java)
         activity.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
@@ -114,10 +132,6 @@ class BleManager(private val activity: ComponentActivity) {
 //        }
     }
 
-    fun callWhenOnResume() {
-        registerReceiver()
-    }
-
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -135,10 +149,6 @@ class BleManager(private val activity: ComponentActivity) {
             addAction(SERVICES_DISCOVERED.value)
             addAction(DATA_AVAILABLE.value)
         }
-    }
-
-    fun callWhenOnPause() {
-        unregisterReceiver()
     }
 
     private fun unregisterReceiver() {

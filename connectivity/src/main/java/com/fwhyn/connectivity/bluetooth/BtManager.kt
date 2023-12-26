@@ -17,10 +17,10 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.fwhyn.connectivity.helper.getBtAdapterOrNull
 import com.fwhyn.connectivity.helper.getParcelable
+import com.fwhyn.connectivity.helper.hexToByteArrayOrNull
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.math.BigInteger
 import java.util.UUID
 
 
@@ -215,20 +215,10 @@ class BtManager(private val activity: ComponentActivity) : DefaultLifecycleObser
                 var numBytes: Int
 
                 // ----------------------------------------------------------------
-                val binaryString = "10010000"
-                val binaryString2 = "0"
-
-                // Convert binary string to BigInteger
-                val bigInteger = BigInteger(binaryString, 2)
-                val bigInteger2 = BigInteger(binaryString2, 2)
-
-                // Convert BigInteger to byte array
-                val byte = bigInteger.toByte()
-                val byte2 = bigInteger2.toByte()
-
-                val byteArray = byteArrayOf(byte, byte2)
-
+                val byteArray = "830100".hexToByteArrayOrNull()
                 outStream.write(byteArray)
+                // outStream.flush()
+                // outStream.close()
 
                 while (true) {
                     // Read from the InputStream.

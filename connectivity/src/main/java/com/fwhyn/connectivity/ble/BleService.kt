@@ -37,7 +37,7 @@ class BleService : Service() {
         private const val ANDESFIT_PM102266_SERVICE_UUID = "49535343-FE7D-4AE5-8FA9-9FAFD205E455"
         private const val ANDESFIT_PM102266_READ_UUID = "49535343-1E4D-4BD9-BA61-23C647249616"
         private const val ANDESFIT_PM102266_WRITE_UUID = "49535343-8841-43F4-A8D4-ECBE34729BB3"
-        private const val CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb"
+        private const val CLIENT_CHARACTERISTIC_CONFIG_UUID = "00002902-0000-1000-8000-00805f9b34fb"
     }
 
     private var characteristicMap: HashMap<String, BluetoothGattCharacteristic> = hashMapOf()
@@ -267,11 +267,11 @@ class BleService : Service() {
     }
 
     private fun initDevice() {
-        val characteristic = BluetoothGattCharacteristic(
-            UUID.fromString("your_characteristic_uuid"),
-            BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-            BluetoothGattCharacteristic.PERMISSION_READ
-        )
+//        val characteristic = BluetoothGattCharacteristic(
+//            UUID.fromString("your_characteristic_uuid"),
+//            BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+//            BluetoothGattCharacteristic.PERMISSION_READ
+//        )
         notifyCharacteristic(characteristicMap[ANDESFIT_PM102266_READ_UUID], true)
         sequence = AndesfitPM10Sequence.INITIALIZED
     }
@@ -339,7 +339,7 @@ class BleService : Service() {
     @SuppressLint("MissingPermission")
     fun writeDescriptor(characteristic: BluetoothGattCharacteristic?, byteArray: ByteArray?) {
         if (bluetoothGatt != null && characteristic != null && byteArray != null) {
-            val descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG))
+            val descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG_UUID))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 bluetoothGatt?.writeDescriptor(descriptor, byteArray)

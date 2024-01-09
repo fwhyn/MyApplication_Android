@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
+import android.bluetooth.BluetoothStatusCodes
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -36,9 +37,9 @@ class BleService : Service() {
 
         private const val ANDESFIT_PM102266_SERVICE_UUID = "49535343-FE7D-4AE5-8FA9-9FAFD205E455"
 
-        //        private const val ANDESFIT_PM102266_READ_UUID = "49535343-1E4D-4BD9-BA61-23C647249616"
-        private const val ANDESFIT_PM102266_READ_UUID = "0000ff02-0000-1000-8000-00805f9b34fb"
+        private const val ANDESFIT_PM102266_READ_UUID = "49535343-1E4D-4BD9-BA61-23C647249616"
         private const val ANDESFIT_PM102266_WRITE_UUID = "49535343-8841-43F4-A8D4-ECBE34729BB3"
+
         private const val CLIENT_CHARACTERISTIC_CONFIG_UUID = "00002902-0000-1000-8000-00805f9b34fb"
     }
 
@@ -143,7 +144,7 @@ class BleService : Service() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             Log.d(TAG, "onConnectionStateChange; status: $status; newState: $newState")
 
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
+            if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
                 // successfully connected to the GATT Server
                 broadcastUpdate(BleServiceConstant.CONNECTED)
 
@@ -222,11 +223,31 @@ class BleService : Service() {
                 Log.d(TAG, "Sequence: ${sequence.name}")
                 when (sequence) {
                     AndesfitPM10Sequence.SET_DEVICE -> setDeviceCompleted()
+                    AndesfitPM10Sequence.SET_DEVICE_COMPLETED -> confirmSetDevice()
                     else -> {}
                 }
             } else {
                 // TODO service error
                 Log.d(TAG, "onCharacteristicWrite: error")
+            }
+        }
+
+        override fun onDescriptorRead(
+            gatt: BluetoothGatt,
+            descriptor: BluetoothGattDescriptor,
+            status: Int,
+            value: ByteArray
+        ) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.d(TAG, "onDescriptorWrite received: success")
+                Log.d(TAG, "Sequence: ${sequence.name}")
+                when (sequence) {
+                    else -> {}
+                }
+
+            } else {
+                // TODO service error
+                Log.d(TAG, "onDescriptorWrite received: error")
             }
         }
 
@@ -269,42 +290,53 @@ class BleService : Service() {
     }
 
     private fun initDevice() {
+        sequence = AndesfitPM10Sequence.INITIALIZED
 //        val characteristic = BluetoothGattCharacteristic(
-//            UUID.fromString("your_characteristic_uuid"),
+//            UUID.fromString(ANDESFIT_PM102266_READ_UUID),
 //            BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
 //            BluetoothGattCharacteristic.PERMISSION_READ
 //        )
+//        notifyCharacteristic(characteristic, true)
 
-//        notifyCharacteristic(characteristicMap[ANDESFIT_PM102266_READ_UUID], true)
-        val byteArray = if (true) {
-            BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-        } else {
-            BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
-        }
-        writeDescriptor(characteristicMap[ANDESFIT_PM102266_READ_UUID], byteArray)
-        sequence = AndesfitPM10Sequence.INITIALIZED
+        notifyCharacteristic(characteristicMap[ANDESFIT_PM102266_READ_UUID], true)
+
+//        notifyCharacteristic(
+//            getCharacteristic(getService(ANDESFIT_PM102266_SERVICE_UUID), ANDESFIT_PM102266_READ_UUID),
+//            true
+//        )
+
+//        setDevice()
     }
 
     private fun setDevice() {
-        val byteArray = "83010101010102000000000000000000000000000000000000000000000000000000".hexToByteArrayOrNull()
-        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_WRITE_UUID], "8301".hexToByteArrayOrNull())
         sequence = AndesfitPM10Sequence.SET_DEVICE
+
+        val byteArray = "83010101010102000000000000000000000000000000000000000000000000000000".hexToByteArrayOrNull()
+        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_WRITE_UUID], byteArray)
     }
 
     private fun setDeviceCompleted() {
-        readCharacteristic(characteristicMap[ANDESFIT_PM102266_READ_UUID])
         sequence = AndesfitPM10Sequence.SET_DEVICE_COMPLETED
+
+        readCharacteristic(characteristicMap[ANDESFIT_PM102266_READ_UUID])
+//        val byteArray = "F3010101010102000000000000000000000000000000000000000000000000000000".hexToByteArrayOrNull()
+//        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_WRITE_UUID], byteArray)
     }
 
     private fun confirmSetDevice() {
-        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_WRITE_UUID], "FE".hexToByteArrayOrNull())
         sequence = AndesfitPM10Sequence.CONFIRMED_SET_DEVICE
+
+        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_WRITE_UUID], "FE".hexToByteArrayOrNull())
     }
 
     @SuppressLint("MissingPermission")
     fun notifyCharacteristic(characteristic: BluetoothGattCharacteristic?, enable: Boolean) {
+        Log.d(TAG, "notifyCharacteristic invoked")
+
+        val success: Boolean
         if (bluetoothGatt != null && characteristic != null) {
-            bluetoothGatt?.setCharacteristicNotification(characteristic, enable)
+            success = bluetoothGatt?.setCharacteristicNotification(characteristic, enable) ?: false
+            logCharacteristicProperties(characteristic)
 
             val byteArray = if (enable) {
                 BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
@@ -312,53 +344,71 @@ class BleService : Service() {
                 BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
             }
             writeDescriptor(characteristic, byteArray)
-
         } else {
-            Log.e(TAG, "notifyCharacteristic error")
+            success = false
         }
+
+        if (!success) Log.e(TAG, "notifyCharacteristic error")
     }
 
     @SuppressLint("MissingPermission")
     fun readCharacteristic(characteristic: BluetoothGattCharacteristic?) {
-        if (bluetoothGatt != null && characteristic != null) {
-            bluetoothGatt?.readCharacteristic(characteristic)
+        Log.d(TAG, "readCharacteristic invoked")
+
+        val success = if (bluetoothGatt != null && characteristic != null) {
+            logCharacteristicProperties(characteristic)
+
+            bluetoothGatt?.readCharacteristic(characteristic) ?: false
         } else {
-            Log.e(TAG, "readCharacteristic error")
+            false
         }
+
+        if (!success) Log.e(TAG, "readCharacteristic error")
     }
 
     @SuppressLint("MissingPermission")
     fun writeCharacteristic(characteristic: BluetoothGattCharacteristic?, byteArray: ByteArray?) {
-        if (bluetoothGatt != null && characteristic != null && byteArray != null) {
+        Log.d(TAG, "writeCharacteristic invoked")
+
+        val success = if (bluetoothGatt != null && characteristic != null && byteArray != null) {
+            logCharacteristicProperties(characteristic)
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bluetoothGatt?.writeCharacteristic(
+                BluetoothStatusCodes.SUCCESS == bluetoothGatt?.writeCharacteristic(
                     characteristic,
                     byteArray,
                     BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                 )
             } else {
                 characteristic.value = byteArray
-                bluetoothGatt?.writeCharacteristic(characteristic)
+                bluetoothGatt?.writeCharacteristic(characteristic) ?: false
             }
         } else {
-            Log.e(TAG, "writeCharacteristic error")
+            false
         }
+
+        if (!success) Log.e(TAG, "writeCharacteristic error")
     }
 
     @SuppressLint("MissingPermission")
     fun writeDescriptor(characteristic: BluetoothGattCharacteristic?, byteArray: ByteArray?) {
-        if (bluetoothGatt != null && characteristic != null && byteArray != null) {
-            val descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG_UUID))
+        Log.d(TAG, "writeDescriptor invoked")
 
+        val success = if (bluetoothGatt != null && characteristic != null && byteArray != null) {
+            logCharacteristicProperties(characteristic)
+
+            val descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG_UUID))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bluetoothGatt?.writeDescriptor(descriptor, byteArray)
+                BluetoothStatusCodes.SUCCESS == bluetoothGatt?.writeDescriptor(descriptor, byteArray)
             } else {
                 characteristic.value = byteArray
-                bluetoothGatt?.writeDescriptor(descriptor)
+                bluetoothGatt?.writeDescriptor(descriptor) ?: false
             }
         } else {
-            Log.e(TAG, "writeDescriptor error")
+            false
         }
+
+        if (!success) Log.e(TAG, "writeDescriptor error")
     }
 
     private fun broadcastUpdate(action: BleServiceConstant, bleData: BleData? = null) {
@@ -369,6 +419,41 @@ class BleService : Service() {
         }
 
         sendBroadcast(intent)
+    }
+
+    private fun getCharacteristic(
+        bluetoothGattService: BluetoothGattService,
+        characteristicUuid: String
+    ): BluetoothGattCharacteristic? {
+        for (bluetoothGattCharacteristic in bluetoothGattService.characteristics) {
+            if (bluetoothGattCharacteristic.uuid.toString().equals(characteristicUuid, true)) {
+                return bluetoothGattCharacteristic
+            }
+        }
+
+        throw RuntimeException("$TAG Characteristic not found: $characteristicUuid")
+    }
+
+    private fun getService(serviceUuid: String): BluetoothGattService {
+        val bluetoothGatt: BluetoothGatt = bluetoothGatt ?: throw RuntimeException("$TAG No device connected")
+
+        for (bluetoothGattService in bluetoothGatt.services) {
+            if (bluetoothGattService.uuid.toString().equals(serviceUuid, true)) {
+                return bluetoothGattService
+            }
+        }
+
+        throw RuntimeException("$TAG Service not found")
+    }
+
+    private fun logCharacteristicProperties(characteristic: BluetoothGattCharacteristic) {
+        val characteristicProperties = characteristic.properties
+
+        val isReadEnabled = (characteristicProperties and BluetoothGattCharacteristic.PROPERTY_READ) != 0
+        val isWriteEnabled = (characteristicProperties and BluetoothGattCharacteristic.PROPERTY_WRITE) != 0
+        val isNotifyEnabled = (characteristicProperties and BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0
+
+        Log.d(TAG, "Read: $isReadEnabled, Write: $isWriteEnabled, Notify: $isNotifyEnabled")
     }
 
     // ----------------------------------------------------------------

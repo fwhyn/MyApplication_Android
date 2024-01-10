@@ -37,8 +37,9 @@ class BleService : Service() {
 
         private const val ANDESFIT_PM102266_SERVICE_UUID = "49535343-FE7D-4AE5-8FA9-9FAFD205E455"
 
-        private const val ANDESFIT_PM102266_READ_UUID = "49535343-1E4D-4BD9-BA61-23C647249616"
-        private const val ANDESFIT_PM102266_WRITE_UUID = "49535343-8841-43F4-A8D4-ECBE34729BB3"
+        private const val ANDESFIT_PM102266_R_UUID = "49535343-1E4D-4BD9-BA61-23C647249616"
+        private const val ANDESFIT_PM102266_RW_UUID = "49535343-6DAA-4D02-ABF6-19569ACA69FE"
+        private const val ANDESFIT_PM102266_W_UUID = "49535343-8841-43F4-A8D4-ECBE34729BB3"
 
         private const val CLIENT_CHARACTERISTIC_CONFIG_UUID = "00002902-0000-1000-8000-00805f9b34fb"
     }
@@ -46,6 +47,14 @@ class BleService : Service() {
     private var characteristicMap: HashMap<String, BluetoothGattCharacteristic> = hashMapOf()
 
     private var bluetoothGatt: BluetoothGatt? = null
+        @SuppressLint("MissingPermission")
+        set(value) {
+            field = value
+            field?.let {
+                val connectionPriority = BluetoothGatt.CONNECTION_PRIORITY_HIGH
+                it.requestConnectionPriority(connectionPriority)
+            }
+        }
 
     // ----------------------------------------------------------------
     override fun onBind(intent: Intent): IBinder {
@@ -159,7 +168,6 @@ class BleService : Service() {
 
         @SuppressLint("MissingPermission")
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
-            bluetoothGatt = gatt
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "onServicesDiscovered: success")
@@ -168,12 +176,16 @@ class BleService : Service() {
                 val service: BluetoothGattService? = gatt?.getService(UUID.fromString(ANDESFIT_PM102266_SERVICE_UUID))
 
                 // Find the desired characteristic
-                service?.getCharacteristic(UUID.fromString(ANDESFIT_PM102266_WRITE_UUID))?.let {
-                    characteristicMap[ANDESFIT_PM102266_WRITE_UUID] = it
+                service?.getCharacteristic(UUID.fromString(ANDESFIT_PM102266_W_UUID))?.let {
+                    characteristicMap[ANDESFIT_PM102266_W_UUID] = it
                 }
 
-                service?.getCharacteristic(UUID.fromString(ANDESFIT_PM102266_READ_UUID))?.let {
-                    characteristicMap[ANDESFIT_PM102266_READ_UUID] = it
+                service?.getCharacteristic(UUID.fromString(ANDESFIT_PM102266_R_UUID))?.let {
+                    characteristicMap[ANDESFIT_PM102266_R_UUID] = it
+                }
+
+                service?.getCharacteristic(UUID.fromString(ANDESFIT_PM102266_RW_UUID))?.let {
+                    characteristicMap[ANDESFIT_PM102266_RW_UUID] = it
                 }
 
                 initDevice()
@@ -221,6 +233,7 @@ class BleService : Service() {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "onCharacteristicWrite: success")
                 Log.d(TAG, "Sequence: ${sequence.name}")
+
                 when (sequence) {
                     AndesfitPM10Sequence.SET_DEVICE -> setDeviceCompleted()
                     AndesfitPM10Sequence.SET_DEVICE_COMPLETED -> confirmSetDevice()
@@ -298,35 +311,28 @@ class BleService : Service() {
 //        )
 //        notifyCharacteristic(characteristic, true)
 
-        notifyCharacteristic(characteristicMap[ANDESFIT_PM102266_READ_UUID], true)
+        notifyCharacteristic(characteristicMap[ANDESFIT_PM102266_R_UUID], true)
 
-//        notifyCharacteristic(
-//            getCharacteristic(getService(ANDESFIT_PM102266_SERVICE_UUID), ANDESFIT_PM102266_READ_UUID),
-//            true
-//        )
-
-//        setDevice()
+        setDevice()
     }
 
     private fun setDevice() {
         sequence = AndesfitPM10Sequence.SET_DEVICE
 
         val byteArray = "83010101010102000000000000000000000000000000000000000000000000000000".hexToByteArrayOrNull()
-        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_WRITE_UUID], byteArray)
+        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_W_UUID], byteArray)
     }
 
     private fun setDeviceCompleted() {
         sequence = AndesfitPM10Sequence.SET_DEVICE_COMPLETED
 
-        readCharacteristic(characteristicMap[ANDESFIT_PM102266_READ_UUID])
-//        val byteArray = "F3010101010102000000000000000000000000000000000000000000000000000000".hexToByteArrayOrNull()
-//        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_WRITE_UUID], byteArray)
+        readCharacteristic(characteristicMap[ANDESFIT_PM102266_RW_UUID])
     }
 
     private fun confirmSetDevice() {
         sequence = AndesfitPM10Sequence.CONFIRMED_SET_DEVICE
 
-        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_WRITE_UUID], "FE".hexToByteArrayOrNull())
+        writeCharacteristic(characteristicMap[ANDESFIT_PM102266_W_UUID], "FE".hexToByteArrayOrNull())
     }
 
     @SuppressLint("MissingPermission")
@@ -338,12 +344,12 @@ class BleService : Service() {
             success = bluetoothGatt?.setCharacteristicNotification(characteristic, enable) ?: false
             logCharacteristicProperties(characteristic)
 
-            val byteArray = if (enable) {
-                BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-            } else {
-                BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
-            }
-            writeDescriptor(characteristic, byteArray)
+//            val byteArray = if (enable) {
+//                BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+//            } else {
+//                BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
+//            }
+//            writeDescriptor(characteristic, byteArray)
         } else {
             success = false
         }
@@ -391,6 +397,22 @@ class BleService : Service() {
     }
 
     @SuppressLint("MissingPermission")
+    fun readDescriptor(characteristic: BluetoothGattCharacteristic?) {
+        Log.d(TAG, "readDescriptor invoked")
+
+        val success = if (bluetoothGatt != null && characteristic != null) {
+            logCharacteristicProperties(characteristic)
+
+            val descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG_UUID))
+            bluetoothGatt?.readDescriptor(descriptor) ?: false
+        } else {
+            false
+        }
+
+        if (!success) Log.e(TAG, "readDescriptor error")
+    }
+
+    @SuppressLint("MissingPermission")
     fun writeDescriptor(characteristic: BluetoothGattCharacteristic?, byteArray: ByteArray?) {
         Log.d(TAG, "writeDescriptor invoked")
 
@@ -435,9 +457,9 @@ class BleService : Service() {
     }
 
     private fun getService(serviceUuid: String): BluetoothGattService {
-        val bluetoothGatt: BluetoothGatt = bluetoothGatt ?: throw RuntimeException("$TAG No device connected")
+        val gatt: BluetoothGatt = bluetoothGatt ?: throw RuntimeException("$TAG No device connected")
 
-        for (bluetoothGattService in bluetoothGatt.services) {
+        for (bluetoothGattService in gatt.services) {
             if (bluetoothGattService.uuid.toString().equals(serviceUuid, true)) {
                 return bluetoothGattService
             }
@@ -453,7 +475,10 @@ class BleService : Service() {
         val isWriteEnabled = (characteristicProperties and BluetoothGattCharacteristic.PROPERTY_WRITE) != 0
         val isNotifyEnabled = (characteristicProperties and BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0
 
-        Log.d(TAG, "Read: $isReadEnabled, Write: $isWriteEnabled, Notify: $isNotifyEnabled")
+        Log.d(
+            TAG,
+            "UUID: ${characteristic.uuid}, Read: $isReadEnabled, Write: $isWriteEnabled, Notify:$isNotifyEnabled"
+        )
     }
 
     // ----------------------------------------------------------------

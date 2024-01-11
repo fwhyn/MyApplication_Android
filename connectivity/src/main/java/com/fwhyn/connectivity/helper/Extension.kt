@@ -44,3 +44,5 @@ fun String.hexToByteArrayOrNull(): ByteArray? {
 
     return byteList.toByteArray()
 }
+
+fun ByteArray.toHexString() = joinToString("") { "%02x".format(it) }
